@@ -1,0 +1,197 @@
+2026-06-26 09:07:55,948 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 09:07:55,952 - TeamLogger - INFO - PIPELINE STARTED.
+2026-06-26 09:07:55,954 - TeamLogger - INFO - [====------------------------------------]  10% | STEP: REQUIREMENTS
+2026-06-26 09:07:55,954 - TeamLogger - INFO - MANAGER delegates to BM: can you make a fully functioning program who makes a password generator with python
+2026-06-26 09:07:58,898 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 09:08:00,862 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
+2026-06-26 09:08:00,864 - TeamLogger - INFO - BM finished its task.
+2026-06-26 09:08:00,864 - TeamLogger - INFO - MANAGER skips DESIGNER (No UI required).
+2026-06-26 09:08:00,864 - TeamLogger - INFO - [==========------------------------------]  25% | STEP: DESIGN
+2026-06-26 09:08:00,864 - TeamLogger - INFO - [================------------------------]  40% | STEP: DEV
+2026-06-26 09:08:00,864 - TeamLogger - INFO - MANAGER delegates to DEV.
+2026-06-26 09:08:11,138 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 09:08:13,323 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 09:08:15,298 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
+2026-06-26 09:08:15,300 - TeamLogger - INFO - DEV fallback: automatically saved markdown to staging/main.py
+2026-06-26 09:08:15,301 - TeamLogger - INFO - DEV fallback: automatically saved markdown to staging/script.sh
+2026-06-26 09:08:15,301 - TeamLogger - INFO - DEV finished its task.
+2026-06-26 09:08:15,302 - TeamLogger - INFO - [========================----------------]  60% | STEP: DOCKER
+2026-06-26 09:08:15,302 - TeamLogger - INFO - MANAGER delegates to DEVOPS: Create a Dockerfile to run the code in staging.
+2026-06-26 09:08:18,148 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 09:08:20,498 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 09:08:22,261 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
+2026-06-26 09:08:22,263 - TeamLogger - INFO - DEVOPS finished its task.
+2026-06-26 09:08:22,263 - TeamLogger - INFO - [================================--------]  80% | STEP: QA
+2026-06-26 09:08:22,263 - TeamLogger - INFO - MANAGER delegates to QA: Run the code in Docker and verify it works.
+2026-06-26 09:08:23,740 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 09:08:31,199 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 09:08:32,869 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
+2026-06-26 09:08:32,870 - TeamLogger - INFO - QA finished its task.
+2026-06-26 09:08:32,870 - TeamLogger - INFO - [====================================----]  90% | STEP: EVALUATION
+2026-06-26 09:08:32,870 - TeamLogger - INFO - MANAGER delegates to EVALUATOR.
+2026-06-26 09:08:34,306 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 09:08:36,212 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 09:08:38,032 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
+2026-06-26 09:08:38,034 - TeamLogger - INFO - EVALUATOR finished its task.
+2026-06-26 09:08:38,034 - TeamLogger - WARNING - Evaluator rejected the code (Attempt 1/3). Giving the Dev a chance to fix it...
+2026-06-26 09:08:38,034 - TeamLogger - INFO - [================------------------------]  40% | STEP: DEV
+2026-06-26 09:08:38,034 - TeamLogger - INFO - MANAGER delegates to DEV.
+2026-06-26 09:08:45,182 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 09:08:48,166 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 09:08:50,529 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
+2026-06-26 09:08:50,530 - TeamLogger - INFO - DEV finished its task.
+2026-06-26 09:08:50,530 - TeamLogger - INFO - [================================--------]  80% | STEP: QA
+2026-06-26 09:08:50,530 - TeamLogger - INFO - MANAGER delegates to QA: Run the fixed code in Docker and verify it works.
+2026-06-26 09:08:51,485 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 09:08:58,931 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 09:09:00,730 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
+2026-06-26 09:09:00,731 - TeamLogger - INFO - QA finished its task.
+2026-06-26 09:09:00,731 - TeamLogger - INFO - [====================================----]  90% | STEP: EVALUATION
+2026-06-26 09:09:00,731 - TeamLogger - INFO - MANAGER delegates to EVALUATOR.
+2026-06-26 09:09:01,502 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 09:09:04,893 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 09:09:06,704 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
+2026-06-26 09:09:06,706 - TeamLogger - INFO - EVALUATOR finished its task.
+2026-06-26 09:09:06,706 - TeamLogger - WARNING - Evaluator rejected the code (Attempt 2/3). Giving the Dev a chance to fix it...
+2026-06-26 09:09:06,706 - TeamLogger - INFO - [================------------------------]  40% | STEP: DEV
+2026-06-26 09:09:06,706 - TeamLogger - INFO - MANAGER delegates to DEV.
+2026-06-26 09:09:09,120 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 09:09:11,085 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 09:09:12,847 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
+2026-06-26 09:09:12,848 - TeamLogger - INFO - DEV finished its task.
+2026-06-26 09:09:12,848 - TeamLogger - INFO - [================================--------]  80% | STEP: QA
+2026-06-26 09:09:12,848 - TeamLogger - INFO - MANAGER delegates to QA: Run the fixed code in Docker and verify it works.
+2026-06-26 09:09:13,499 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 09:09:21,208 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 09:09:22,987 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
+2026-06-26 09:09:22,987 - TeamLogger - INFO - QA finished its task.
+2026-06-26 09:09:22,988 - TeamLogger - INFO - [====================================----]  90% | STEP: EVALUATION
+2026-06-26 09:09:22,988 - TeamLogger - INFO - MANAGER delegates to EVALUATOR.
+2026-06-26 09:09:31,541 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 09:09:33,227 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
+2026-06-26 09:09:33,227 - TeamLogger - INFO - EVALUATOR finished its task.
+2026-06-26 09:09:33,227 - TeamLogger - WARNING - Evaluator rejected the code (Attempt 3/3). Giving the Dev a chance to fix it...
+2026-06-26 09:09:33,228 - TeamLogger - INFO - [================------------------------]  40% | STEP: DEV
+2026-06-26 09:09:33,228 - TeamLogger - INFO - MANAGER delegates to DEV.
+2026-06-26 09:09:39,995 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 09:09:47,170 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 09:09:48,972 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
+2026-06-26 09:09:48,975 - TeamLogger - INFO - DEV fallback: automatically saved markdown to staging/main.py
+2026-06-26 09:09:48,975 - TeamLogger - INFO - DEV finished its task.
+2026-06-26 09:09:48,975 - TeamLogger - INFO - [================================--------]  80% | STEP: QA
+2026-06-26 09:09:48,975 - TeamLogger - INFO - MANAGER delegates to QA: Run the fixed code in Docker and verify it works.
+2026-06-26 09:09:49,738 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 09:09:56,955 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 09:09:58,723 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
+2026-06-26 09:09:58,724 - TeamLogger - INFO - QA finished its task.
+2026-06-26 09:09:58,724 - TeamLogger - INFO - [====================================----]  90% | STEP: EVALUATION
+2026-06-26 09:09:58,724 - TeamLogger - INFO - MANAGER delegates to EVALUATOR.
+2026-06-26 09:09:59,473 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 09:10:01,010 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 09:10:02,630 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
+2026-06-26 09:10:02,631 - TeamLogger - INFO - EVALUATOR finished its task.
+2026-06-26 09:10:02,632 - TeamLogger - WARNING - Evaluator rejected the code again, publishing anyway.
+2026-06-26 09:10:02,632 - TeamLogger - INFO - [========================================] 100% | STEP: DONE
+2026-06-26 09:10:02,641 - TeamLogger - INFO - [========================================] 100% | STEP: DONE
+2026-06-26 09:10:02,641 - TeamLogger - INFO - PIPELINE FINISHED.
+2026-06-26 09:10:03,956 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 09:10:06,202 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
+2026-06-26 10:42:10,892 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:42:10,895 - TeamLogger - INFO - PIPELINE STARTED.
+2026-06-26 10:42:10,896 - TeamLogger - INFO - [====------------------------------------]  10% | STEP: REQUIREMENTS
+2026-06-26 10:42:10,897 - TeamLogger - INFO - MANAGER delegates to BM: can you make a counter who count the leng of a word for exemple if i said hello > 5 so the user enter a word and the program give a good answer
+2026-06-26 10:42:13,138 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:42:15,129 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
+2026-06-26 10:42:15,131 - TeamLogger - INFO - BM finished its task.
+2026-06-26 10:42:15,131 - TeamLogger - INFO - MANAGER skips DESIGNER (No UI required).
+2026-06-26 10:42:15,131 - TeamLogger - INFO - [==========------------------------------]  25% | STEP: DESIGN
+2026-06-26 10:42:15,132 - TeamLogger - INFO - [================------------------------]  40% | STEP: DEV
+2026-06-26 10:42:15,132 - TeamLogger - INFO - MANAGER delegates to DEV.
+2026-06-26 10:42:17,359 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:42:18,891 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:42:20,658 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
+2026-06-26 10:42:20,663 - TeamLogger - INFO - DEV fallback: automatically saved markdown to staging/script.sh
+2026-06-26 10:42:20,664 - TeamLogger - INFO - DEV finished its task.
+2026-06-26 10:42:20,664 - TeamLogger - INFO - [========================----------------]  60% | STEP: DOCKER
+2026-06-26 10:42:20,664 - TeamLogger - INFO - MANAGER delegates to DEVOPS: Create a Dockerfile to run the code in staging.
+2026-06-26 10:42:22,178 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:42:27,949 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:42:30,221 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:42:32,025 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
+2026-06-26 10:42:32,026 - TeamLogger - INFO - DEVOPS finished its task.
+2026-06-26 10:42:32,027 - TeamLogger - INFO - [================================--------]  80% | STEP: QA
+2026-06-26 10:42:32,027 - TeamLogger - INFO - MANAGER delegates to QA: Run the code in Docker and verify it works.
+2026-06-26 10:42:33,360 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:42:43,970 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:42:45,744 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
+2026-06-26 10:42:45,745 - TeamLogger - INFO - QA finished its task.
+2026-06-26 10:42:45,745 - TeamLogger - INFO - [====================================----]  90% | STEP: EVALUATION
+2026-06-26 10:42:45,745 - TeamLogger - INFO - MANAGER delegates to EVALUATOR.
+2026-06-26 10:42:47,223 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:42:49,642 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:42:51,378 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
+2026-06-26 10:42:51,379 - TeamLogger - INFO - EVALUATOR finished its task.
+2026-06-26 10:42:51,380 - TeamLogger - WARNING - Evaluator rejected the code (Attempt 1/3). Giving the Dev a chance to fix it...
+2026-06-26 10:42:51,380 - TeamLogger - INFO - [================------------------------]  40% | STEP: DEV
+2026-06-26 10:42:51,380 - TeamLogger - INFO - MANAGER delegates to DEV.
+2026-06-26 10:42:53,579 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:42:55,379 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:42:57,737 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:42:59,774 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
+2026-06-26 10:42:59,777 - TeamLogger - INFO - DEV fallback: automatically saved markdown to staging/main.py
+2026-06-26 10:42:59,778 - TeamLogger - INFO - DEV finished its task.
+2026-06-26 10:42:59,778 - TeamLogger - INFO - [================================--------]  80% | STEP: QA
+2026-06-26 10:42:59,778 - TeamLogger - INFO - MANAGER delegates to QA: Run the fixed code in Docker and verify it works.
+2026-06-26 10:43:00,630 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:43:10,303 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:43:12,062 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
+2026-06-26 10:43:12,063 - TeamLogger - INFO - QA finished its task.
+2026-06-26 10:43:12,063 - TeamLogger - INFO - [====================================----]  90% | STEP: EVALUATION
+2026-06-26 10:43:12,064 - TeamLogger - INFO - MANAGER delegates to EVALUATOR.
+2026-06-26 10:43:12,741 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:43:14,423 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:43:16,159 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
+2026-06-26 10:43:16,160 - TeamLogger - INFO - EVALUATOR finished its task.
+2026-06-26 10:43:16,160 - TeamLogger - WARNING - Evaluator rejected the code (Attempt 2/3). Giving the Dev a chance to fix it...
+2026-06-26 10:43:16,161 - TeamLogger - INFO - [================------------------------]  40% | STEP: DEV
+2026-06-26 10:43:16,161 - TeamLogger - INFO - MANAGER delegates to DEV.
+2026-06-26 10:43:17,515 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:43:19,997 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:43:21,792 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
+2026-06-26 10:43:21,793 - TeamLogger - INFO - DEV finished its task.
+2026-06-26 10:43:21,793 - TeamLogger - INFO - [================================--------]  80% | STEP: QA
+2026-06-26 10:43:21,793 - TeamLogger - INFO - MANAGER delegates to QA: Run the fixed code in Docker and verify it works.
+2026-06-26 10:43:22,504 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:43:32,816 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:43:34,477 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
+2026-06-26 10:43:34,478 - TeamLogger - INFO - QA finished its task.
+2026-06-26 10:43:34,478 - TeamLogger - INFO - [====================================----]  90% | STEP: EVALUATION
+2026-06-26 10:43:34,478 - TeamLogger - INFO - MANAGER delegates to EVALUATOR.
+2026-06-26 10:43:35,199 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:43:36,878 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:43:38,584 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
+2026-06-26 10:43:38,585 - TeamLogger - INFO - EVALUATOR finished its task.
+2026-06-26 10:43:38,585 - TeamLogger - WARNING - Evaluator rejected the code (Attempt 3/3). Giving the Dev a chance to fix it...
+2026-06-26 10:43:38,586 - TeamLogger - INFO - [================------------------------]  40% | STEP: DEV
+2026-06-26 10:43:38,586 - TeamLogger - INFO - MANAGER delegates to DEV.
+2026-06-26 10:43:39,640 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:43:41,050 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:43:42,884 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
+2026-06-26 10:43:42,885 - TeamLogger - INFO - DEV finished its task.
+2026-06-26 10:43:42,885 - TeamLogger - INFO - [================================--------]  80% | STEP: QA
+2026-06-26 10:43:42,885 - TeamLogger - INFO - MANAGER delegates to QA: Run the fixed code in Docker and verify it works.
+2026-06-26 10:43:43,577 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:43:53,094 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:43:54,866 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
+2026-06-26 10:43:54,867 - TeamLogger - INFO - QA finished its task.
+2026-06-26 10:43:54,867 - TeamLogger - INFO - [====================================----]  90% | STEP: EVALUATION
+2026-06-26 10:43:54,867 - TeamLogger - INFO - MANAGER delegates to EVALUATOR.
+2026-06-26 10:43:56,195 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:43:57,938 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
+2026-06-26 10:43:57,939 - TeamLogger - INFO - EVALUATOR finished its task.
+2026-06-26 10:43:57,939 - TeamLogger - WARNING - Evaluator rejected the code again, publishing anyway.
+2026-06-26 10:43:57,939 - TeamLogger - INFO - [========================================] 100% | STEP: DONE
+2026-06-26 10:43:57,952 - TeamLogger - INFO - [========================================] 100% | STEP: DONE
+2026-06-26 10:43:57,952 - TeamLogger - INFO - PIPELINE FINISHED.
+2026-06-26 10:43:59,066 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-26 10:44:00,907 - httpx - INFO - HTTP Request: POST https://os-api.agno.com/telemetry/runs "HTTP/2 201 Created"
