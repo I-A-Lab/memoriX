@@ -8,7 +8,7 @@ from agentX.tools.docker_tools import run_tests_in_docker
 qa_agent = Agent(
     name="QA",
     role="Quality Assurance Engineer",
-    model=Ollama(id="qwen2.5:3b"),
+    model=Ollama(id="ornith:9b"),
     tools=[run_tests_in_docker],
     instructions=[
         "You are a strict QA Engineer. Your job is to test the code using 'run_tests_in_docker'.",

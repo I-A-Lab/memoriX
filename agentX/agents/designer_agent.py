@@ -6,7 +6,7 @@ from agno.models.ollama import Ollama
 designer_agent = Agent(
     name="Designer",
     role="UI/UX Designer",
-    model=Ollama(id="qwen2.5:3b"),
+    model=Ollama(id="ornith:9b"),
     instructions=[
         "You are a strict UI/UX Architect. Your sole job is to design the UI based on requirements.",
         "You MUST output exactly these sections:",

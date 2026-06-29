@@ -6,7 +6,7 @@ from agentX.coder.coder import execute_project
 manager_agent = Agent(
     name="Manager",
     role="AI Project Manager and Orchestrator",
-    model=Ollama(id="qwen2.5:3b"),
+    model=Ollama(id="ornith:9b"),
     tools=[execute_project],
     instructions=[
         "You are the headless Orchestrator Engine. You are NOT a conversational AI.",

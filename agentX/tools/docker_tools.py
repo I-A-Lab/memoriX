@@ -43,6 +43,9 @@ def run_tests_in_docker(**kwargs) -> str:
     """
     try:
         import time
+        if not (WORKSPACE_DIR / "Dockerfile").exists():
+            return "FAILURE: No Dockerfile found in workspace. The DevOps agent failed to create it."
+            
         # Start the container in detached mode
         subprocess.run(
             ["docker", "compose", "up", "-d", "--build"],

@@ -66,6 +66,22 @@ def list_workspace_files(**kwargs) -> str:
     except Exception as e:
         return f"Error listing workspace folder: {e}"
 
+def read_file_from_workspace(filename: str, **kwargs) -> str:
+    """Reads the contents of a file from the workspace folder.
+    Use this to read a file before modifying it.
+    
+    Args:
+        filename (str): The name of the file (e.g., 'main.py').
+    """
+    try:
+        file_path = WORKSPACE_DIR / filename
+        if not file_path.exists():
+            return f"Error: File '{filename}' not found in workspace."
+        with open(file_path, "r", encoding="utf-8") as f:
+            return f.read()
+    except Exception as e:
+        return f"Error reading file from workspace: {e}"
+
 def clear_workspace(**kwargs) -> str:
     """Deletes all files present in the workspace folder."""
     try:

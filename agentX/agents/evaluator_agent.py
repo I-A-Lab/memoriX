@@ -8,7 +8,7 @@ from agentX.tools.file_tools import list_workspace_files
 evaluator_agent = Agent(
     name="Evaluator",
     role="Code Quality Evaluator",
-    model=Ollama(id="qwen2.5:3b"),
+    model=Ollama(id="ornith:9b"),
     tools=[list_workspace_files],
     instructions=[
         "You are the final Code Evaluator.",
@@ -20,7 +20,8 @@ evaluator_agent = Agent(
         "1. If QA verdict is 'FAILURE', you MUST output 'REJECTED'.",
         "2. If core requirements are missing, you MUST output 'REJECTED'.",
         "3. If no code was generated or the workspace is empty, you MUST output 'REJECTED'.",
-        "4. ONLY if QA verdict is 'SUCCESS' and requirements are met, output 'APPROVED'."
+        "4. ONLY if QA verdict is 'SUCCESS' and requirements are met, output 'APPROVED'.",
+        "5. If you see ANY 'Traceback', 'Exception', 'Error' or 'AttributeError' in the QA logs, you MUST output 'REJECTED'. NEVER assume a traceback is acceptable."
     ],
     markdown=True,
     add_history_to_context=False

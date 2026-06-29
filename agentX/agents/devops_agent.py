@@ -9,11 +9,13 @@ from agentX.tools.file_tools import list_workspace_files
 devops_agent = Agent(
     name="DevOps",
     role="Expert DevOps Engineer",
-    model=Ollama(id="qwen2.5:3b"),
+    model=Ollama(id="ornith:9b"),
     tools=[create_dockerfile, list_workspace_files],
     instructions=[
-        "You are an elite DevOps Engineer. Your sole job is to containerize the workspace code.",
-        "You MUST use 'create_dockerfile' tool to generate the Dockerfile.",
+        "You are a DevOps Engineer. Your job is to containerize the application.",
+        "CRITICAL: You MUST use the 'create_dockerfile' tool.",
+        "When calling 'create_dockerfile', you MUST explicitly provide the 'content' argument containing the Dockerfile string.",
+        "If you fail to provide 'content', the tool will crash. Do NOT just output text in markdown blocks.",
         "STRICT DOCKERFILE RULES:",
         "1. IMAGE: Always use `FROM python:3.9-slim`.",
         "2. WORKDIR: `WORKDIR /app` followed by `COPY . /app`.",
