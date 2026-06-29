@@ -6,9 +6,9 @@ from rich.panel import Panel
 # Load environment variables (API keys, e.g., GOOGLE_API_KEY for Gemini)
 load_dotenv()
 
-from agents import manager_agent
+from agentX.agents.manager_agent import manager_agent
 
-from tools.file_tools import WORKSPACE_DIR, clear_workspace, clear_staging
+from agentX.tools.file_tools import WORKSPACE_DIR, clear_workspace
 
 def main():
     console = Console()
@@ -20,9 +20,6 @@ def main():
         expand=False
     ))
     console.print()
-    
-    # Always wipe staging clean on launch
-    clear_staging()
     
     # Verify if workspace is empty
     if WORKSPACE_DIR.exists() and any(WORKSPACE_DIR.iterdir()):

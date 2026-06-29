@@ -2,11 +2,10 @@ import os
 import shutil
 from pathlib import Path
 
-STAGING_DIR = Path(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) / "staging"
-WORKSPACE_DIR = Path(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) / "workspace"
+WORKSPACE_DIR = Path(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))) / "agentX" / "workspace"
 
-def write_code_to_staging(filename: str, content: str, **kwargs) -> str:
-    """Writes a code file to the staging folder (temporary working memory).
+def write_code_to_workspace(filename: str, content: str, **kwargs) -> str:
+    """Writes a code file to the workspace folder (temporary and final working memory).
     The Coder Agent uses this tool to create source and test files.
     
     Args:
@@ -30,7 +29,7 @@ def write_code_to_staging(filename: str, content: str, **kwargs) -> str:
             content = re.sub(r"^<script.*?>\n?", "", content, flags=re.IGNORECASE)
             content = re.sub(r"\n?</script>$", "", content, flags=re.IGNORECASE)
             
-        file_path = STAGING_DIR / filename
+        file_path = WORKSPACE_DIR / filename
         # Ensure subdirectories exist if filename contains a path
         file_path.parent.mkdir(parents=True, exist_ok=True)
         
@@ -50,28 +49,30 @@ def write_code_to_staging(filename: str, content: str, **kwargs) -> str:
 
         with open(file_path, "w", encoding="utf-8") as f:
             f.write(content)
-        return f"Code successfully written to staging/{filename}"
+        return f"Code successfully written to workspace/{filename}"
     except Exception as e:
-        return f"Error writing to staging: {e}"
+        return f"Error writing to workspace: {e}"
 
-def list_staging_files(**kwargs) -> str:
-    """Lists all files present in the staging folder."""
+def list_workspace_files(**kwargs) -> str:
+    """Lists all files present in the workspace folder."""
     try:
         files = []
-        for root, dirs, filenames in os.walk(STAGING_DIR):
+        for root, dirs, filenames in os.walk(WORKSPACE_DIR):
             for f in filenames:
-                files.append(os.path.relpath(os.path.join(root, f), STAGING_DIR))
+                files.append(os.path.relpath(os.path.join(root, f), WORKSPACE_DIR))
         if not files:
-            return "The staging folder is empty."
-        return "Files in staging:\n" + "\n".join(files)
+            return "The workspace folder is empty."
+        return "Files in workspace:\n" + "\n".join(files)
     except Exception as e:
-        return f"Error listing staging folder: {e}"
+        return f"Error listing workspace folder: {e}"
 
 def clear_workspace(**kwargs) -> str:
-    """Deletes all files present in the workspace folder.
-    To be used if the user has given their permission to clean the folder.
-    """
+    """Deletes all files present in the workspace folder."""
     try:
+        if not os.path.exists(WORKSPACE_DIR):
+            WORKSPACE_DIR.mkdir(parents=True, exist_ok=True)
+            return "Workspace created."
+            
         for item in os.listdir(WORKSPACE_DIR):
             item_path = WORKSPACE_DIR / item
             if os.path.isdir(item_path):
@@ -82,64 +83,49 @@ def clear_workspace(**kwargs) -> str:
     except Exception as e:
         return f"Error cleaning workspace: {e}"
 
-def clear_staging(**kwargs) -> str:
-    """Deletes all files present in the staging folder to start fresh."""
-    try:
-        for item in os.listdir(STAGING_DIR):
-            item_path = STAGING_DIR / item
-            if os.path.isdir(item_path):
-                shutil.rmtree(item_path)
-            else:
-                os.remove(item_path)
-        return "The staging area has been completely cleaned."
-    except Exception as e:
-        return f"Error cleaning staging: {e}"
-
-def publish_to_workspace(useful_files: list = None, **kwargs) -> str:
-    """Moves files from the staging folder to the workspace.
-    If useful_files is provided, only these files (e.g., ['main.py', 'utils.py']) will be moved.
-    If not provided, it automatically filters out test files and Docker files, keeping only the strict minimum.
-    The staging folder is then cleaned. To be used by the Manager after final validation.
+def cleanup_workspace_useless_files(useful_files: list = None, **kwargs) -> str:
+    """Cleans up the workspace by removing test files, docker configurations, and unnecessary scripts.
+    To be used by the Manager after final validation.
     
     Args:
         useful_files (list, optional): List of file or folder names to keep for the user.
     """
     try:
-        from agents import estimate_and_progress
+        from agentX.coder.coder import estimate_and_progress
         estimate_and_progress(0, 'DONE', 100)
-        moved_files = []
-        for item in os.listdir(STAGING_DIR):
-            s = STAGING_DIR / item
-            d = WORKSPACE_DIR / item
+        removed_files = []
+        
+        if not os.path.exists(WORKSPACE_DIR):
+            return "Workspace not found."
             
-            # Always ignore Docker technical files
+        for item in os.listdir(WORKSPACE_DIR):
+            item_path = WORKSPACE_DIR / item
+            
+            # Always remove Docker technical files
             if item in ["Dockerfile", "docker-compose.yml"]:
+                if os.path.isdir(item_path):
+                    shutil.rmtree(item_path)
+                else:
+                    os.remove(item_path)
+                removed_files.append(item)
                 continue
                 
             # Automatically filter if no useful_files specified
             if useful_files is None:
                 if item.startswith("test_") or item.endswith("_test.py") or item.endswith(".sh"):
-                    continue
+                    if os.path.isdir(item_path):
+                        shutil.rmtree(item_path)
+                    else:
+                        os.remove(item_path)
+                    removed_files.append(item)
             else:
                 if item not in useful_files:
-                    continue
+                    if os.path.isdir(item_path):
+                        shutil.rmtree(item_path)
+                    else:
+                        os.remove(item_path)
+                    removed_files.append(item)
                 
-            if os.path.exists(d):
-                if os.path.isdir(d):
-                    shutil.rmtree(d)
-                else:
-                    os.remove(d)
-            shutil.move(str(s), str(WORKSPACE_DIR))
-            moved_files.append(item)
-            
-        # Completely clean staging
-        for item in os.listdir(STAGING_DIR):
-            item_path = STAGING_DIR / item
-            if os.path.isdir(item_path):
-                shutil.rmtree(item_path)
-            else:
-                os.remove(item_path)
-                
-        return f"Success: {len(moved_files)} truly useful files ({', '.join(moved_files)}) were published to the workspace. Staging cleaned."
+        return f"Success: Cleaned up {len(removed_files)} useless files ({', '.join(removed_files)}). The workspace is ready."
     except Exception as e:
-        return f"Error publishing to workspace: {e}"
+        return f"Error cleaning up workspace files: {e}"
