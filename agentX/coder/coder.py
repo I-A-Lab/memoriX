@@ -78,7 +78,7 @@ def ask_dev(requirements: str, design_specs: str, extra_prompt: str = "") -> str
     """Delegates a coding task to the Developer Agent."""
     estimate_and_progress(0, 'DEV', 40)
     logger.info("MANAGER delegates to DEV.")
-    prompt = f"Requirements:\n{requirements}\n\nDesign Specs:\n{design_specs}\n\n{extra_prompt}"
+    prompt = f"Requirements:\n{requirements}\n\nDesign Specs:\n{design_specs}\n\nCRITICAL: You MUST write your final code directly into the workspace using your file tools. Do NOT just output code in markdown blocks. The evaluator will fail if the files are empty.\n\n{extra_prompt}"
     response = dev_agent.run(prompt)
     
     # Fallback for 3B models: if they output markdown instead of calling the tool
@@ -209,7 +209,7 @@ def execute_project(prompt: str, **kwargs) -> str:
             evaluator_result = ask_evaluator(requirements, design_specs, qa_report)
             
             # 7. Feedback Loop (Retry up to 5 times if failed)
-            max_retries = 5
+            max_retries = 10
             for attempt in range(max_retries):
                 if "APPROVED" in evaluator_result and "REJECTED" not in evaluator_result:
                     break
