@@ -171,9 +171,10 @@ def ask_evaluator(requirements: str, design_specs: str, qa_report: str) -> str:
     logger.info("EVALUATOR finished its task.")
     return response.content
 
-def execute_project(prompt: str) -> str:
+def execute_project(prompt: str, **kwargs) -> str:
     """Executes the entire project pipeline sequentially: BM -> Designer -> Dev -> DevOps -> QA -> Evaluator -> Publish.
     This guarantees that the workspace is delivered to the user.
+    USE THIS TOOL FOR ANY USER REQUEST, NO MATTER HOW SIMPLE OR COMPLEX (e.g. 'make a password generator', 'build a website', etc.)
     
     Args:
         prompt (str): The user's original request.
@@ -207,21 +208,24 @@ def execute_project(prompt: str) -> str:
             # 6. Evaluator
             evaluator_result = ask_evaluator(requirements, design_specs, qa_report)
             
-            # 7. Feedback Loop (Retry up to 3 times if failed)
-            max_retries = 3
+            # 7. Feedback Loop (Retry up to 5 times if failed)
+            max_retries = 5
             for attempt in range(max_retries):
-                if "REJECTED" not in evaluator_result:
+                if "APPROVED" in evaluator_result and "REJECTED" not in evaluator_result:
                     break
                     
+                console.print(Panel(evaluator_result, title=f"[bold red]Evaluator Feedback (Attempt {attempt+1}/{max_retries})[/bold red]", border_style="red"))
                 logger.warning(f"Evaluator rejected the code (Attempt {attempt+1}/{max_retries}). Giving the Dev a chance to fix it...")
                 ask_dev(requirements, design_specs, f"The Evaluator rejected the code. Here is the feedback:\n{evaluator_result}\nCRITICAL: Fix any syntax errors and write the code again to workspace.")
                 qa_report = ask_qa("Run the fixed code in Docker and verify it works.")
                 evaluator_result = ask_evaluator(requirements, design_specs, qa_report)
             
             # 8. Publish / Cleanup
-            if "REJECTED" in evaluator_result:
+            if "APPROVED" not in evaluator_result or "REJECTED" in evaluator_result:
+                console.print(Panel(evaluator_result, title="[bold red]Final Evaluator Rejection[/bold red]", border_style="red"))
                 logger.warning("Evaluator rejected the code again, finishing anyway.")
             else:
+                console.print(Panel(evaluator_result, title="[bold green]Final Evaluator Approval[/bold green]", border_style="green"))
                 logger.info("Code was approved by Evaluator.")
                 
             cleanup_result = cleanup_workspace_useless_files()

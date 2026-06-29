@@ -19,7 +19,8 @@ evaluator_agent = Agent(
         "STRICT RULES:",
         "1. If QA verdict is 'FAILURE', you MUST output 'REJECTED'.",
         "2. If core requirements are missing, you MUST output 'REJECTED'.",
-        "3. If QA verdict is 'SUCCESS' and requirements are met, output 'APPROVED'."
+        "3. If no code was generated or the workspace is empty, you MUST output 'REJECTED'.",
+        "4. ONLY if QA verdict is 'SUCCESS' and requirements are met, output 'APPROVED'."
     ],
     markdown=True,
     add_history_to_context=False
