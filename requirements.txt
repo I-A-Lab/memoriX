@@ -1,7 +1,0 @@
-agno
-ollama
-openai
-docker
-torch
-rich
-python-dotenv
