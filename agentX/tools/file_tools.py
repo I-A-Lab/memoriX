@@ -43,15 +43,36 @@ def write_code_to_workspace(filename: str, content: str, **kwargs) -> str:
                 missing_imports += "import string\n"
             if "secrets" in content and "import secrets" not in content:
                 missing_imports += "import secrets\n"
+            if "from pydantic" not in content and "BaseModel" in content:
+                missing_imports += "from pydantic import BaseModel\n"
+            if "List" in content and "from typing" not in content and "import List" not in content:
+                missing_imports += "from typing import List\n"
             
             if missing_imports:
                 content = missing_imports + "\n" + content
 
         with open(file_path, "w", encoding="utf-8") as f:
             f.write(content)
-        return f"Code successfully written to workspace/{filename}"
+        return f"Code successfully written to {filename} in workspace."
     except Exception as e:
-        return f"Error writing to workspace: {e}"
+        return f"Error writing code: {e}"
+
+def delete_file_from_workspace(filename: str, **kwargs) -> str:
+    """Deletes a file from the workspace folder.
+    The Coder Agent uses this tool to remove obsolete files or effectively rename files.
+    
+    Args:
+        filename (str): The name of the file to delete (e.g., 'main.py').
+    """
+    try:
+        file_path = WORKSPACE_DIR / filename
+        if file_path.exists() and file_path.is_file():
+            os.remove(file_path)
+            return f"File '{filename}' successfully deleted from workspace."
+        else:
+            return f"File '{filename}' does not exist in workspace."
+    except Exception as e:
+        return f"Error deleting file: {e}"
 
 def list_workspace_files(**kwargs) -> str:
     """Lists all files present in the workspace folder."""

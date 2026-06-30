@@ -9,7 +9,7 @@ from agentX.tools.file_tools import list_workspace_files
 devops_agent = Agent(
     name="DevOps",
     role="Expert DevOps Engineer",
-    model=Ollama(id="ornith:9b"),
+    model=Ollama(id="qwen2.5:3b"),
     tools=[create_dockerfile, list_workspace_files],
     instructions=[
         "You are a DevOps Engineer. Your job is to containerize the application.",

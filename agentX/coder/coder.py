@@ -16,9 +16,51 @@ from agentX.agents.slm_breakdown_agent import slm_breakdown_agent
 
 from agentX.tools.file_tools import cleanup_workspace_useless_files
 
+import time
+
 logger = logging.getLogger("TeamLogger")
 console = Console()
 live_display = None
+pipeline_start_time = None
+
+current_pipeline_step = "PROCESSING"
+current_pipeline_percentage = 0
+
+class PipelineProgress:
+    def __rich__(self):
+        bar_length = 40
+        percentage = current_pipeline_percentage
+        current_step = current_pipeline_step
+        filled = int(bar_length * percentage // 100)
+        
+        step_colors = {
+            'BREAKDOWN': 'cyan',
+            'REQUIREMENTS': 'cyan',
+            'DESIGN': 'magenta',
+            'DEV': 'yellow',
+            'DOCKER': 'blue',
+            'QA': 'yellow',
+            'EVALUATION': 'magenta',
+            'DONE': 'green'
+        }
+        
+        color = step_colors.get(current_step, 'white')
+        bar_filled = "━" * filled
+        bar_empty = "╌" * (bar_length - filled)
+        
+        progress_text = Text()
+        progress_text.append(f"[{current_step.center(12)}]", style=f"bold {color}")
+        progress_text.append(f"  {bar_filled}", style=f"bold {color}")
+        progress_text.append(bar_empty, style="dim")
+        progress_text.append(f"  {percentage:>3}%", style="bold white")
+        
+        global pipeline_start_time
+        if pipeline_start_time is not None:
+            elapsed = int(time.time() - pipeline_start_time)
+            mins, secs = divmod(elapsed, 60)
+            progress_text.append(f"  [{mins:02}:{secs:02}]", style="bold cyan")
+            
+        return Panel(progress_text, border_style="dim", expand=False)
 
 def estimate_and_progress(eta_minutes: int = 0, current_step: str = "PROCESSING", percentage: int = 0) -> str:
     """Use this tool to update the progress bar in the user interface.
@@ -27,36 +69,15 @@ def estimate_and_progress(eta_minutes: int = 0, current_step: str = "PROCESSING"
         current_step (str): The current step (e.g., 'PLANNING', 'DEV', 'DOCKER', 'TEST', 'EVALUATION').
         percentage (int): Progress percentage (0 to 100).
     """
+    global current_pipeline_step, current_pipeline_percentage, live_display
+    current_pipeline_step = current_step
+    current_pipeline_percentage = percentage
+    
+    if live_display is None:
+        console.print(PipelineProgress())
+        
     bar_length = 40
     filled = int(bar_length * percentage // 100)
-    
-    step_colors = {
-        'REQUIREMENTS': 'cyan',
-        'DESIGN': 'magenta',
-        'DEV': 'yellow',
-        'DOCKER': 'blue',
-        'QA': 'yellow',
-        'EVALUATION': 'magenta',
-        'DONE': 'green'
-    }
-    
-    color = step_colors.get(current_step, 'white')
-    bar_filled = "━" * filled
-    bar_empty = "╌" * (bar_length - filled)
-    
-    progress_text = Text()
-    progress_text.append(f"[{current_step.center(12)}]", style=f"bold {color}")
-    progress_text.append(f"  {bar_filled}", style=f"bold {color}")
-    progress_text.append(bar_empty, style="dim")
-    progress_text.append(f"  {percentage:>3}%", style="bold white")
-    
-    panel = Panel(progress_text, border_style="dim", expand=False)
-    
-    if live_display is not None:
-        live_display.update(panel)
-    else:
-        console.print(panel)
-        
     msg_log = f"[{'='*filled}{'-'*(bar_length-filled)}] {percentage:>3}% | STEP: {current_step}"
     logger.info(msg_log)
     return "Progress updated and displayed to the user."
@@ -72,7 +93,7 @@ def ask_slm_breakdown(prompt: str) -> tuple[str, any]:
         project_tree = Tree(f"[bold cyan]Project: {breakdown_data.project_name}[/bold cyan]\n[dim]{breakdown_data.summary}[/dim]")
         
         for module in breakdown_data.modules:
-            module_node = project_tree.add(f"[bold blue]📦 Module: {module.name}[/bold blue] - {module.description}")
+            module_node = project_tree.add(f"[bold blue] Module: {module.name}[/bold blue] - {module.description}")
             if module.functions:
                 func_tree = module_node.add("[bold magenta]Functions[/bold magenta]")
                 for func in module.functions:
@@ -251,7 +272,7 @@ def ask_evaluator(requirements: str, design_specs: str, qa_report: str) -> str:
     logger.info("EVALUATOR finished its task.")
     return response.content
 
-def execute_project(prompt: str, **kwargs) -> str:
+def execute_project(prompt: str = "", **kwargs) -> str:
     """Executes the entire project pipeline sequentially: BM -> Designer -> Dev -> DevOps -> QA -> Evaluator -> Publish.
     This guarantees that the workspace is delivered to the user.
     USE THIS TOOL FOR ANY USER REQUEST, NO MATTER HOW SIMPLE OR COMPLEX (e.g. 'make a password generator', 'build a website', etc.)
@@ -259,24 +280,37 @@ def execute_project(prompt: str, **kwargs) -> str:
     Args:
         prompt (str): The user's original request.
     """
-    global live_display
+    if not prompt:
+        prompt = kwargs.get("prompt", "")
+    if not prompt:
+        return "Error: You must provide a 'prompt' string argument."
+        
+    global live_display, pipeline_start_time
+    pipeline_start_time = time.time()
     logger.info("PIPELINE STARTED.")
     
-    # 0. SLM Breakdown (Outside Live display to allow input prompt)
-    architecture_breakdown_text, architecture_breakdown_data = ask_slm_breakdown(prompt)
+    # 0. SLM Breakdown (Inside Live display, but stopped before prompt)
+    with Live(PipelineProgress(), console=console, refresh_per_second=4, transient=False) as live:
+        live_display = live
+        architecture_breakdown_text, architecture_breakdown_data = ask_slm_breakdown(prompt)
+    live_display = None
+    
     while architecture_breakdown_text:
         if not Confirm.ask("\n[bold yellow]Do you want to proceed with this architecture?[/bold yellow]"):
             logger.info("User rejected the architecture. Generating a new one.")
             console.print("\n[yellow] Generating an alternative architecture breakdown...[/yellow]")
             prompt += "\n\nCRITICAL: The user rejected your previous architectural proposal. Please provide a DIFFERENT architecture breakdown, with alternative module names, structures, or approaches."
-            architecture_breakdown_text, architecture_breakdown_data = ask_slm_breakdown(prompt)
+            with Live(PipelineProgress(), console=console, refresh_per_second=4, transient=False) as live:
+                live_display = live
+                architecture_breakdown_text, architecture_breakdown_data = ask_slm_breakdown(prompt)
+            live_display = None
         else:
             break
             
     if not architecture_breakdown_text:
         return "Project cancelled: SLM Breakdown failed."
             
-    with Live(console=console, refresh_per_second=4, transient=False) as live:
+    with Live(PipelineProgress(), console=console, refresh_per_second=4, transient=False) as live:
         live_display = live
         try:
             # 1. BM (Requirements)

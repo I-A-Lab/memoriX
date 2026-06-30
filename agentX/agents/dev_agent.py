@@ -1,19 +1,20 @@
 from agno.agent import Agent
 from agno.models.ollama import Ollama
 
-from agentX.tools.file_tools import write_code_to_workspace, list_workspace_files, read_file_from_workspace
+from agentX.tools.file_tools import write_code_to_workspace, list_workspace_files, read_file_from_workspace, delete_file_from_workspace
 
 # Developer Agent (Dev)
 # Role: Write source code (Web + Backend) and associated unit tests in workspace.
 dev_agent = Agent(
     name="Dev",
     role="Full-Stack Developer",
-    model=Ollama(id="ornith:9b"),
-    tools=[write_code_to_workspace, list_workspace_files, read_file_from_workspace],
+    model=Ollama(id="qwen2.5:3b"),
+    tools=[write_code_to_workspace, list_workspace_files, read_file_from_workspace, delete_file_from_workspace],
     instructions=[
         "You are an elite Polyglot Developer.",
         "You MUST write production-ready code based on requirements and save it using 'write_code_to_workspace'.",
         "If you need to modify existing code, use 'read_file_from_workspace' to view it before overwriting it.",
+        "If you are instructed by the Evaluator to rename or remove an obsolete file, use 'delete_file_from_workspace'.",
         "If unable to use the tool, wrap your raw code in standard markdown blocks (e.g., ```python, ```html).",
         "STRICT RULES:",
         "1. LANGUAGES: Respect the requested languages EXACTLY. DO NOT write HTML/CSS/JS unless specifically requested. If asked for a Python CLI script, write ONLY Python.",

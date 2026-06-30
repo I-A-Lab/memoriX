@@ -6,7 +6,7 @@ from agno.models.ollama import Ollama
 bm_agent = Agent(
     name="BM",
     role="Business Analyst",
-    model=Ollama(id="ornith:9b"),
+    model=Ollama(id="qwen2.5:3b"),
     instructions=[
         "You are an elite Business Analyst. Your sole job is to translate the user request into a strict technical specification.",
         "You MUST output exactly these sections and nothing else:",

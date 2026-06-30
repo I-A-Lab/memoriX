@@ -22,8 +22,7 @@ def create_dockerfile(content: str, **kwargs) -> str:
             f.write(content)
             
         # Automatically generate a standard docker-compose.yml so the AI doesn't have to
-        compose_content = """version: '3.8'
-services:
+        compose_content = """services:
   testapp:
     build: .
 """

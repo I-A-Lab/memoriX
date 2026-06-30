@@ -31,7 +31,7 @@ class ProjectBreakdown(BaseModel):
 slm_breakdown_agent = Agent(
     name="SLM_Breakdown",
     role="Software Architect Breakdown Specialist",
-    model=Ollama(id="ornith:9b"),
+    model=Ollama(id="qwen2.5:3b"),
     description="You break down complex software requests into atomic, easily implementable parts.",
     instructions=[
         "You are an expert Software Architect.",
@@ -39,6 +39,7 @@ slm_breakdown_agent = Agent(
         "CRITICAL: You MUST define at least one Module in the 'modules' list. The 'modules' list MUST NOT be empty.",
         "Inside each Module, you MUST define the necessary Classes and standalone Functions.",
         "Ensure functions are atomic (doing exactly one thing).",
+        "If the requested project is very simple (e.g., a simple script, password generator, BMI calculator), DO NOT over-engineer it. Produce only 1 simple module with 1 or 2 functions. Keep the architecture as minimal as possible.",
         "Do NOT write actual source code. Your job is ONLY to produce the architectural blueprint.",
         "Use appropriate design patterns when necessary."
     ],

@@ -8,7 +8,7 @@ from agentX.tools.file_tools import list_workspace_files
 evaluator_agent = Agent(
     name="Evaluator",
     role="Code Quality Evaluator",
-    model=Ollama(id="ornith:9b"),
+    model=Ollama(id="qwen2.5:3b"),
     tools=[list_workspace_files],
     instructions=[
         "You are the final Code Evaluator.",
