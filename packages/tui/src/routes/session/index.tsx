@@ -2039,13 +2039,19 @@ function Shell(props: ToolProps) {
   const ctx = use()
   const isRunning = createMemo(() => props.part.state.status === "running")
   const output = createMemo(() => stripAnsi(stringValue(props.metadata.output)?.trim() ?? ""))
+  const commandStr = createMemo(() => stringValue(props.input.command) ?? "")
   const [expanded, setExpanded] = createSignal(false)
   const maxLines = 10
   const maxChars = createMemo(() => maxLines * Math.max(20, ctx.width - 6))
   const collapsed = createMemo(() => collapseToolOutput(output(), maxLines, maxChars()))
+  const commandCollapsed = createMemo(() => collapseToolOutput(commandStr(), 3, 200))
   const limited = createMemo(() => {
     if (expanded() || !collapsed().overflow) return output()
     return collapsed().output
+  })
+  const limitedCommand = createMemo(() => {
+    if (expanded() || !commandCollapsed().overflow) return commandStr()
+    return commandCollapsed().output
   })
 
   const workdirDisplay = createMemo(() => {
@@ -2068,24 +2074,24 @@ function Shell(props: ToolProps) {
         <BlockTool
           title={title()}
           part={props.part}
-          onClick={collapsed().overflow ? () => setExpanded((prev) => !prev) : undefined}
+          onClick={collapsed().overflow || commandCollapsed().overflow ? () => setExpanded((prev) => !prev) : undefined}
         >
           <box gap={1}>
-            <Show when={isRunning()} fallback={<text fg={theme.text}>$ {stringValue(props.input.command)}</text>}>
-              <Spinner color={theme.text}>{stringValue(props.input.command)}</Spinner>
+            <Show when={isRunning()} fallback={<text fg={theme.text}>$ {limitedCommand()}</text>}>
+              <Spinner color={theme.text}>{limitedCommand()}</Spinner>
             </Show>
             <Show when={output()}>
               <text fg={theme.text}>{limited()}</text>
             </Show>
-            <Show when={collapsed().overflow}>
+            <Show when={collapsed().overflow || commandCollapsed().overflow}>
               <text fg={theme.textMuted}>{expanded() ? "Click to collapse" : "Click to expand"}</text>
             </Show>
           </box>
         </BlockTool>
       </Match>
       <Match when={true}>
-        <InlineTool icon="$" pending="Writing command..." complete={stringValue(props.input.command)} part={props.part}>
-          {stringValue(props.input.command)}
+        <InlineTool icon="$" pending="Writing command..." complete={limitedCommand()} part={props.part}>
+          {limitedCommand()}
         </InlineTool>
       </Match>
     </Switch>
@@ -2095,23 +2101,39 @@ function Shell(props: ToolProps) {
 function Write(props: ToolProps) {
   const { theme, syntax } = useTheme()
   const pathFormatter = usePathFormatter()
+  const ctx = use()
+  const [expanded, setExpanded] = createSignal(false)
   const code = createMemo(() => {
     return stringValue(props.input.content) ?? ""
+  })
+  const maxLines = 10
+  const maxChars = createMemo(() => maxLines * Math.max(20, ctx.width - 6))
+  const collapsed = createMemo(() => collapseToolOutput(code(), maxLines, maxChars()))
+  const limited = createMemo(() => {
+    if (expanded() || !collapsed().overflow) return code()
+    return collapsed().output
   })
 
   return (
     <Switch>
       <Match when={props.metadata.diagnostics !== undefined}>
-        <BlockTool title={"# Wrote " + pathFormatter.format(stringValue(props.input.filePath))} part={props.part}>
+        <BlockTool
+          title={"# Wrote " + pathFormatter.format(stringValue(props.input.filePath))}
+          part={props.part}
+          onClick={collapsed().overflow ? () => setExpanded((prev) => !prev) : undefined}
+        >
           <line_number fg={theme.textMuted} minWidth={3} paddingRight={1}>
             <code
               conceal={false}
               fg={theme.text}
               filetype={filetype(stringValue(props.input.filePath))}
               syntaxStyle={syntax()}
-              content={code()}
+              content={limited()}
             />
           </line_number>
+          <Show when={collapsed().overflow}>
+            <text fg={theme.textMuted}>{expanded() ? "Click to collapse" : "Click to expand"}</text>
+          </Show>
           <Diagnostics diagnostics={props.metadata.diagnostics} filePath={stringValue(props.input.filePath) ?? ""} />
         </BlockTool>
       </Match>

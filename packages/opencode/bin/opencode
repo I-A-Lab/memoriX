@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+import { createRequire } from "module"
+import { fileURLToPath as __fileURLToPath } from "url"
+import { dirname as __dirnameFunc } from "path"
+const require = createRequire(import.meta.url)
+const __filename = __fileURLToPath(import.meta.url)
+const __dirname = __dirnameFunc(__filename)
 
 const childProcess = require("child_process")
 const fs = require("fs")
@@ -169,8 +175,16 @@ const names = (() => {
 })()
 
 function findBinary(startDir) {
+  for (const name of names) {
+    const distCandidate = path.join(startDir, "dist", name, "bin", binary)
+    if (fs.existsSync(distCandidate)) return distCandidate
+  }
   let current = startDir
   for (;;) {
+    for (const name of names) {
+      const distCandidate = path.join(current, "dist", name, "bin", binary)
+      if (fs.existsSync(distCandidate)) return distCandidate
+    }
     const modules = path.join(current, "node_modules")
     if (fs.existsSync(modules)) {
       for (const name of names) {

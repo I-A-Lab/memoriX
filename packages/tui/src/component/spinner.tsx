@@ -3,11 +3,13 @@ import { useTheme } from "../context/theme"
 import { useKV } from "../context/kv"
 import type { JSX } from "@opentui/solid"
 import type { RGBA } from "@opentui/core"
-import "opentui-spinner/solid"
+import { registerSpinner } from "opentui-spinner/solid"
+registerSpinner()
 
 export const SPINNER_FRAMES = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
 
 export function Spinner(props: { children?: JSX.Element; color?: RGBA }) {
+  registerSpinner()
   const { theme } = useTheme()
   const kv = useKV()
   const color = () => props.color ?? theme.textMuted

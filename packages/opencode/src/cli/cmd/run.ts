@@ -171,6 +171,10 @@ export const RunCommand = effectCmd({
         type: "string",
         describe: "agent to use",
       })
+      .option("sdlc", {
+        type: "boolean",
+        describe: "run using the autonomous SDLC agent architecture",
+      })
       .option("format", {
         type: "string",
         choices: ["default", "json"],
@@ -642,6 +646,7 @@ export const RunCommand = effectCmd({
       }
 
       async function pickAgent(sdk: OpencodeClient) {
+        if ((args as any).sdlc) args.agent = "sdlc"
         if (!args.agent) return undefined
         if (args.attach) {
           return attachAgent(sdk)
@@ -977,6 +982,7 @@ export async function runMini(input: MiniCommandInput) {
     password: input.password,
     username: input.username,
     dir: input.directory,
+    sdlc: undefined,
     port: undefined,
     variant: undefined,
     thinking: undefined,

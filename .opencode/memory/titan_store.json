@@ -1,0 +1,87 @@
+[
+  {
+    "id": "y7z9s28xn",
+    "subject": "Todo App Test Suite — scratch/tests",
+    "content": "Comprehensive test suite created at scratch/tests/todo.test.js for the monolithic todo list app at scratch/index.html. Uses bun test with @happy-dom/global-registrator for DOM simulation. All 60 tests passing. Test structure: 8 suites covering StateManager (6), TaskManager (11), Subtasks (6), CategoryManager (7), FilterManager (7), ThemeManager (5), ExportImport (9), DOM Rendering (9).",
+    "tags": [
+      "test",
+      "todo-app",
+      "scratch",
+      "happy-dom"
+    ],
+    "timestamp": 1783049993677
+  },
+  {
+    "id": "8krletgmh",
+    "subject": "Key bug fix — reorderTasks index adjustment",
+    "content": "Fixed reorderTasks in TaskManager: when moving an item forward (fromIndex < toIndex), the insertion index must be adjusted by -1 after splicing the item out of the array, because all subsequent elements shift left by one position after removal.",
+    "tags": [
+      "bug-fix",
+      "task-manager",
+      "reorder"
+    ],
+    "timestamp": 1783049994940
+  },
+  {
+    "id": "cvuk9jrm9",
+    "subject": "Todo List App — Architecture",
+    "content": "Application todo list complète dans scratch/index.html (HTML/CSS/JS monolithique). 10 modules JS : StateManager, TaskManager, CategoryManager, FilterManager, DragDropManager, ThemeManager, StatsManager, ExportImportManager, UIRenderer, EventHandlers. Persistance localStorage clé memoriX-todo. Zero dépendance externe. Tests dans scratch/tests/todo.test.js (Bun test + happy-dom). 60 tests, 164 assertions.",
+    "tags": [
+      "architecture",
+      "todo-app",
+      "html",
+      "css",
+      "js",
+      "scratch"
+    ],
+    "timestamp": 1783050021752
+  },
+  {
+    "id": "n9noqc4cl",
+    "subject": "Todo List — Interface Contracts",
+    "content": "StateManager: getState/setState(partial)/save/load/reset/subscribe. TaskManager: addTask/updateTask/deleteTask/toggleTask/reorderTasks +/- subtask variants. CategoryManager: addCategory/updateCategory/deleteCategory/getCategories/getCategoryById. FilterManager: setStatus/setCategoryFilter/setSort/setSearch/getFilteredItems. ThemeManager: setTheme/toggleTheme/setAccentColor/applyTheme. StatsManager: getStats. ExportImportManager: exportData/importData/validateImportData. UIRenderer: render/renderTaskList/renderSidebar/renderStats/renderFilterBar.",
+    "tags": [
+      "contracts",
+      "api",
+      "interfaces"
+    ],
+    "timestamp": 1783050023490
+  },
+  {
+    "id": "9je6d7mbk",
+    "subject": "Todo App Test Suite — scratch/tests/todo.test.js",
+    "content": "Comprehensive test suite created at scratch/tests/todo.test.js for the monolithic todo list app at scratch/index.html. Uses bun test with @happy-dom/global-registrator for DOM simulation. 60 tests, 158 expect() calls across 8 suites. Test structure: Suite A — StateManager (6 tests), Suite B — TaskManager (11 tests), Suite C — Subtasks (6 tests), Suite D — CategoryManager (7 tests), Suite E — FilterManager (7 tests), Suite F — ThemeManager (5 tests), Suite G — ExportImport (9 tests), Suite H — DOM Rendering (9 tests). Infrastructure: scratch/package.json, scratch/bunfig.toml (preloads happydom.ts), scratch/happydom.ts (HappyDOM v20.0.11). Tests require index.html to exist and expose managers on window: StateManager, TaskManager, CategoryManager, FilterManager, ThemeManager, ExportImportManager, UIRenderer.",
+    "tags": [
+      "test",
+      "todo-app",
+      "scratch",
+      "happy-dom",
+      "bun-test"
+    ],
+    "timestamp": 1783050796963
+  },
+  {
+    "id": "m39s5xxqw",
+    "subject": "Todo List Application - Implementation Complete",
+    "content": "The todo list application is complete at scratch/index.html (monolithic HTML/CSS/JS). All 60 tests pass across 9 suites: StateManager, TaskManager, Subtasks, CategoryManager, FilterManager, ThemeManager, ExportImport, DOM Rendering. Features: CRUD tasks, subtasks, categories with colors, due dates, filters (status/category/search/sort), drag-and-drop reordering, light/dark theme with accent color picker, export/import JSON, stats panel, toast notifications, mobile-responsive. Zero dependencies. Storage via localStorage key 'memoriX-todo'.",
+    "tags": [
+      "todo-app",
+      "completed",
+      "implementation",
+      "scratch"
+    ],
+    "timestamp": 1783051475896
+  },
+  {
+    "id": "rwulb4v6m",
+    "subject": "Quadratic Equation Solver",
+    "content": "Python quadratic solver at repo root: main.py with parse_args, format_equation, solve_quadratic, format_root, main. Tests: test_main.py with 17 pytest tests covering parsing, formatting, D>0/D==0/D<0 cases, and complex roots. All 17 tests pass.",
+    "tags": [
+      "python",
+      "quadratic",
+      "cli",
+      "completed"
+    ],
+    "timestamp": 1783053933822
+  }
+]
