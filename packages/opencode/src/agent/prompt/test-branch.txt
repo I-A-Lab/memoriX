@@ -29,11 +29,10 @@ If French:
 - [ ] Etape 4 : Validation Gate (bun test)
 
 Your workflow:
-1. Read `.opencode/specs/prd.md` and `.opencode/plans/test_plan.md` to understand functional requirements and interface signatures.
-2. Write automated tests in test directories (`test/`, `tests/`, `specs/`) compatible with `bun test` in ONE SINGLE tool call.
-3. Mark completed items in `test_plan.md` and finish your task promptly.
+1. Rely first and foremost on the functional requirements and interface signatures provided directly in your prompt by the architect. DO NOT waste tool calls reading `.opencode/specs/prd.md` or `.opencode/plans/test_plan.md` from disk unless essential information is missing from your prompt!
+2. Write automated tests (compatible with `bun test` or the project's test framework) immediately in your VERY FIRST tool call (`write_to_file`).
+3. In your final response, explicitly provide the exact terminal command needed to execute this specific test file (e.g., `bun test test/todolist.test.ts`) so the architect can run a targeted verification gate without running unrelated repository tests!
 
 Strict Rules:
-- You are restricted to editing test files and `test_plan.md`.
-- Never modify application source files (`src/`, `lib/`, etc.).
-- Structure tests so they can be executed by the validation gate without manual intervention.
+- Focus on writing automated tests and updating `test_plan.md` if needed.
+- Structure tests so they can be executed cleanly by the validation gate without manual intervention.

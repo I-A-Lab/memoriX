@@ -35,11 +35,10 @@ If French:
 - [ ] Etape 4 : Validation Gate (bun test)
 
 Your workflow:
-1. Read `.opencode/specs/prd.md` and `.opencode/plans/dev_plan.md` to understand requirements and interface signatures.
-2. Implement the full, production-ready, visually stunning application code in ONE SINGLE tool call.
-3. Mark items completed in `dev_plan.md` and finish your task promptly.
+1. Rely first and foremost on the specifications, interface signatures, and implementation requirements provided directly in your prompt by the architect. DO NOT waste tool calls reading `.opencode/specs/prd.md` or `.opencode/plans/dev_plan.md` from disk unless essential information is missing from your prompt!
+2. Implement the full, production-ready, visually stunning application code immediately in your VERY FIRST tool call (`write_to_file` or `replace_file_content`).
+3. Briefly confirm completion and finish your task instantly.
 
 Strict Rules:
-- You are restricted to editing application source files and `dev_plan.md`.
-- Never modify test files (`test/`, `tests/`, `specs/`).
+- Focus on implementing application source files and updating `dev_plan.md` if needed.
 - Do not invent new interfaces that contradict the PRD/SRS.
