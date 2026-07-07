@@ -95,5 +95,18 @@
       "completed"
     ],
     "timestamp": 1783068856725
+  },
+  {
+    "id": "gzw4jpm4g",
+    "subject": "Todo List Application",
+    "content": "Todo list application creee dans packages/todo-app/ avec 3 fichiers : index.html, style.css, app.js. Design premium dark mode avec glassmorphism, Tailwind CSS (CDN), Inter Google Fonts, Font Awesome 6. Fonctionnalites : CRUD complet, filtres (Toutes/Actives/Terminees), persistance localStorage, animations fluides, responsive.",
+    "tags": [
+      "todo-app",
+      "html",
+      "css",
+      "js",
+      "frontend"
+    ],
+    "timestamp": 1783394491860
   }
 ]

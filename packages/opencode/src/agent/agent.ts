@@ -272,6 +272,7 @@ const layer = Layer.effect(
             permission: Permission.merge(
               defaults,
               Permission.fromConfig({
+                todowrite: "allow",
                 question: "allow",
                 plan_enter: "allow",
                 plan_exit: "allow",
@@ -296,14 +297,14 @@ const layer = Layer.effect(
             permission: Permission.merge(
               defaults,
               Permission.fromConfig({
+                todowrite: "allow",
                 edit: {
                   "*": "allow",
                   [path.join("test", "**", "*")]: "deny",
                   [path.join("tests", "**", "*")]: "deny",
                   [path.join("specs", "**", "*")]: "deny",
                   [path.join(".opencode", "specs", "*.md")]: "deny",
-                  [path.join(".opencode", "plans", "test_plan.md")]: "deny",
-                  [path.join(".opencode", "plans", "dev_plan.md")]: "allow",
+                  [path.join(".opencode", "plans", "*.md")]: "deny",
                 },
               }),
               user,
@@ -319,12 +320,14 @@ const layer = Layer.effect(
             permission: Permission.merge(
               defaults,
               Permission.fromConfig({
+                todowrite: "allow",
                 edit: {
                   "*": "deny",
                   [path.join("test", "**", "*")]: "allow",
                   [path.join("tests", "**", "*")]: "allow",
-                  [path.join("specs", "**", "*")]: "allow",
-                  [path.join(".opencode", "plans", "test_plan.md")]: "allow",
+                  [path.join("specs", "**", "*")]: "deny",
+                  [path.join(".opencode", "specs", "*.md")]: "deny",
+                  [path.join(".opencode", "plans", "*.md")]: "deny",
                 },
               }),
               user,

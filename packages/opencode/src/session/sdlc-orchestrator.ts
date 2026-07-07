@@ -10,8 +10,12 @@ import { promisify } from "util"
 const execAsync = promisify(exec)
 
 export interface Interface {
-  readonly runGate: (attempt?: number, maxAttempts?: number) => Effect.Effect<BreakLogReport>
-  readonly executePipeline: (prompt: string, maxAttempts?: number) => Effect.Effect<{ status: "END" | "FAILED"; attempts: number; lastLog: BreakLogReport }>
+  readonly runGate: (attempt?: number, maxAttempts?: number, testCommand?: string) => Effect.Effect<BreakLogReport>
+  readonly executePipeline: (
+    prompt: string,
+    maxAttempts?: number,
+    testCommand?: string,
+  ) => Effect.Effect<{ status: "END" | "FAILED"; attempts: number; lastLog: BreakLogReport }>
 }
 
 export class Service extends Context.Service<Service, Interface>()("@opencode/SdlcOrchestrator") {}
@@ -21,10 +25,14 @@ export const layer = Layer.effect(
   Effect.gen(function* () {
     const todo = yield* Todo.Service
 
-    const runGate = Effect.fn("SdlcOrchestrator.runGate")(function* (attempt: number = 1, maxAttempts: number = 5) {
+    const runGate = Effect.fn("SdlcOrchestrator.runGate")(function* (
+      attempt: number = 1,
+      maxAttempts: number = 5,
+      testCommand: string = "bun test",
+    ) {
       return yield* Effect.promise(async () => {
         try {
-          const { stdout, stderr } = await execAsync("bun test")
+          const { stdout, stderr } = await execAsync(testCommand)
           return analyzeTestOutput(stdout || "", stderr || "", 0, attempt, maxAttempts)
         } catch (err: any) {
           const stdout = err.stdout || ""
@@ -35,22 +43,21 @@ export const layer = Layer.effect(
       }).pipe(Effect.orDie)
     })
 
-    const executePipeline = Effect.fn("SdlcOrchestrator.executePipeline")(function* (prompt: string, maxAttempts: number = 5) {
+    const executePipeline = Effect.fn("SdlcOrchestrator.executePipeline")(function* (
+      prompt: string,
+      maxAttempts: number = 5,
+      testCommand: string = "bun test",
+    ) {
       let attempt = 1
       let lastLog: BreakLogReport | undefined
 
+      const prdDir = path.join(".opencode", "specs")
+      const plansDir = path.join(".opencode", "plans")
+      yield* Effect.promise(() => fs.mkdir(prdDir, { recursive: true })).pipe(Effect.orDie)
+      yield* Effect.promise(() => fs.mkdir(plansDir, { recursive: true })).pipe(Effect.orDie)
+
       while (attempt <= maxAttempts) {
-        const prdDir = path.join(".opencode", "specs")
-        yield* Effect.promise(() => fs.mkdir(prdDir, { recursive: true })).pipe(Effect.orDie)
-
-        const devPlan = path.join(".opencode", "plans", "dev_plan.md")
-        const testPlan = path.join(".opencode", "plans", "test_plan.md")
-        yield* Effect.all([
-          todo.syncToMarkdown(devPlan, []),
-          todo.syncToMarkdown(testPlan, []),
-        ], { concurrency: "unbounded" })
-
-        lastLog = yield* runGate(attempt, maxAttempts)
+        lastLog = yield* runGate(attempt, maxAttempts, testCommand)
 
         if (lastLog.passed) {
           return { status: "END" as const, attempts: attempt, lastLog }
