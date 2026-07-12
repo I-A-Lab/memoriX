@@ -41,3 +41,6 @@ __pycache__/
 .ruff_cache/
 .venv/
 venv/
+
+# memoriX runtime data
+memory/runtime/
