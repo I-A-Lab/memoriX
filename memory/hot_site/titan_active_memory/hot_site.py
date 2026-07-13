@@ -357,6 +357,73 @@ class HotSiteTitanMemory:
 
         return min(1.0, max(0.0, normalized))
 
+    def replay_active_memories(
+        self,
+        *,
+        replayed_by: str = "memorix_nightly",
+        replay_reason: str = "Nightly active-memory replay.",
+    ) -> int:
+        """Replay all active validated memories through Titan.
+
+        Replay reinforces the active neural memory only. It does not read,
+        write, or modify the cold site, and it does not validate candidates.
+        """
+
+        reviewer = replayed_by.strip()
+        reason = replay_reason.strip()
+
+        if not reviewer:
+            raise HotSiteInputError(
+                "replayed_by must not be empty."
+            )
+
+        if not reason:
+            raise HotSiteInputError(
+                "replay_reason must not be empty."
+            )
+
+        active_memories = self.list_memories(
+            active_only=True
+        )
+
+        for memory in active_memories:
+            metadata = dict(memory.metadata)
+            metadata.update(
+                {
+                    "source_candidate_id": (
+                        memory.source_candidate_id
+                    ),
+                    "created_at": memory.created_at,
+                    "validated_at": memory.validated_at,
+                    "version": memory.version,
+                    "supersedes_memory_id": (
+                        memory.supersedes_memory_id
+                    ),
+                    "active": True,
+                    "validated": True,
+                    "nightly_replay": True,
+                }
+            )
+
+            payload: dict[str, Any] = {
+                "id": memory.memory_id,
+                "content": memory.content,
+                "source_agent": metadata.get(
+                    "source_agent",
+                    "memorix_nightly",
+                ),
+                "validated_by": reviewer,
+                "validation_reason": reason,
+                "active": True,
+                "metadata": metadata,
+            }
+
+            self._backend.store_validated_memory(
+                payload
+            )
+
+        return len(active_memories)
+
     def stats(self) -> dict[str, Any]:
         """Return statistics from the underlying Titan backend."""
 

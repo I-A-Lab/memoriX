@@ -1,4 +1,4 @@
-﻿"""Filesystem paths used by the memoriX Python runtime.
+"""Filesystem paths used by the memoriX Python runtime.
 
 The defaults are intentionally centralized here so storage components do not
 construct their own unrelated paths. Tests may inject temporary paths and must
@@ -25,6 +25,7 @@ class MemoryStoragePaths:
     memory_candidates: Path
     titan_neural_state: Path
     titan_metadata: Path
+    nightly_logs: Path
 
     @classmethod
     def from_runtime_root(
@@ -61,6 +62,11 @@ class MemoryStoragePaths:
                 root
                 / "hot_site"
                 / "titan_metadata.jsonl"
+            ),
+            nightly_logs=(
+                root
+                / "logs"
+                / "nightly_consolidation.jsonl"
             ),
         )
 

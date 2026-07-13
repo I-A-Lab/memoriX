@@ -1,4 +1,4 @@
-﻿"""Public Python API for the complete memoriX memory system.
+"""Public Python API for the complete memoriX memory system.
 
 This gateway is the only supported high-level Python entry point.
 
@@ -45,6 +45,10 @@ from memory.hot_site.short_term_memory import (
 )
 from memory.hot_site.titan_active_memory import (
     HotSiteTitanMemory,
+)
+from memory.sync import (
+    NightlyConsolidationReport,
+    NightlyConsolidationService,
 )
 
 
@@ -120,6 +124,22 @@ class MemoriXGateway:
                 self._candidate_service,
                 self._hot_site,
                 policy=consolidation_policy,
+            )
+        )
+
+        self._nightly_service = (
+            NightlyConsolidationService(
+                consolidation_service=(
+                    self._consolidation_service
+                ),
+                short_term_store=(
+                    self._short_term_store
+                ),
+                hot_site=self._hot_site,
+                cold_archive_path=(
+                    self._paths.cold_archive_events
+                ),
+                log_path=self._paths.nightly_logs,
             )
         )
 
@@ -315,6 +335,19 @@ class MemoriXGateway:
             mode=mode
         )
 
+    def run_nightly_consolidation(
+        self,
+        *,
+        clear_short_term_after_success: bool = True,
+    ) -> NightlyConsolidationReport:
+        """Run protected nightly consolidation and hot-site replay."""
+
+        return self._nightly_service.run(
+            clear_short_term_after_success=(
+                clear_short_term_after_success
+            )
+        )
+
     def memory_status(self) -> dict[str, Any]:
         """Return a non-mutating status summary of the Python memory."""
 
@@ -379,6 +412,9 @@ class MemoriXGateway:
                 ),
                 "titan_metadata": str(
                     self._paths.titan_metadata
+                ),
+                "nightly_logs": str(
+                    self._paths.nightly_logs
                 ),
             },
         }
