@@ -11,6 +11,7 @@ from memory.integrations.mcp.tools import (
     McpInvalidArgumentsError,
     McpUnknownToolError,
     MemoriXMcpTools,
+    tool_result_payload,
 )
 
 
@@ -177,6 +178,42 @@ class McpToolValidationTests(McpToolsTestCase):
                 "memorix_context",
                 {},
             )
+
+
+class McpStructuredContentTests(unittest.TestCase):
+    def test_array_result_is_wrapped_in_object(self) -> None:
+        payload = tool_result_payload(
+            [{"candidate_id": "candidate_test"}]
+        )
+
+        self.assertEqual(
+            payload["structuredContent"],
+            {
+                "value": [
+                    {
+                        "candidate_id": "candidate_test"
+                    }
+                ]
+            },
+        )
+
+    def test_object_result_remains_direct(self) -> None:
+        payload = tool_result_payload(
+            {
+                "retrieval_contract": (
+                    "hot_site_only_no_cold_fallback"
+                )
+            }
+        )
+
+        self.assertEqual(
+            payload["structuredContent"],
+            {
+                "retrieval_contract": (
+                    "hot_site_only_no_cold_fallback"
+                )
+            },
+        )
 
 
 if __name__ == "__main__":

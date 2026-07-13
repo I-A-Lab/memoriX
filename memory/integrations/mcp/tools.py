@@ -616,9 +616,19 @@ class MemoriXMcpTools:
 
 
 def tool_result_payload(value: Any) -> dict[str, Any]:
-    """Build a standard MCP tools/call result."""
+    """Build a standard MCP tools/call result.
+
+    MCP structuredContent must be a JSON object. Object-shaped values are
+    returned directly. Arrays and primitive values are wrapped under "value".
+    """
 
     serialized = to_json_value(value)
+
+    structured_content = (
+        serialized
+        if isinstance(serialized, dict)
+        else {"value": serialized}
+    )
 
     return {
         "content": [
@@ -631,6 +641,6 @@ def tool_result_payload(value: Any) -> dict[str, Any]:
                 ),
             }
         ],
-        "structuredContent": serialized,
+        "structuredContent": structured_content,
         "isError": False,
     }
