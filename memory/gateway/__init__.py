@@ -6,10 +6,16 @@ from memory.gateway.event_service import (
     MemoryEventService,
     RecordedMemoryEvent,
 )
+from memory.gateway.validation_service import (
+    CandidateValidationError,
+    MemoryValidationService,
+)
 
 __all__ = [
+    "CandidateValidationError",
     "DuplicateEventError",
     "MemoryEventConsistencyError",
     "MemoryEventService",
+    "MemoryValidationService",
     "RecordedMemoryEvent",
 ]

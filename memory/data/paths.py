@@ -17,11 +17,12 @@ DEFAULT_RUNTIME_ROOT = MEMORY_PACKAGE_ROOT / "runtime"
 
 @dataclass(frozen=True, slots=True)
 class MemoryStoragePaths:
-    """Resolved paths for short-term, cold-site, and hot-site storage."""
+    """Resolved paths for all current memoriX storage components."""
 
     runtime_root: Path
     short_term_events: Path
     cold_archive_events: Path
+    memory_candidates: Path
     titan_neural_state: Path
     titan_metadata: Path
 
@@ -45,6 +46,11 @@ class MemoryStoragePaths:
                 root
                 / "cold_site"
                 / "events_archive.jsonl"
+            ),
+            memory_candidates=(
+                root
+                / "candidates"
+                / "memory_candidates.jsonl"
             ),
             titan_neural_state=(
                 root
