@@ -1,68 +1,51 @@
-# Dev Plan - Todo List
+# Development Plan
+## Password Generator in Python
 
-## Architecture fichiers
+### Project Structure
 ```
-packages/todo-app/
-  index.html     # Structure HTML + Tailwind + Font Awesome + Inter
-  style.css      # Surcouche CSS (animations, glassmorphism, custom)
-  app.js         # Logique JS (CRUD, filtres, localStorage)
-```
-
-## Contrats d'interface
-
-### HTML (`index.html`)
-- `<div id="app">` : conteneur principal
-  - `<div id="todo-card">` : carte glassmorphique centree
-    - `<h1>` : titre "memoriX"
-    - `<div id="todo-form">` : input + bouton ajouter
-    - `<div id="todo-filters">` : 3 boutons filtres (Toutes/Actives/Terminees)
-    - `<ul id="todo-list">` : liste des taches
-    - `<div id="todo-footer">` : compteur + bouton "Effacer terminees"
-
-### CSS (`style.css`)
-- Classes personnalisees :
-  - `.glass-card` : effet glassmorphism
-  - `.todo-item` : style d'une tache
-  - `.todo-item.completed` : tache terminee (barre + opacite reduite)
-  - `.todo-enter`, `.todo-leave` : animations
-  - `.filter-btn.active` : filtre actif
-
-### JS (`app.js`)
-```js
-// Structure de donnees
-interface Todo {
-  id: string;        // crypto.randomUUID()
-  text: string;
-  completed: boolean;
-  createdAt: number; // Date.now()
-}
-
-// API publique exposee
-class TodoApp {
-  constructor()                              // charge depuis localStorage, init DOM
-  get todos(): Todo[]                        // getter prive
-  get filter(): 'all' | 'active' | 'completed'
-  set filter(value)
-
-  addTodo(text: string): void                // cree et ajoute
-  toggleTodo(id: string): void               // bascule completed
-  removeTodo(id: string): void               // supprime
-  clearCompleted(): void                     // supprime toutes les completed
-  get filteredTodos(): Todo[]                // selon le filtre courant
-  get activeCount(): number                  // count !completed
-
-  save(): void                               // persiste dans localStorage
-  render(): void                             // re-affiche la liste
-}
+password_generator/
+├── __init__.py
+├── generator.py          # Core password generation logic
+├── strength.py          # Password strength estimation
+├── utils.py            # Utility functions (clipboard, ambiguous chars)
+├── cli.py             # Command-line interface
+└── __main__.py        # Entry point for python -m execution
 ```
 
-### Persistance
-- Cle localStorage : `memoriX_todos`
-- Charge au constructeur, sauvegarde a chaque mutation
+### Development Steps
 
-## Instructions pour @dev_branch
-1. Creer le dossier `packages/todo-app/` s'il n'existe pas
-2. Creer `index.html` avec structure Tailwind, Inter, Font Awesome
-3. Creer `style.css` avec animations et glassmorphism
-4. Creer `app.js` avec la classe TodoApp complete
-5. Le design DOIT etre premium : dark mode, glassmorphism, animations
+#### Phase 1: Core Generator Module
+1. Create `generator.py` with `PasswordGenerator` class
+   - `generate(length, use_upper, use_lower, use_digits, use_special, exclude_ambiguous)`
+   - `generate_batch(count, **kwargs)` for multiple passwords
+   - Use `secrets` module for cryptographically secure randomness
+
+#### Phase 2: Strength Estimation
+2. Create `strength.py` with `estimate_strength(password)` function
+   - Analyze length, character diversity, patterns
+   - Return strength level: weak, medium, strong, very strong
+
+#### Phase 3: Utilities
+3. Create `utils.py` with helper functions
+   - `copy_to_clipboard(text)` - platform-aware clipboard copy
+   - `AMBIGUOUS_CHARS` - set of ambiguous characters to exclude
+   - `get_available_chars(...)` - builds character pool based on options
+
+#### Phase 4: CLI Interface
+4. Create `cli.py` with argument parser
+   - `-l/--length` - password length (default: 16)
+   - `-n/--count` - number of passwords (default: 1)
+   - `--no-upper/--no-lower/--no-digits/--no-special` - exclude types
+   - `--exclude-ambiguous` - exclude ambiguous characters
+   - `--show-strength` - display strength estimation
+
+#### Phase 5: Package Integration
+5. Create `__init__.py` and `__main__.py`
+   - Export main classes and functions
+   - Enable `python -m password_generator` execution
+
+### Key Design Decisions
+- Use `secrets` instead of `random` for security
+- Minimal dependencies (stdlib only)
+- Platform-agnostic clipboard handling
+- Comprehensive input validation

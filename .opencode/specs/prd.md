@@ -1,32 +1,43 @@
-# PRD: Todo List Application
+# Product Requirements Document (PRD)
+## Password Generator in Python
 
-## Objectif
-Application web de todo list moderne, elegante et reactive, entierement cote client (HTML/CSS/JS natif).
+### Overview
+A command-line password generator application written in Python that generates secure, customizable passwords based on user-defined criteria.
 
-## Fonctionnalites
-1. Ajouter une tache (champ texte + bouton "Ajouter")
-2. Marquer une tache comme terminee (checkbox)
-3. Supprimer une tache (bouton poubelle)
-4. Persistance locale (localStorage)
-5. Filtres : Toutes / Actives / Terminees
-6. Compteur de taches restantes
-7. Effacer les taches terminees
+### User Stories
+1. As a user, I want to generate passwords of specific lengths
+2. As a user, I want to include/exclude uppercase letters, lowercase letters, numbers, and special characters
+3. As a user, I want to exclude ambiguous characters (like 0/O, l/1/I) for better readability
+4. As a user, I want to generate multiple passwords at once
+5. As a user, I want to copy generated passwords to clipboard easily
+6. As a user, I want to see password strength estimation
 
-## Design (UI/UX) - OBLIGATOIRE
-- Dark mode par defaut avec fond sombre (#0a0a0f ou similaire)
-- Glassmorphism (fond semi-transparent avec `backdrop-filter: blur()`)
-- Typographie : Inter (Google Fonts)
-- Icônes : Font Awesome 6
-- Animations douces au hover, ajout/suppression de tache
-- Ombres profondes (`shadow-2xl`, `shadow-lg`)
-- Boutons avec effets de hover (scale, glow)
-- Responsive (mobile-first)
-- Utilisation de Tailwind CSS via CDN pour le style
+### Functional Requirements
+1. Password generation with configurable length (8-128 characters)
+2. Character type selection: uppercase, lowercase, digits, special characters
+3. Ambiguous character exclusion option
+4. Batch generation of multiple passwords
+5. Clipboard copy functionality
+6. Password strength indicator (weak/medium/strong/very strong)
+7. Command-line interface with argparse
+8. Error handling and input validation
 
-## Stack
-- HTML5
-- Tailwind CSS (CDN)
-- Google Fonts Inter (CDN)
-- Font Awesome 6 (CDN)
-- Vanilla JS (ES6+)
-- localStorage pour la persistance
+### Non-Functional Requirements
+1. Cross-platform compatibility (Windows, macOS, Linux)
+2. Secure random number generation using Python's `secrets` module
+3. Clean, readable code following PEP 8
+4. Comprehensive error handling
+5. No external dependencies beyond standard library
+
+### Technical Stack
+- Language: Python 3.6+
+- Standard library modules: `secrets`, `string`, `argparse`, `random`
+
+### Acceptance Criteria
+1. Generates passwords of specified length
+2. Properly includes/excludes selected character types
+3. Excludes ambiguous characters when requested
+4. Generates multiple passwords without duplication
+5. Provides strength estimation
+6. Handles invalid input gracefully
+7. Works on all major operating systems

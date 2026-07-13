@@ -1,39 +1,83 @@
-# Test Plan - Todo List
+# Test Plan
+## Password Generator in Python
 
-## Tests fonctionnels (manuels)
+### Test Strategy
+- Unit tests for all core functions
+- Integration tests for CLI
+- Edge case testing for security-critical paths
 
-### Test : Ajout d'une tache
-1. Saisir "Acheter du pain" dans l'input
-2. Cliquer "Ajouter" ou Enter
-3. Verifier que la tache apparait dans la liste
-4. Verifier que le compteur indique "1 tache restante"
+### Test Structure
+```
+tests/
+├── __init__.py
+├── test_generator.py      # Test password generation
+├── test_strength.py       # Test strength estimation
+├── test_utils.py          # Test utility functions
+└── test_cli.py           # Test CLI interface
+```
 
-### Test : Completion d'une tache
-1. Cocher la checkbox d'une tache
-2. Verifier le style barre / opacite reduite
-3. Verifier que le compteur decremente
+### Test Cases
 
-### Test : Suppression d'une tache
-1. Cliquer l'icone poubelle sur une tache
-2. Verifier qu'elle disparait (animation)
+#### Generator Tests (`test_generator.py`)
+1. **Test basic generation**
+   - Generate password with default settings
+   - Verify length matches specification
+   - Verify character types are present when enabled
 
-### Test : Filtres
-1. Ajouter 3 taches, en completer 1
-2. Cliquer "Actives" -> voir 2 taches
-3. Cliquer "Terminees" -> voir 1 tache
-4. Cliquer "Toutes" -> voir 3 taches
+2. **Test character type control**
+   - Generate with only uppercase
+   - Generate with only lowercase
+   - Generate with only digits
+   - Generate with only special characters
+   - Verify each type is correctly included/excluded
 
-### Test : Effacer terminees
-1. Avoir au moins 1 tache terminee
-2. Cliquer "Effacer terminees"
-3. Verifier que les terminees disparaissent
+3. **Test ambiguous character exclusion**
+   - Generate with `exclude_ambiguous=True`
+   - Verify none of the ambiguous characters appear
+   - Test with mixed character types
 
-### Test : Persistance localStorage
-1. Ajouter une tache, actualiser la page
-2. Verifier que la tache est toujours presente
-3. Verifier l'etat completed persiste
+4. **Test batch generation**
+   - Generate multiple passwords
+   - Verify all have correct length
+   - Verify passwords are unique (statistically)
 
-## Tests d'integrite
-- Input vide : desactiver le bouton ou empecher l'ajout
-- Input " " (espaces) : trim avant ajout
-- localStorage corrompu : fallback a un tableau vide
+5. **Test edge cases**
+   - Minimum length (8)
+   - Maximum length (128)
+   - Zero count should raise error
+   - Negative length should raise error
+
+#### Strength Tests (`test_strength.py`)
+1. **Test strength levels**
+   - Short password with few types → weak
+   - Medium length with 2 types → medium
+   - Long length with 3 types → strong
+   - Long length with all types → very strong
+
+2. **Test strength consistency**
+   - Same input always produces same strength
+   - Longer passwords generally have higher strength
+
+#### Utility Tests (`test_utils.py`)
+1. **Test clipboard copy**
+   - Mock platform-specific functions
+   - Verify correct function is called
+
+2. **Test ambiguous character set**
+   - Verify all expected characters are included
+   - Verify set is non-empty
+
+#### CLI Tests (`test_cli.py`)
+1. **Test argument parsing**
+   - Test default values
+   - Test custom arguments
+   - Test invalid combinations
+
+2. **Test output format**
+   - Verify password is printed
+   - Verify strength is shown when requested
+
+### Test Execution
+- Run with: `python -m pytest tests/ -v`
+- Minimum coverage: 90% for all modules
+- Security-critical code must have 100% coverage
