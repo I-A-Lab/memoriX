@@ -106,3 +106,51 @@ export type MemoriXClientOptions = {
   titanTopK?: number
   titanMinScore?: number
 }
+export type MemoriXServiceErrorCode =
+  | "disabled"
+  | "configuration"
+  | "connection"
+  | "operation"
+
+export type MemoriXServiceFailure = {
+  ok: false
+  code: MemoriXServiceErrorCode
+  message: string
+  cause?: unknown
+}
+
+export type MemoriXServiceSuccess<T> = {
+  ok: true
+  value: T
+}
+
+export type MemoriXServiceResult<T> =
+  | MemoriXServiceSuccess<T>
+  | MemoriXServiceFailure
+
+export type MemoriXServiceOptions = {
+  enabled: boolean
+  pythonExecutable?: string
+  projectRoot: string
+  runtimeRoot: string
+  timeoutMs?: number
+  titanDModel?: number
+  titanHiddenDim?: number
+  titanMaxItems?: number
+  titanDevice?: string
+  titanTopK?: number
+  titanMinScore?: number
+}
+
+export type MemoriXServiceEnvironment = {
+  MEMORIX_ENABLED?: string
+  MEMORIX_PYTHON_EXECUTABLE?: string
+  MEMORIX_RUNTIME_ROOT?: string
+  MEMORIX_TIMEOUT_MS?: string
+  MEMORIX_TITAN_D_MODEL?: string
+  MEMORIX_TITAN_HIDDEN_DIM?: string
+  MEMORIX_TITAN_MAX_ITEMS?: string
+  MEMORIX_TITAN_DEVICE?: string
+  MEMORIX_TITAN_TOP_K?: string
+  MEMORIX_TITAN_MIN_SCORE?: string
+}

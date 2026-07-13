@@ -34,3 +34,16 @@ export class MemoriXToolCallError extends MemoriXClientError {
     this.toolName = toolName
   }
 }
+export class MemoriXDisabledError extends MemoriXClientError {
+  constructor() {
+    super("memoriX is disabled.")
+    this.name = "MemoriXDisabledError"
+  }
+}
+
+export class MemoriXConfigurationError extends MemoriXClientError {
+  constructor(message: string, options?: { cause?: unknown }) {
+    super(message, options)
+    this.name = "MemoriXConfigurationError"
+  }
+}
