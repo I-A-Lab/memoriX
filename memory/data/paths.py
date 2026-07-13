@@ -17,11 +17,13 @@ DEFAULT_RUNTIME_ROOT = MEMORY_PACKAGE_ROOT / "runtime"
 
 @dataclass(frozen=True, slots=True)
 class MemoryStoragePaths:
-    """Resolved paths for short-term and cold-site storage."""
+    """Resolved paths for short-term, cold-site, and hot-site storage."""
 
     runtime_root: Path
     short_term_events: Path
     cold_archive_events: Path
+    titan_neural_state: Path
+    titan_metadata: Path
 
     @classmethod
     def from_runtime_root(
@@ -43,6 +45,16 @@ class MemoryStoragePaths:
                 root
                 / "cold_site"
                 / "events_archive.jsonl"
+            ),
+            titan_neural_state=(
+                root
+                / "hot_site"
+                / "titan_memory.pt"
+            ),
+            titan_metadata=(
+                root
+                / "hot_site"
+                / "titan_metadata.jsonl"
             ),
         )
 
