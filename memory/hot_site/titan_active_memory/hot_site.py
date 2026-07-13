@@ -1,4 +1,4 @@
-﻿"""Controlled typed interface for the active Titan hot site.
+"""Controlled typed interface for the active Titan hot site.
 
 This adapter connects the new memoriX domain contracts to the historical
 neural Titan backend.
@@ -321,6 +321,41 @@ class HotSiteTitanMemory:
             action=ForgetAction.DEACTIVATED,
             reason=explanation,
         )
+
+    def compute_surprise(self, text: str) -> float:
+        """Compute a normalized Titan surprise score without storing text.
+
+        Titan exposes a raw prediction-error value. The raw value is converted
+        to the closed interval [0, 1] with a smooth saturating function.
+
+        This operation does not create a validated memory and does not write
+        to either the hot-site metadata store or the cold site.
+        """
+
+        if not isinstance(text, str) or not text.strip():
+            raise HotSiteInputError(
+                "text must not be empty."
+            )
+
+        try:
+            titan_memory = self._backend.memory
+            key, value = titan_memory._make_key_value(text)
+            raw_surprise = float(
+                titan_memory._surprise(key, value)
+            )
+        except Exception as error:
+            raise RuntimeError(
+                "Titan surprise computation failed."
+            ) from error
+
+        if raw_surprise <= 0.0:
+            return 0.0
+
+        normalized = raw_surprise / (
+            raw_surprise + 0.015
+        )
+
+        return min(1.0, max(0.0, normalized))
 
     def stats(self) -> dict[str, Any]:
         """Return statistics from the underlying Titan backend."""
