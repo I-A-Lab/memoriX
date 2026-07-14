@@ -338,3 +338,39 @@ class TopicBlockInput:
             raise ValueError(
                 "importance must be between 0 and 1."
             )
+
+@dataclass(frozen=True, slots=True)
+class ControlledTopicRouting:
+    """Topic metadata attached during explicit human validation.
+
+    This contract describes a logical routing annotation only. It does not
+    move a memory, validate a candidate, resize Titan, prune data, search
+    cold history, or alter retrieval behavior.
+    """
+
+    block_id: str
+    label: str
+    confidence: float
+    matched_terms: tuple[str, ...]
+    routing_id: str
+    observed_at: str
+    observation_only: bool = True
+    physical_partitioning: bool = False
+    retrieval_behavior_changed: bool = False
+    schema_version: int = 1
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "block_id": self.block_id,
+            "label": self.label,
+            "confidence": self.confidence,
+            "matched_terms": list(self.matched_terms),
+            "routing_id": self.routing_id,
+            "observed_at": self.observed_at,
+            "observation_only": self.observation_only,
+            "physical_partitioning": self.physical_partitioning,
+            "retrieval_behavior_changed": (
+                self.retrieval_behavior_changed
+            ),
+            "schema_version": self.schema_version,
+        }

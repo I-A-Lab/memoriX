@@ -1,6 +1,10 @@
-﻿"""Human candidate-review gateway for the Titan hot site."""
+"""Human candidate-review gateway for the Titan hot site."""
 
 from __future__ import annotations
+
+from memory.gateway.adaptive_validation import (
+    AdaptiveValidationMetadataService,
+)
 
 from dataclasses import replace
 
@@ -101,18 +105,15 @@ class MemoryValidationService:
                 if superseded_memory is not None
                 else None
             ),
-            metadata={
-                **candidate.metadata,
-                "candidate_reason": candidate.reason,
-                "source_event_ids": list(
-                    candidate.source_event_ids
-                ),
-                "importance": candidate.importance,
-                "confidence": candidate.confidence,
-                "surprise": candidate.surprise,
-                "validated_by": reviewer,
-                "validation_reason": explanation,
-            },
+            metadata=AdaptiveValidationMetadataService().enrich(
+                         candidate_id=candidate.candidate_id,
+                         content=candidate.content,
+                         metadata=(
+                             {**candidate.metadata, 'candidate_reason': candidate.reason, 'source_event_ids': list(candidate.source_event_ids), 'importance': candidate.importance, 'confidence': candidate.confidence, 'surprise': candidate.surprise, 'validated_by': reviewer, 'validation_reason': explanation}
+                         ),
+                         importance=candidate.importance,
+                         observed_at=candidate.created_at,
+                     ),
         )
 
         self._hot_site.store_validated(

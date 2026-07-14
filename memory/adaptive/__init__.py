@@ -10,6 +10,7 @@ from memory.adaptive.contracts import (
     PressureObservation,
     PressureObservationInput,
     PressureThresholds,
+    ControlledTopicRouting,
     PressureWeights,
     TopicBlockInput,
     TopicBlockObservation,
@@ -32,6 +33,14 @@ from memory.adaptive.pressure_history import (
 from memory.adaptive.block_registry import (
     TopicBlockRegistry,
 )
+from memory.adaptive.routing import (
+    merge_topic_routing_metadata,
+    route_validated_candidate,
+    topic_routing_from_metadata,
+)
+from memory.adaptive.routing_service import (
+    ControlledTopicRoutingService,
+)
 from memory.adaptive.topic_blocks import (
     build_topic_block_id,
     calculate_routing_confidence,
@@ -44,6 +53,8 @@ from memory.adaptive.topic_blocks import (
 )
 
 __all__ = [
+    "ControlledTopicRouting",
+    "ControlledTopicRoutingService",
     "PressureComponents",
     "PressureHistoryStore",
     "PressureLevel",
@@ -72,4 +83,7 @@ __all__ = [
     "observe_topic_block",
     "select_topic_label",
     "term_counts",
+    "merge_topic_routing_metadata",
+    "route_validated_candidate",
+    "topic_routing_from_metadata",
 ]
