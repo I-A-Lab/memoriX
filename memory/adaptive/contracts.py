@@ -528,3 +528,231 @@ class CapacityRecommendation:
             "applied": self.applied,
             "schema_version": self.schema_version,
         }
+
+class SoftPruningAction(str, Enum):
+    """Action proposed by a dry-run hot-site pruning plan."""
+
+    KEEP = "keep"
+    WEAKEN = "weaken"
+    DEACTIVATE = "deactivate"
+
+
+@dataclass(frozen=True, slots=True)
+class SoftPruningPolicy:
+    """Thresholds used to create non-applied pruning recommendations."""
+
+    minimum_pressure: float = 0.70
+    weaken_score_threshold: float = 0.42
+    deactivate_score_threshold: float = 0.22
+    protected_importance: float = 0.85
+    protected_recency_days: float = 7.0
+    protected_access_count: int = 20
+    maximum_age_days: float = 365.0
+    access_saturation: int = 25
+
+    importance_weight: float = 0.35
+    recency_weight: float = 0.25
+    access_weight: float = 0.20
+    retrieval_weight: float = 0.20
+
+    def validate(self) -> None:
+        normalized_values = (
+            self.minimum_pressure,
+            self.weaken_score_threshold,
+            self.deactivate_score_threshold,
+            self.protected_importance,
+            self.importance_weight,
+            self.recency_weight,
+            self.access_weight,
+            self.retrieval_weight,
+        )
+
+        if any(
+            value < 0.0 or value > 1.0
+            for value in normalized_values
+        ):
+            raise ValueError(
+                "Normalized pruning policy values "
+                "must be between 0 and 1."
+            )
+
+        if (
+            self.deactivate_score_threshold
+            > self.weaken_score_threshold
+        ):
+            raise ValueError(
+                "deactivate_score_threshold must be lower than "
+                "or equal to weaken_score_threshold."
+            )
+
+        if self.protected_recency_days < 0.0:
+            raise ValueError(
+                "protected_recency_days must be non-negative."
+            )
+
+        if self.protected_access_count < 0:
+            raise ValueError(
+                "protected_access_count must be non-negative."
+            )
+
+        if self.maximum_age_days <= 0.0:
+            raise ValueError(
+                "maximum_age_days must be strictly positive."
+            )
+
+        if self.access_saturation <= 0:
+            raise ValueError(
+                "access_saturation must be strictly positive."
+            )
+
+        total_weight = (
+            self.importance_weight
+            + self.recency_weight
+            + self.access_weight
+            + self.retrieval_weight
+        )
+
+        if total_weight <= 0.0:
+            raise ValueError(
+                "At least one retention weight must be positive."
+            )
+
+
+@dataclass(frozen=True, slots=True)
+class HotMemoryPruningInput:
+    """Explicit hot-memory measurements used by the pruning planner."""
+
+    memory_id: str
+    block_id: str
+    importance: float
+    access_count: int
+    age_days: float
+    retrieval_score: float
+    active: bool = True
+    pinned: bool = False
+    human_validated: bool = True
+    metadata: Mapping[str, Any] | None = None
+
+    def validate(self) -> None:
+        if not self.memory_id.strip():
+            raise ValueError(
+                "memory_id must be a non-empty string."
+            )
+
+        if not self.block_id.strip():
+            raise ValueError(
+                "block_id must be a non-empty string."
+            )
+
+        if (
+            self.importance < 0.0
+            or self.importance > 1.0
+        ):
+            raise ValueError(
+                "importance must be between 0 and 1."
+            )
+
+        if self.access_count < 0:
+            raise ValueError(
+                "access_count must be non-negative."
+            )
+
+        if self.age_days < 0.0:
+            raise ValueError(
+                "age_days must be non-negative."
+            )
+
+        if (
+            self.retrieval_score < 0.0
+            or self.retrieval_score > 1.0
+        ):
+            raise ValueError(
+                "retrieval_score must be between 0 and 1."
+            )
+
+
+@dataclass(frozen=True, slots=True)
+class SoftPruningRecommendation:
+    """One dry-run recommendation for one logical hot memory."""
+
+    memory_id: str
+    block_id: str
+    action: SoftPruningAction
+    retention_score: float
+    pressure: float
+    protected: bool
+    protection_reasons: tuple[str, ...]
+    scoring_components: Mapping[str, float]
+    explanation: tuple[str, ...]
+    hot_site_only: bool = True
+    physical_deletion: bool = False
+    dry_run: bool = True
+    applied: bool = False
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "memory_id": self.memory_id,
+            "block_id": self.block_id,
+            "action": self.action.value,
+            "retention_score": self.retention_score,
+            "pressure": self.pressure,
+            "protected": self.protected,
+            "protection_reasons": list(
+                self.protection_reasons
+            ),
+            "scoring_components": dict(
+                self.scoring_components
+            ),
+            "explanation": list(self.explanation),
+            "hot_site_only": self.hot_site_only,
+            "physical_deletion": self.physical_deletion,
+            "dry_run": self.dry_run,
+            "applied": self.applied,
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class SoftPruningPlan:
+    """Immutable dry-run plan for a hot-site or topic-block scope."""
+
+    plan_id: str
+    scope_id: str
+    pressure_observation_id: str
+    pressure: float
+    recommendations: tuple[
+        SoftPruningRecommendation,
+        ...
+    ]
+    created_at: str
+    hot_site_only: bool = True
+    cold_site_untouched: bool = True
+    physical_deletion: bool = False
+    dry_run: bool = True
+    applied: bool = False
+    schema_version: int = 1
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "plan_id": self.plan_id,
+            "scope_id": self.scope_id,
+            "pressure_observation_id": (
+                self.pressure_observation_id
+            ),
+            "pressure": self.pressure,
+            "recommendations": [
+                recommendation.to_dict()
+                for recommendation
+                in self.recommendations
+            ],
+            "created_at": self.created_at,
+            "hot_site_only": self.hot_site_only,
+            "cold_site_untouched": (
+                self.cold_site_untouched
+            ),
+            "physical_deletion": (
+                self.physical_deletion
+            ),
+            "dry_run": self.dry_run,
+            "applied": self.applied,
+            "schema_version": self.schema_version,
+        }

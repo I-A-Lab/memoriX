@@ -108,3 +108,30 @@ __all__ += [
     "CapacityRecommendationStore",
     "recommend_dynamic_capacity",
 ]
+from memory.adaptive.contracts import (
+    HotMemoryPruningInput,
+    SoftPruningAction,
+    SoftPruningPlan,
+    SoftPruningPolicy,
+    SoftPruningRecommendation,
+)
+from memory.adaptive.pruning import (
+    calculate_retention_score,
+    plan_soft_pruning,
+    recommend_soft_pruning,
+)
+from memory.adaptive.pruning_history import (
+    SoftPruningPlanStore,
+)
+
+__all__ += [
+    "HotMemoryPruningInput",
+    "SoftPruningAction",
+    "SoftPruningPlan",
+    "SoftPruningPlanStore",
+    "SoftPruningPolicy",
+    "SoftPruningRecommendation",
+    "calculate_retention_score",
+    "plan_soft_pruning",
+    "recommend_soft_pruning",
+]
