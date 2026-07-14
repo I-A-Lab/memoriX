@@ -87,3 +87,24 @@ __all__ = [
     "route_validated_candidate",
     "topic_routing_from_metadata",
 ]
+from memory.adaptive.capacity import (
+    recommend_dynamic_capacity,
+)
+from memory.adaptive.capacity_history import (
+    CapacityRecommendationStore,
+)
+from memory.adaptive.contracts import (
+    CapacityPolicy,
+    CapacityRecommendation,
+    CapacityRecommendationInput,
+    CapacityRecommendationLevel,
+)
+
+__all__ += [
+    "CapacityPolicy",
+    "CapacityRecommendation",
+    "CapacityRecommendationInput",
+    "CapacityRecommendationLevel",
+    "CapacityRecommendationStore",
+    "recommend_dynamic_capacity",
+]

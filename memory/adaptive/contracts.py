@@ -374,3 +374,157 @@ class ControlledTopicRouting:
             ),
             "schema_version": self.schema_version,
         }
+
+class CapacityRecommendationLevel(str, Enum):
+    """Strength of an action-free capacity recommendation."""
+
+    KEEP = "keep"
+    WATCH = "watch"
+    EXPAND = "expand"
+
+
+@dataclass(frozen=True, slots=True)
+class CapacityPolicy:
+    """Thresholds controlling dry-run expansion recommendations."""
+
+    minimum_usage_ratio: float = 0.80
+    minimum_memory_pressure: float = 0.70
+    minimum_persistence: float = 0.60
+    minimum_momentum: float = 0.05
+    minimum_entropy: float = 0.55
+    minimum_surprise: float = 0.55
+    minimum_supporting_signals: int = 2
+    minimum_increment: int = 10
+    normal_growth_factor: float = 1.25
+    strong_growth_factor: float = 1.50
+    maximum_growth_factor: float = 2.00
+
+    def validate(self) -> None:
+        normalized_values = (
+            self.minimum_usage_ratio,
+            self.minimum_memory_pressure,
+            self.minimum_persistence,
+            self.minimum_momentum,
+            self.minimum_entropy,
+            self.minimum_surprise,
+        )
+
+        if any(
+            value < 0.0 or value > 1.0
+            for value in normalized_values
+        ):
+            raise ValueError(
+                "Normalized capacity-policy thresholds "
+                "must be between 0 and 1."
+            )
+
+        if self.minimum_supporting_signals < 1:
+            raise ValueError(
+                "minimum_supporting_signals must be positive."
+            )
+
+        if self.minimum_increment < 1:
+            raise ValueError(
+                "minimum_increment must be positive."
+            )
+
+        if self.normal_growth_factor < 1.0:
+            raise ValueError(
+                "normal_growth_factor must be at least 1."
+            )
+
+        if (
+            self.strong_growth_factor
+            < self.normal_growth_factor
+        ):
+            raise ValueError(
+                "strong_growth_factor must be greater than "
+                "or equal to normal_growth_factor."
+            )
+
+        if (
+            self.maximum_growth_factor
+            < self.strong_growth_factor
+        ):
+            raise ValueError(
+                "maximum_growth_factor must be greater than "
+                "or equal to strong_growth_factor."
+            )
+
+
+@dataclass(frozen=True, slots=True)
+class CapacityRecommendationInput:
+    """Explicit inputs for one dry-run capacity evaluation."""
+
+    block_id: str
+    current_capacity: int
+    used_items: int
+    pressure: PressureObservation
+    evaluated_at: str | None = None
+
+    def validate(self) -> None:
+        if not self.block_id.strip():
+            raise ValueError(
+                "block_id must be a non-empty string."
+            )
+
+        if self.current_capacity <= 0:
+            raise ValueError(
+                "current_capacity must be strictly positive."
+            )
+
+        if self.used_items < 0:
+            raise ValueError(
+                "used_items must be non-negative."
+            )
+
+        if self.pressure.scope_id != self.block_id:
+            raise ValueError(
+                "Pressure scope_id must match block_id."
+            )
+
+
+@dataclass(frozen=True, slots=True)
+class CapacityRecommendation:
+    """Immutable recommendation that never applies capacity changes."""
+
+    recommendation_id: str
+    block_id: str
+    level: CapacityRecommendationLevel
+    current_capacity: int
+    recommended_capacity: int
+    recommended_increment: int
+    usage_ratio: float
+    memory_pressure: float
+    persistence: float
+    supporting_signals: tuple[str, ...]
+    blocking_reasons: tuple[str, ...]
+    explanation: tuple[str, ...]
+    evaluated_at: str
+    dry_run: bool = True
+    applied: bool = False
+    schema_version: int = 1
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "recommendation_id": self.recommendation_id,
+            "block_id": self.block_id,
+            "level": self.level.value,
+            "current_capacity": self.current_capacity,
+            "recommended_capacity": self.recommended_capacity,
+            "recommended_increment": self.recommended_increment,
+            "usage_ratio": self.usage_ratio,
+            "memory_pressure": self.memory_pressure,
+            "persistence": self.persistence,
+            "supporting_signals": list(
+                self.supporting_signals
+            ),
+            "blocking_reasons": list(
+                self.blocking_reasons
+            ),
+            "explanation": list(self.explanation),
+            "evaluated_at": self.evaluated_at,
+            "dry_run": self.dry_run,
+            "applied": self.applied,
+            "schema_version": self.schema_version,
+        }
