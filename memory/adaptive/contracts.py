@@ -756,3 +756,101 @@ class SoftPruningPlan:
             "applied": self.applied,
             "schema_version": self.schema_version,
         }
+
+class AdaptiveDecisionStatus(str, Enum):
+    """Global dry-run status emitted by the adaptive controller."""
+
+    STABLE = "stable"
+    WATCH = "watch"
+    ACTIONS_RECOMMENDED = "actions_recommended"
+
+
+@dataclass(frozen=True, slots=True)
+class AdaptiveControllerInput:
+    """Explicit measurements used for one adaptive dry-run evaluation."""
+
+    scope_id: str
+    current_capacity: int
+    used_items: int
+    usage_samples: Sequence[int]
+    term_frequencies: Mapping[str, int]
+    surprise_samples: Sequence[float]
+    previous_pressure_samples: Sequence[float]
+    memories: Sequence[HotMemoryPruningInput]
+    observed_at: str | None = None
+
+    def validate(self) -> None:
+        if not self.scope_id.strip():
+            raise ValueError(
+                "scope_id must be a non-empty string."
+            )
+
+        if self.current_capacity <= 0:
+            raise ValueError(
+                "current_capacity must be strictly positive."
+            )
+
+        if self.used_items < 0:
+            raise ValueError(
+                "used_items must be non-negative."
+            )
+
+        if any(
+            memory.block_id != self.scope_id
+            for memory in self.memories
+        ):
+            raise ValueError(
+                "All pruning memories must belong to scope_id."
+            )
+
+
+@dataclass(frozen=True, slots=True)
+class AdaptiveControllerDecision:
+    """Global, explainable and strictly non-applied adaptive decision."""
+
+    decision_id: str
+    scope_id: str
+    status: AdaptiveDecisionStatus
+    pressure: PressureObservation
+    capacity: CapacityRecommendation
+    pruning: SoftPruningPlan
+    recommended_actions: tuple[str, ...]
+    blocked_actions: tuple[str, ...]
+    explanation: tuple[str, ...]
+    created_at: str
+    observation_only: bool = True
+    dry_run: bool = True
+    applied: bool = False
+    hot_site_only: bool = True
+    cold_site_untouched: bool = True
+    retrieval_behavior_changed: bool = False
+    schema_version: int = 1
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "decision_id": self.decision_id,
+            "scope_id": self.scope_id,
+            "status": self.status.value,
+            "pressure": self.pressure.to_dict(),
+            "capacity": self.capacity.to_dict(),
+            "pruning": self.pruning.to_dict(),
+            "recommended_actions": list(
+                self.recommended_actions
+            ),
+            "blocked_actions": list(
+                self.blocked_actions
+            ),
+            "explanation": list(self.explanation),
+            "created_at": self.created_at,
+            "observation_only": self.observation_only,
+            "dry_run": self.dry_run,
+            "applied": self.applied,
+            "hot_site_only": self.hot_site_only,
+            "cold_site_untouched": (
+                self.cold_site_untouched
+            ),
+            "retrieval_behavior_changed": (
+                self.retrieval_behavior_changed
+            ),
+            "schema_version": self.schema_version,
+        }

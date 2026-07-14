@@ -135,3 +135,22 @@ __all__ += [
     "plan_soft_pruning",
     "recommend_soft_pruning",
 ]
+from memory.adaptive.contracts import (
+    AdaptiveControllerDecision,
+    AdaptiveControllerInput,
+    AdaptiveDecisionStatus,
+)
+from memory.adaptive.controller import (
+    evaluate_adaptive_controller,
+)
+from memory.adaptive.controller_history import (
+    AdaptiveDecisionStore,
+)
+
+__all__ += [
+    "AdaptiveControllerDecision",
+    "AdaptiveControllerInput",
+    "AdaptiveDecisionStatus",
+    "AdaptiveDecisionStore",
+    "evaluate_adaptive_controller",
+]
