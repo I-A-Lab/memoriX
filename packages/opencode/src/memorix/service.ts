@@ -7,7 +7,9 @@ import {
   MemoriXDisabledError,
 } from "./errors"
 import type {
-  JSONValue,
+  MemoriXCandidate,
+  MemoriXProposeCandidateInput,
+  MemoriXRecordedEvent,
   MemoriXRecordEventInput,
   MemoriXRetrievalResult,
   MemoriXServiceEnvironment,
@@ -25,6 +27,7 @@ export type MemoriXClientContract = Pick<
   | "context"
   | "searchColdHistory"
   | "recordEvent"
+  | "proposeCandidate"
   | "callTool"
   | "close"
 >
@@ -295,9 +298,17 @@ export class MemoriXService {
 
   async recordEvent(
     input: MemoriXRecordEventInput,
-  ): Promise<MemoriXServiceResult<JSONValue>> {
+  ): Promise<MemoriXServiceResult<MemoriXRecordedEvent>> {
     return this.runSafely(
       (client) => client.recordEvent(input),
+    )
+  }
+
+  async proposeCandidate(
+    input: MemoriXProposeCandidateInput,
+  ): Promise<MemoriXServiceResult<MemoriXCandidate>> {
+    return this.runSafely(
+      (client) => client.proposeCandidate(input),
     )
   }
 

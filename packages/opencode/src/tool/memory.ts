@@ -1,108 +1,123 @@
 import { Effect, Schema } from "effect"
+
+import {
+  getDefaultMemoriXService,
+  retrieveMemoryThroughMemoriX,
+  storeMemoryThroughMemoriX,
+  type MemoryFact,
+  type MemoryRetrieveFacadeMetadata,
+  type MemoryStoreFacadeMetadata,
+} from "../memorix"
 import * as Tool from "./tool"
-import path from "path"
-import fs from "fs/promises"
 
-const MEMORY_DIR = path.join(".opencode", "memory")
-const MEMORY_FILE = path.join(MEMORY_DIR, "titan_store.json")
-
-export interface MemoryFact {
-  id: string
-  subject: string
-  content: string
-  tags: readonly string[]
-  timestamp: number
-}
-
-const ensureMemoryStore = async (): Promise<MemoryFact[]> => {
-  try {
-    await fs.mkdir(MEMORY_DIR, { recursive: true })
-    const data = await fs.readFile(MEMORY_FILE, "utf-8")
-    return JSON.parse(data)
-  } catch {
-    return []
-  }
-}
-
-const saveMemoryStore = async (facts: MemoryFact[]): Promise<void> => {
-  await fs.mkdir(MEMORY_DIR, { recursive: true })
-  await fs.writeFile(MEMORY_FILE, JSON.stringify(facts, null, 2), "utf-8")
-}
+export type { MemoryFact }
 
 export const StoreParameters = Schema.Struct({
-  subject: Schema.String.annotate({ description: "The subject or architectural component of the fact" }),
-  content: Schema.String.annotate({ description: "The detailed fact, contract, or decision to memorize" }),
-  tags: Schema.Array(Schema.String).annotate({ description: "Tags for categorization and retrieval (e.g., ['prd', 'interface', 'api'])" }),
+  subject: Schema.String.annotate({
+    description:
+      "The subject or architectural component of the fact",
+  }),
+  content: Schema.String.annotate({
+    description:
+      "The detailed fact, contract, or decision to memorize",
+  }),
+  tags: Schema.Array(Schema.String).annotate({
+    description:
+      "Tags for categorization and retrieval " +
+      "(for example: ['prd', 'interface', 'api'])",
+  }),
 })
 
-type StoreMetadata = {
-  fact: MemoryFact
-}
-
-export const MemoryStoreTool = Tool.define<typeof StoreParameters, StoreMetadata, never>(
+export const MemoryStoreTool = Tool.define<
+  typeof StoreParameters,
+  MemoryStoreFacadeMetadata,
+  never
+>(
   "memory_store",
   Effect.gen(function* () {
     return {
-      description: "Store an important architectural fact, interface contract, or progress state into Titan long-term memory.",
+      description:
+        "Archive an important architectural fact in memoriX and " +
+        "create a pending candidate for human validation. " +
+        "This tool never validates or writes directly to the Titan hot site.",
       parameters: StoreParameters,
-      execute: (params: Schema.Schema.Type<typeof StoreParameters>, ctx: Tool.Context<StoreMetadata>) =>
-        Effect.gen(function* () {
-          const facts = yield* Effect.promise(() => ensureMemoryStore())
-          const newFact: MemoryFact = {
-            id: Math.random().toString(36).substring(2, 11),
-            subject: params.subject,
-            content: params.content,
-            tags: [...params.tags],
-            timestamp: Date.now(),
-          }
-          facts.push(newFact)
-          yield* Effect.promise(() => saveMemoryStore(facts))
-
-          return {
-            title: `Stored memory: ${params.subject}`,
-            output: `Successfully stored fact [ID: ${newFact.id}] under subject '${params.subject}'.`,
-            metadata: { fact: newFact },
-          }
-        }),
-    } satisfies Tool.DefWithoutID<typeof StoreParameters, StoreMetadata>
+      execute: (
+        params: Schema.Schema.Type<
+          typeof StoreParameters
+        >,
+        ctx: Tool.Context<
+          MemoryStoreFacadeMetadata
+        >,
+      ) =>
+        Effect.promise(() =>
+          storeMemoryThroughMemoriX(
+            getDefaultMemoriXService(),
+            {
+              subject: params.subject,
+              content: params.content,
+              tags: params.tags,
+            },
+            {
+              sessionID: String(ctx.sessionID),
+              messageID: String(ctx.messageID),
+              agent: ctx.agent,
+            },
+          ),
+        ),
+    } satisfies Tool.DefWithoutID<
+      typeof StoreParameters,
+      MemoryStoreFacadeMetadata
+    >
   }),
 )
 
 export const RetrieveParameters = Schema.Struct({
-  query: Schema.String.annotate({ description: "Search query or keywords to match against stored memory facts" }),
-  tags: Schema.optional(Schema.Array(Schema.String)).annotate({ description: "Optional list of tags to filter by" }),
+  query: Schema.String.annotate({
+    description:
+      "Search query or keywords to match against active, " +
+      "human-validated Titan hot-site memories",
+  }),
+  tags: Schema.optional(
+    Schema.Array(Schema.String),
+  ).annotate({
+    description:
+      "Optional tags used to filter validated hot-site results",
+  }),
 })
 
-type RetrieveMetadata = {
-  results: MemoryFact[]
-}
-
-export const MemoryRetrieveTool = Tool.define<typeof RetrieveParameters, RetrieveMetadata, never>(
+export const MemoryRetrieveTool = Tool.define<
+  typeof RetrieveParameters,
+  MemoryRetrieveFacadeMetadata,
+  never
+>(
   "memory_retrieve",
   Effect.gen(function* () {
     return {
-      description: "Retrieve architectural facts, interface contracts, or progress states from Titan long-term memory.",
+      description:
+        "Retrieve active, human-validated architectural facts from " +
+        "the memoriX Titan hot site only. This tool never searches " +
+        "or falls back to cold history.",
       parameters: RetrieveParameters,
-      execute: (params: Schema.Schema.Type<typeof RetrieveParameters>, ctx: Tool.Context<RetrieveMetadata>) =>
-        Effect.gen(function* () {
-          const facts = yield* Effect.promise(() => ensureMemoryStore())
-          const q = params.query.toLowerCase()
-          const results = facts.filter((f) => {
-            const matchesQuery =
-              f.subject.toLowerCase().includes(q) ||
-              f.content.toLowerCase().includes(q) ||
-              f.tags.some((t) => t.toLowerCase().includes(q))
-            const matchesTags =
-              !params.tags || params.tags.length === 0 || params.tags.some((pt) => f.tags.includes(pt))
-            return matchesQuery && matchesTags
-          })
-
-          return {
-            title: `Retrieved ${results.length} memory facts`,
-            output: results.length > 0 ? JSON.stringify(results, null, 2) : "No matching memory facts found.",
-            metadata: { results },
-          }
-        }),
-    } satisfies Tool.DefWithoutID<typeof RetrieveParameters, RetrieveMetadata>
+      execute: (
+        params: Schema.Schema.Type<
+          typeof RetrieveParameters
+        >,
+        _ctx: Tool.Context<
+          MemoryRetrieveFacadeMetadata
+        >,
+      ) =>
+        Effect.promise(() =>
+          retrieveMemoryThroughMemoriX(
+            getDefaultMemoriXService(),
+            {
+              query: params.query,
+              tags: params.tags,
+            },
+          ),
+        ),
+    } satisfies Tool.DefWithoutID<
+      typeof RetrieveParameters,
+      MemoryRetrieveFacadeMetadata
+    >
   }),
 )

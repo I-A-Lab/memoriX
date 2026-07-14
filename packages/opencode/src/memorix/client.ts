@@ -13,7 +13,10 @@ import {
 import type {
   JSONObject,
   JSONValue,
+  MemoriXCandidate,
   MemoriXClientOptions,
+  MemoriXProposeCandidateInput,
+  MemoriXRecordedEvent,
   MemoriXRecordEventInput,
   MemoriXRetrievalResult,
   MemoriXStatus,
@@ -285,7 +288,9 @@ export class MemoriXClient {
     return asRecord(value) as unknown as MemoriXRetrievalResult
   }
 
-  async recordEvent(input: MemoriXRecordEventInput): Promise<JSONValue> {
+  async recordEvent(
+    input: MemoriXRecordEventInput,
+  ): Promise<MemoriXRecordedEvent> {
     if (!input.content.trim()) {
       throw new MemoriXClientError("Event content must not be empty.")
     }
@@ -298,7 +303,46 @@ export class MemoriXClient {
       throw new MemoriXClientError("Event source must not be empty.")
     }
 
-    return this.callTool("memorix_record_event", input as unknown as JSONObject)
+    const value = await this.callTool(
+      "memorix_record_event",
+      input as unknown as JSONObject,
+    )
+
+    return asRecord(value) as unknown as MemoriXRecordedEvent
+  }
+
+  async proposeCandidate(
+    input: MemoriXProposeCandidateInput,
+  ): Promise<MemoriXCandidate> {
+    if (!input.content.trim()) {
+      throw new MemoriXClientError(
+        "Candidate content must not be empty.",
+      )
+    }
+
+    if (!input.reason.trim()) {
+      throw new MemoriXClientError(
+        "Candidate reason must not be empty.",
+      )
+    }
+
+    if (
+      input.source_event_ids.length === 0 ||
+      input.source_event_ids.some(
+        (eventID) => !eventID.trim(),
+      )
+    ) {
+      throw new MemoriXClientError(
+        "Candidate source_event_ids must contain non-empty event IDs.",
+      )
+    }
+
+    const value = await this.callTool(
+      "memorix_propose_candidate",
+      input as unknown as JSONObject,
+    )
+
+    return asRecord(value) as unknown as MemoriXCandidate
   }
 
   async close(): Promise<void> {

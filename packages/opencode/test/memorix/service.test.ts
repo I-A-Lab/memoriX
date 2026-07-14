@@ -83,10 +83,54 @@ class FakeClient implements MemoriXClientContract {
     }
   }
 
-  async recordEvent(): Promise<JSONValue> {
+  async recordEvent() {
     this.recordCalls += 1
+
     return {
-      stored: true,
+      short_term_event: {
+        event_id: "event_fake",
+        content: "fake",
+        event_type: "test",
+        source: "unit_test",
+        created_at:
+          "2026-07-14T10:00:00+00:00",
+        project_id: null,
+        session_id: null,
+        importance: 0.5,
+        confidence: 1,
+        surprise: 0,
+        metadata: {},
+      },
+      archived_event: {
+        event_id: "event_fake",
+        content: "fake",
+        event_type: "test",
+        source: "unit_test",
+        original_created_at:
+          "2026-07-14T10:00:00+00:00",
+        archived_at:
+          "2026-07-14T10:00:01+00:00",
+        project_id: null,
+        session_id: null,
+        metadata: {},
+      },
+    }
+  }
+
+  async proposeCandidate() {
+    return {
+      candidate_id: "candidate_fake",
+      content: "fake",
+      reason: "test",
+      source_event_ids: ["event_fake"],
+      created_at:
+        "2026-07-14T10:00:02+00:00",
+      status: "pending" as const,
+      importance: 0.5,
+      confidence: 1,
+      surprise: 0,
+      target_memory_id: null,
+      metadata: {},
     }
   }
 

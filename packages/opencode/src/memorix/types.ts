@@ -154,3 +154,63 @@ export type MemoriXServiceEnvironment = {
   MEMORIX_TITAN_TOP_K?: string
   MEMORIX_TITAN_MIN_SCORE?: string
 }
+export type MemoriXStoredEvent = {
+  event_id: string
+  content: string
+  event_type: string
+  source: string
+  created_at: string
+  project_id: string | null
+  session_id: string | null
+  importance: number
+  confidence: number
+  surprise: number
+  metadata: JSONObject
+}
+
+export type MemoriXArchivedEvent = {
+  event_id: string
+  content: string
+  event_type: string
+  source: string
+  original_created_at: string
+  archived_at: string
+  project_id: string | null
+  session_id: string | null
+  metadata: JSONObject
+}
+
+export type MemoriXRecordedEvent = {
+  short_term_event: MemoriXStoredEvent
+  archived_event: MemoriXArchivedEvent
+}
+
+export type MemoriXCandidateStatus =
+  | "pending"
+  | "validated"
+  | "rejected"
+
+export type MemoriXCandidate = {
+  candidate_id: string
+  content: string
+  reason: string
+  source_event_ids: string[]
+  created_at: string
+  status: MemoriXCandidateStatus
+  importance: number
+  confidence: number
+  surprise: number
+  target_memory_id: string | null
+  metadata: JSONObject
+}
+
+export type MemoriXProposeCandidateInput = {
+  content: string
+  reason: string
+  source_event_ids: string[]
+  importance?: number
+  confidence?: number
+  surprise?: number
+  target_memory_id?: string | null
+  metadata?: JSONObject
+}

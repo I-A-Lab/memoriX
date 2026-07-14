@@ -22,13 +22,36 @@ export type {
   MemoriXServiceDependencies,
 } from "./service"
 
+export {
+  retrieveMemoryThroughMemoriX,
+  storeMemoryThroughMemoriX,
+} from "./memory-facade"
+
+export type {
+  MemoryFacadeContext,
+  MemoryFacadeResult,
+  MemoryFacadeService,
+  MemoryFact,
+  MemoryRetrieveFacadeInput,
+  MemoryRetrieveFacadeMetadata,
+  MemoryStoreFacadeInput,
+  MemoryStoreFacadeMetadata,
+  MemoryStoreStatus,
+} from "./memory-facade"
+
 export type {
   JSONObject,
   JSONPrimitive,
   JSONValue,
+  MemoriXArchivedEvent,
+  MemoriXCandidate,
+  MemoriXCandidateStatus,
   MemoriXClientOptions,
+  MemoriXProposeCandidateInput,
+  MemoriXRecordedEvent,
   MemoriXRecordEventInput,
   MemoriXRetrievalMatch,
+  MemoriXStoredEvent,
   MemoriXRetrievalResult,
   MemoriXServiceEnvironment,
   MemoriXServiceErrorCode,

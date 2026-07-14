@@ -26,6 +26,31 @@ from memory.hot_site.titan_active_memory.neural_backend import (
 )
 
 
+def _deduplicate_retrieved_matches(
+    matches: list,
+) -> list:
+    """Keep one highest-scoring result for each logical memory ID."""
+
+    best_by_memory_id = {}
+    memory_order = []
+
+    for match in matches:
+        memory_id = match.memory_id
+        current = best_by_memory_id.get(memory_id)
+
+        if current is None:
+            best_by_memory_id[memory_id] = match
+            memory_order.append(memory_id)
+            continue
+
+        if match.score > current.score:
+            best_by_memory_id[memory_id] = match
+
+    return [
+        best_by_memory_id[memory_id]
+        for memory_id in memory_order
+    ]
+
 class HotSiteInputError(ValueError):
     """Raised when data violates the active hot-site contract."""
 
@@ -252,10 +277,24 @@ class HotSiteTitanMemory:
                     "titan_item_id": result.get(
                         "titan_item_id"
                     ),
-                    "subject": result.get("subject"),
-                    "property": result.get("property"),
                 }
             )
+
+            result_subject = result.get("subject")
+
+            if (
+                metadata.get("subject") is None
+                and result_subject is not None
+            ):
+                metadata["subject"] = result_subject
+
+            result_property = result.get("property")
+
+            if (
+                metadata.get("property") is None
+                and result_property is not None
+            ):
+                metadata["property"] = result_property
 
             matches.append(
                 RetrievedMemory(
@@ -272,7 +311,7 @@ class HotSiteTitanMemory:
         return RetrievalResult(
             query=query,
             source=RetrievalSource.HOT_SITE,
-            matches=tuple(matches),
+            matches=tuple(_deduplicate_retrieved_matches(matches)),
         )
 
     def soft_forget(
