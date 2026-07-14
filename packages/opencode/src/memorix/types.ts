@@ -214,3 +214,32 @@ export type MemoriXProposeCandidateInput = {
   target_memory_id?: string | null
   metadata?: JSONObject
 }
+export type MemoriXHookOptions = {
+  captureUserMessages: boolean
+  captureToolResults: boolean
+  maxMessageCharacters: number
+  maxToolOutputCharacters: number
+  ignoredTools: readonly string[]
+}
+
+export type MemoriXHookEnvironment = {
+  MEMORIX_HOOK_CAPTURE_MESSAGES?: string
+  MEMORIX_HOOK_CAPTURE_TOOL_RESULTS?: string
+  MEMORIX_HOOK_MAX_MESSAGE_CHARACTERS?: string
+  MEMORIX_HOOK_MAX_TOOL_OUTPUT_CHARACTERS?: string
+  MEMORIX_HOOK_IGNORED_TOOLS?: string
+}
+
+export type MemoriXHookOutcome =
+  | {
+      status: "recorded"
+      eventID: string
+    }
+  | {
+      status: "skipped"
+      reason: string
+    }
+  | {
+      status: "unavailable"
+      reason: string
+    }

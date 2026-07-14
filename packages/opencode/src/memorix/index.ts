@@ -16,6 +16,18 @@ export {
   resetDefaultMemoriXService,
 } from "./service"
 
+export {
+  memoriXHookOptionsFromEnvironment,
+  recordToolResultHook,
+  recordUserMessageHook,
+} from "./hooks"
+
+export type {
+  MemoriXHookService,
+  MemoriXToolResultHookInput,
+  MemoriXUserMessageHookInput,
+} from "./hooks"
+
 export type {
   MemoriXClientContract,
   MemoriXClientFactory,
@@ -49,6 +61,9 @@ export type {
   MemoriXClientOptions,
   MemoriXProposeCandidateInput,
   MemoriXRecordedEvent,
+  MemoriXHookEnvironment,
+  MemoriXHookOptions,
+  MemoriXHookOutcome,
   MemoriXRecordEventInput,
   MemoriXRetrievalMatch,
   MemoriXStoredEvent,
