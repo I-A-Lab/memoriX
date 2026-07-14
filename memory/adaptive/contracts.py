@@ -210,3 +210,131 @@ def utc_now_iso() -> str:
     """Return a stable UTC ISO-8601 timestamp."""
 
     return datetime.now(timezone.utc).isoformat()
+
+@dataclass(frozen=True, slots=True)
+class TopicTerm:
+    """One normalized term contributing to a dynamic topic block."""
+
+    term: str
+    count: int
+    weight: float
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "term": self.term,
+            "count": self.count,
+            "weight": self.weight,
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class TopicBlockRoutingObservation:
+    """Action-free observation of a possible topic-block routing."""
+
+    routing_id: str
+    block_id: str
+    label: str
+    confidence: float
+    matched_terms: tuple[str, ...]
+    content_digest: str
+    explanation: tuple[str, ...]
+    observed_at: str
+    schema_version: int = 1
+    observation_only: bool = True
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "routing_id": self.routing_id,
+            "block_id": self.block_id,
+            "label": self.label,
+            "confidence": self.confidence,
+            "matched_terms": list(self.matched_terms),
+            "content_digest": self.content_digest,
+            "explanation": list(self.explanation),
+            "observed_at": self.observed_at,
+            "schema_version": self.schema_version,
+            "observation_only": self.observation_only,
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class TopicBlockObservation:
+    """Immutable observation of one dynamically inferred topic block."""
+
+    block_id: str
+    label: str
+    terms: tuple[TopicTerm, ...]
+    capacity: int
+    used_items: int
+    usage_ratio: float
+    importance: float
+    observed_item_ids: tuple[str, ...]
+    created_at: str
+    updated_at: str
+    routing: TopicBlockRoutingObservation
+    schema_version: int = 1
+    observation_only: bool = True
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "block_id": self.block_id,
+            "label": self.label,
+            "terms": [
+                term.to_dict()
+                for term in self.terms
+            ],
+            "capacity": self.capacity,
+            "used_items": self.used_items,
+            "usage_ratio": self.usage_ratio,
+            "importance": self.importance,
+            "observed_item_ids": list(
+                self.observed_item_ids
+            ),
+            "created_at": self.created_at,
+            "updated_at": self.updated_at,
+            "routing": self.routing.to_dict(),
+            "schema_version": self.schema_version,
+            "observation_only": self.observation_only,
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class TopicBlockInput:
+    """Explicit source data used to infer one dynamic topic block."""
+
+    content: str
+    item_id: str
+    metadata_terms: Sequence[str] = ()
+    importance: float = 0.5
+    capacity: int = 100
+    used_items: int = 1
+    observed_at: str | None = None
+
+    def validate(self) -> None:
+        if not self.content.strip():
+            raise ValueError(
+                "content must be a non-empty string."
+            )
+
+        if not self.item_id.strip():
+            raise ValueError(
+                "item_id must be a non-empty string."
+            )
+
+        if self.capacity <= 0:
+            raise ValueError(
+                "capacity must be strictly positive."
+            )
+
+        if self.used_items < 0:
+            raise ValueError(
+                "used_items must be non-negative."
+            )
+
+        if (
+            self.importance < 0.0
+            or self.importance > 1.0
+        ):
+            raise ValueError(
+                "importance must be between 0 and 1."
+            )

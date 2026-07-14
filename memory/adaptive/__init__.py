@@ -11,6 +11,10 @@ from memory.adaptive.contracts import (
     PressureObservationInput,
     PressureThresholds,
     PressureWeights,
+    TopicBlockInput,
+    TopicBlockObservation,
+    TopicBlockRoutingObservation,
+    TopicTerm,
 )
 from memory.adaptive.pressure import (
     calculate_entropy,
@@ -25,6 +29,19 @@ from memory.adaptive.pressure import (
 from memory.adaptive.pressure_history import (
     PressureHistoryStore,
 )
+from memory.adaptive.block_registry import (
+    TopicBlockRegistry,
+)
+from memory.adaptive.topic_blocks import (
+    build_topic_block_id,
+    calculate_routing_confidence,
+    content_digest,
+    extract_topic_terms,
+    normalize_topic_term,
+    observe_topic_block,
+    select_topic_label,
+    term_counts,
+)
 
 __all__ = [
     "PressureComponents",
@@ -34,6 +51,11 @@ __all__ = [
     "PressureObservationInput",
     "PressureThresholds",
     "PressureWeights",
+    "TopicBlockInput",
+    "TopicBlockObservation",
+    "TopicBlockRegistry",
+    "TopicBlockRoutingObservation",
+    "TopicTerm",
     "calculate_entropy",
     "calculate_memory_pressure",
     "calculate_momentum",
@@ -42,4 +64,12 @@ __all__ = [
     "calculate_usage_ratio",
     "classify_pressure_level",
     "observe_memory_pressure",
+    "build_topic_block_id",
+    "calculate_routing_confidence",
+    "content_digest",
+    "extract_topic_terms",
+    "normalize_topic_term",
+    "observe_topic_block",
+    "select_topic_label",
+    "term_counts",
 ]
