@@ -1,83 +1,83 @@
-# Test Plan
-## Password Generator in Python
+# Test Plan: Password Generator (Python)
 
-### Test Strategy
-- Unit tests for all core functions
-- Integration tests for CLI
-- Edge case testing for security-critical paths
+## 1. Overview
 
-### Test Structure
+Test the password generator CLI tool with unit tests and integration tests using Python's built-in `unittest` framework and subprocess calls.
+
+## 2. Test Categories
+
+### 2.1 Unit Tests
+
+Test individual functions in isolation:
+
+| Test | Description |
+|------|-------------|
+| `test_build_char_pool_default` | Default pool includes uppercase, lowercase, digits, symbols |
+| `test_build_char_pool_no_upper` | Pool excludes uppercase when `--no-upper` is set |
+| `test_build_char_pool_no_lower` | Pool excludes lowercase when `--no-lower` is set |
+| `test_build_char_pool_no_digits` | Pool excludes digits when `--no-digits` is set |
+| `test_build_char_pool_no_symbols` | Pool excludes symbols when `--no-symbols` is set |
+| `test_build_char_pool_ambiguous` | Pool excludes ambiguous characters when flag is set |
+| `test_generate_password_length` | Generated password matches requested length |
+| `test_generate_password_characters` | Generated password contains only characters from the pool |
+| `test_validate_args_minimum_length` | Validation fails when length < 4 |
+| `test_validate_args_no_char_set` | Validation fails when all character sets are excluded |
+
+### 2.2 Integration Tests
+
+Test the CLI as a subprocess:
+
+| Test | Command | Expected |
+|------|---------|----------|
+| `test_default_run` | `python password_generator.py` | Exit code 0, output length 16 |
+| `test_custom_length` | `python password_generator.py --length 32` | Exit code 0, output length 32 |
+| `test_multiple_count` | `python password_generator.py --count 5` | Exit code 0, 5 lines of output |
+| `test_no_symbols_flag` | `python password_generator.py --no-symbols` | Exit code 0, no symbols in output |
+| `test_ambiguous_flag` | `python password_generator.py --ambiguous` | Exit code 0, no ambiguous chars |
+| `test_invalid_all_excluded` | `python password_generator.py --no-upper --no-lower --no-digits --no-symbols` | Exit code 1, error message |
+| `test_short_length` | `python password_generator.py --length 3` | Exit code 1, error message |
+| `test_copy_flag` | `python password_generator.py --copy` | Exit code 0, clipboard message or success |
+
+### 2.3 Edge Cases
+
+| Test | Description |
+|------|-------------|
+| `test_minimum_valid_length` | Length=4 works correctly |
+| `test_maximum_length` | Length=256 works correctly |
+| `test_single_char_set` | Only uppercase (all others excluded) produces valid password |
+| `test_empty_output_on_error` | No output to stdout on validation failure |
+
+## 3. Test File Structure
+
 ```
-tests/
-├── __init__.py
-├── test_generator.py      # Test password generation
-├── test_strength.py       # Test strength estimation
-├── test_utils.py          # Test utility functions
-└── test_cli.py           # Test CLI interface
+memoriX/
+├── password_generator.py          # Source code
+└── test_password_generator.py     # All tests
 ```
 
-### Test Cases
+## 4. Test Execution
 
-#### Generator Tests (`test_generator.py`)
-1. **Test basic generation**
-   - Generate password with default settings
-   - Verify length matches specification
-   - Verify character types are present when enabled
+```bash
+# Run all tests
+python -m unittest test_password_generator -v
 
-2. **Test character type control**
-   - Generate with only uppercase
-   - Generate with only lowercase
-   - Generate with only digits
-   - Generate with only special characters
-   - Verify each type is correctly included/excluded
+# Run specific test class
+python -m unittest test_password_generator.TestUnit -v
 
-3. **Test ambiguous character exclusion**
-   - Generate with `exclude_ambiguous=True`
-   - Verify none of the ambiguous characters appear
-   - Test with mixed character types
+# Run specific test
+python -m unittest test_password_generator.TestIntegration.test_default_run -v
+```
 
-4. **Test batch generation**
-   - Generate multiple passwords
-   - Verify all have correct length
-   - Verify passwords are unique (statistically)
+## 5. Assertions
 
-5. **Test edge cases**
-   - Minimum length (8)
-   - Maximum length (128)
-   - Zero count should raise error
-   - Negative length should raise error
+- Use `assertRegex` for pattern matching on output.
+- Use `assertEqual` for exact length checks.
+- Use `assertIn` / `assertNotIn` for character presence checks.
+- Use `assertGreaterEqual` for counting lines of output.
+- Use `subprocess.run` with `capture_output=True` for CLI tests.
 
-#### Strength Tests (`test_strength.py`)
-1. **Test strength levels**
-   - Short password with few types → weak
-   - Medium length with 2 types → medium
-   - Long length with 3 types → strong
-   - Long length with all types → very strong
+## 6. Coverage Goals
 
-2. **Test strength consistency**
-   - Same input always produces same strength
-   - Longer passwords generally have higher strength
-
-#### Utility Tests (`test_utils.py`)
-1. **Test clipboard copy**
-   - Mock platform-specific functions
-   - Verify correct function is called
-
-2. **Test ambiguous character set**
-   - Verify all expected characters are included
-   - Verify set is non-empty
-
-#### CLI Tests (`test_cli.py`)
-1. **Test argument parsing**
-   - Test default values
-   - Test custom arguments
-   - Test invalid combinations
-
-2. **Test output format**
-   - Verify password is printed
-   - Verify strength is shown when requested
-
-### Test Execution
-- Run with: `python -m pytest tests/ -v`
-- Minimum coverage: 90% for all modules
-- Security-critical code must have 100% coverage
+- 100% function coverage.
+- All CLI argument paths tested.
+- All error conditions tested.

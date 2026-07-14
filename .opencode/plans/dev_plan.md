@@ -1,51 +1,80 @@
-# Development Plan
-## Password Generator in Python
+# Development Plan: Password Generator (Python)
 
-### Project Structure
+## 1. Overview
+
+Create a single-file Python CLI tool (`password_generator.py`) that generates secure random passwords with configurable options.
+
+## 2. Architecture
+
+- **Single file**: All code lives in `password_generator.py` at repository root.
+- **No external dependencies**: Uses only Python standard library.
+- **Modular internal structure**: Separate functions for generation, argument parsing, validation, and output.
+
+## 3. Implementation Steps
+
+### Step 1: Project Setup
+- Create `password_generator.py` with shebang and module docstring.
+- Import required modules: `secrets`, `string`, `argparse`, `sys`.
+
+### Step 2: Character Set Definitions
+- Define constants for each character category:
+  - `UPPERCASE = string.ascii_uppercase`
+  - `LOWERCASE = string.ascii_lowercase`
+  - `DIGITS = string.digits`
+  - `SYMBOLS = string.punctuation`
+  - `AMBIGUOUS = "Il1O0"` (characters to exclude when `--ambiguous` is set)
+
+### Step 3: Argument Parser
+- Create `argparse.ArgumentParser` with description.
+- Add arguments: `--length`, `--count`, `--no-upper`, `--no-lower`, `--no-digits`, `--no-symbols`, `--ambiguous`, `--copy`.
+- Set defaults and help text for each argument.
+
+### Step 4: Validation Function
+- `validate_args(args)`:
+  - Ensure at least one character set remains after exclusions.
+  - Ensure `length >= 4`.
+  - Print error and exit with code 1 on failure.
+
+### Step 5: Password Generation
+- `generate_password(length, char_pool)`:
+  - Use `secrets.choice(char_pool)` in a loop to build password.
+  - Return the password string.
+- `build_char_pool(args)`:
+  - Start with empty set.
+  - Add character sets based on flags.
+  - Remove ambiguous characters if `args.ambiguous` is True.
+  - Convert to string and return.
+
+### Step 6: Clipboard Support
+- `copy_to_clipboard(text)`:
+  - Try to import `pyperclip`.
+  - If available, copy text and print confirmation.
+  - If not available, print a message that clipboard copy is unavailable.
+
+### Step 7: Main Function
+- `main()`:
+  - Parse arguments.
+  - Validate.
+  - Build character pool.
+  - Generate `count` passwords.
+  - Print each password to stdout.
+  - If `--copy` flag is set, copy the first password to clipboard.
+
+### Step 8: Entry Point
+- Add `if __name__ == "__main__": main()` block.
+
+## 4. File Structure
+
 ```
-password_generator/
-├── __init__.py
-├── generator.py          # Core password generation logic
-├── strength.py          # Password strength estimation
-├── utils.py            # Utility functions (clipboard, ambiguous chars)
-├── cli.py             # Command-line interface
-└── __main__.py        # Entry point for python -m execution
+memoriX/
+└── password_generator.py   # Single file with all code
 ```
 
-### Development Steps
+## 5. Testing Strategy
 
-#### Phase 1: Core Generator Module
-1. Create `generator.py` with `PasswordGenerator` class
-   - `generate(length, use_upper, use_lower, use_digits, use_special, exclude_ambiguous)`
-   - `generate_batch(count, **kwargs)` for multiple passwords
-   - Use `secrets` module for cryptographically secure randomness
+See `test_plan.md` for details.
 
-#### Phase 2: Strength Estimation
-2. Create `strength.py` with `estimate_strength(password)` function
-   - Analyze length, character diversity, patterns
-   - Return strength level: weak, medium, strong, very strong
+## 6. Dependencies
 
-#### Phase 3: Utilities
-3. Create `utils.py` with helper functions
-   - `copy_to_clipboard(text)` - platform-aware clipboard copy
-   - `AMBIGUOUS_CHARS` - set of ambiguous characters to exclude
-   - `get_available_chars(...)` - builds character pool based on options
-
-#### Phase 4: CLI Interface
-4. Create `cli.py` with argument parser
-   - `-l/--length` - password length (default: 16)
-   - `-n/--count` - number of passwords (default: 1)
-   - `--no-upper/--no-lower/--no-digits/--no-special` - exclude types
-   - `--exclude-ambiguous` - exclude ambiguous characters
-   - `--show-strength` - display strength estimation
-
-#### Phase 5: Package Integration
-5. Create `__init__.py` and `__main__.py`
-   - Export main classes and functions
-   - Enable `python -m password_generator` execution
-
-### Key Design Decisions
-- Use `secrets` instead of `random` for security
-- Minimal dependencies (stdlib only)
-- Platform-agnostic clipboard handling
-- Comprehensive input validation
+- Python 3.9+
+- Optional: `pyperclip` for clipboard support
