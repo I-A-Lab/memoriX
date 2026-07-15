@@ -71,8 +71,8 @@ class LiveProbeTests(unittest.TestCase):
         )
         cold = (
             self.root
-            / "cold"
-            / "events.jsonl"
+            / "cold_site"
+            / "events_archive.jsonl"
         )
 
         short_term.parent.mkdir(
@@ -124,8 +124,8 @@ class LiveProbeTests(unittest.TestCase):
     ) -> None:
         path = (
             self.root
-            / "cold"
-            / "events.jsonl"
+            / "cold_site"
+            / "events_archive.jsonl"
         )
         path.parent.mkdir(parents=True)
         path.write_text(

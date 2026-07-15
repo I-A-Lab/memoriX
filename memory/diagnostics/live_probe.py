@@ -6,6 +6,7 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
+from memory.data.paths import MemoryStoragePaths
 from memory.diagnostics.contracts import (
     LiveProbeReport,
     ProbeCheck,
@@ -25,50 +26,58 @@ def _utc_now_iso() -> str:
 def discover_runtime_paths(
     runtime_root: Path,
 ) -> dict[str, Path]:
-    """Return known and optional runtime paths.
+    """Return canonical and optional runtime paths.
+
+    Canonical storage paths come from MemoryStoragePaths, which is the
+    single source of truth used by the memoriX gateway. Optional adaptive
+    paths remain observation-only and are resolved relative to the same
+    runtime root.
 
     Missing paths are legitimate observations. This function performs no
     mkdir, touch, write, migration, or storage initialization.
     """
 
-    root = Path(runtime_root)
+    storage_paths = (
+        MemoryStoragePaths.from_runtime_root(
+            runtime_root
+        )
+    )
+    root = storage_paths.runtime_root
 
     return {
         "runtime_root": root,
         "short_term_root": (
-            root / "short_term"
+            storage_paths.short_term_events.parent
         ),
         "short_term_events": (
-            root
-            / "short_term"
-            / "events.jsonl"
+            storage_paths.short_term_events
         ),
-        "cold_root": root / "cold",
-        "cold_events": (
-            root / "cold" / "events.jsonl"
+        "cold_root": (
+            storage_paths.cold_archive_events.parent
         ),
-        "cold_archive": (
-            root / "cold" / "archive.jsonl"
+        "cold_archive_events": (
+            storage_paths.cold_archive_events
         ),
         "candidates_root": (
-            root / "candidates"
+            storage_paths.memory_candidates.parent
         ),
-        "pending_candidates": (
-            root
-            / "candidates"
-            / "pending.jsonl"
+        "memory_candidates": (
+            storage_paths.memory_candidates
         ),
-        "validated_candidates": (
-            root
-            / "candidates"
-            / "validated.jsonl"
+        "hot_root": (
+            storage_paths.titan_neural_state.parent
         ),
-        "hot_root": root / "hot",
-        "hot_metadata": (
-            root / "hot" / "memories.json"
+        "titan_neural_state": (
+            storage_paths.titan_neural_state
         ),
-        "hot_state": (
-            root / "hot" / "titan_state.pt"
+        "titan_metadata": (
+            storage_paths.titan_metadata
+        ),
+        "logs_root": (
+            storage_paths.nightly_logs.parent
+        ),
+        "nightly_logs": (
+            storage_paths.nightly_logs
         ),
         "adaptive_root": (
             root / "adaptive"
@@ -99,7 +108,6 @@ def discover_runtime_paths(
             / "controller_decisions.jsonl"
         ),
     }
-
 
 def _file_integrity_check(
     observations: tuple[
