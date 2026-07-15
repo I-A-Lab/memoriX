@@ -1,18 +1,68 @@
 """Filesystem paths used by the memoriX Python runtime.
 
-The defaults are intentionally centralized here so storage components do not
-construct their own unrelated paths. Tests may inject temporary paths and must
-not write into the project runtime directory.
+Runtime data must remain outside the source repository by default.
+Tests and callers may always inject an explicit temporary runtime root.
 """
 
 from __future__ import annotations
 
+import os
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 
 
 MEMORY_PACKAGE_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_RUNTIME_ROOT = MEMORY_PACKAGE_ROOT / "runtime"
+
+
+def resolve_default_runtime_root() -> Path:
+    """Return a platform-appropriate runtime directory outside the repository."""
+
+    explicit_root = os.environ.get("MEMORIX_RUNTIME_ROOT", "").strip()
+
+    if explicit_root:
+        return Path(explicit_root).expanduser().resolve()
+
+    local_app_data = os.environ.get("LOCALAPPDATA", "").strip()
+
+    if local_app_data:
+        return (
+            Path(local_app_data)
+            / "memoriX"
+            / "runtime"
+        ).expanduser().resolve()
+
+    xdg_data_home = os.environ.get("XDG_DATA_HOME", "").strip()
+
+    if xdg_data_home:
+        return (
+            Path(xdg_data_home)
+            / "memoriX"
+            / "runtime"
+        ).expanduser().resolve()
+
+    try:
+        home = Path.home()
+    except RuntimeError:
+        home = None
+
+    if home is not None:
+        return (
+            home
+            / ".local"
+            / "share"
+            / "memoriX"
+            / "runtime"
+        ).resolve()
+
+    return (
+        Path(tempfile.gettempdir())
+        / "memoriX"
+        / "runtime"
+    ).resolve()
+
+
+DEFAULT_RUNTIME_ROOT = resolve_default_runtime_root()
 
 
 @dataclass(frozen=True, slots=True)

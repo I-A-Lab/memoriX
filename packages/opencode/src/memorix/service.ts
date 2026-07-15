@@ -1,4 +1,5 @@
 import path from "node:path"
+import os from "node:os"
 
 import { MemoriXClient } from "./client"
 import {
@@ -122,6 +123,91 @@ function failure(
   }
 }
 
+export type MemoriXRuntimeFallbacks = {
+  homeDirectory?: string
+  temporaryDirectory?: string
+}
+
+export function resolveDefaultMemoriXRuntimeRoot(
+  environment: Pick<
+    MemoriXServiceEnvironment,
+    | "MEMORIX_RUNTIME_ROOT"
+    | "LOCALAPPDATA"
+    | "XDG_DATA_HOME"
+    | "HOME"
+    | "USERPROFILE"
+    | "TEMP"
+    | "TMP"
+  > = {
+    MEMORIX_RUNTIME_ROOT:
+      process.env.MEMORIX_RUNTIME_ROOT,
+    LOCALAPPDATA: process.env.LOCALAPPDATA,
+    XDG_DATA_HOME: process.env.XDG_DATA_HOME,
+    HOME: process.env.HOME,
+    USERPROFILE: process.env.USERPROFILE,
+    TEMP: process.env.TEMP,
+    TMP: process.env.TMP,
+  },
+  fallbacks: MemoriXRuntimeFallbacks = {},
+): string {
+  const explicitRuntime =
+    environment.MEMORIX_RUNTIME_ROOT?.trim()
+
+  if (explicitRuntime) {
+    return path.resolve(explicitRuntime)
+  }
+
+  const localAppData =
+    environment.LOCALAPPDATA?.trim()
+
+  if (localAppData) {
+    return path.resolve(
+      localAppData,
+      "memoriX",
+      "runtime",
+    )
+  }
+
+  const xdgDataHome =
+    environment.XDG_DATA_HOME?.trim()
+
+  if (xdgDataHome) {
+    return path.resolve(
+      xdgDataHome,
+      "memoriX",
+      "runtime",
+    )
+  }
+
+  const homeDirectory =
+    environment.HOME?.trim() ||
+    environment.USERPROFILE?.trim() ||
+    fallbacks.homeDirectory?.trim() ||
+    os.homedir().trim()
+
+  if (homeDirectory) {
+    return path.resolve(
+      homeDirectory,
+      ".local",
+      "share",
+      "memoriX",
+      "runtime",
+    )
+  }
+
+  const temporaryDirectory =
+    environment.TEMP?.trim() ||
+    environment.TMP?.trim() ||
+    fallbacks.temporaryDirectory?.trim() ||
+    os.tmpdir()
+
+  return path.resolve(
+    temporaryDirectory,
+    "memoriX",
+    "runtime",
+  )
+}
+
 export function memoriXServiceOptionsFromEnvironment(
   environment: MemoriXServiceEnvironment = {
     MEMORIX_ENABLED: process.env.MEMORIX_ENABLED,
@@ -129,6 +215,12 @@ export function memoriXServiceOptionsFromEnvironment(
       process.env.MEMORIX_PYTHON_EXECUTABLE,
     MEMORIX_RUNTIME_ROOT:
       process.env.MEMORIX_RUNTIME_ROOT,
+    LOCALAPPDATA: process.env.LOCALAPPDATA,
+    XDG_DATA_HOME: process.env.XDG_DATA_HOME,
+    HOME: process.env.HOME,
+    USERPROFILE: process.env.USERPROFILE,
+    TEMP: process.env.TEMP,
+    TMP: process.env.TMP,
     MEMORIX_TIMEOUT_MS:
       process.env.MEMORIX_TIMEOUT_MS,
     MEMORIX_TITAN_D_MODEL:
@@ -162,8 +254,7 @@ export function memoriXServiceOptionsFromEnvironment(
 
   const runtimeRoot =
     overrides.runtimeRoot ??
-    environment.MEMORIX_RUNTIME_ROOT?.trim() ??
-    path.join(repositoryRoot, "memory", "runtime")
+    resolveDefaultMemoriXRuntimeRoot(environment)
 
   return {
     enabled,

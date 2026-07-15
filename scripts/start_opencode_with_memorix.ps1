@@ -1,4 +1,4 @@
-﻿[CmdletBinding()]
+[CmdletBinding()]
 param(
     [string]$RuntimeRoot = "",
 
@@ -79,7 +79,18 @@ if (-not (Test-Path $OpenCodePackage -PathType Container)) {
 }
 
 if ([string]::IsNullOrWhiteSpace($RuntimeRoot)) {
-    $RuntimeRoot = Join-Path $ProjectRoot "memory\runtime\manual-test"
+    if (-not [string]::IsNullOrWhiteSpace($env:MEMORIX_RUNTIME_ROOT)) {
+        $RuntimeRoot = $env:MEMORIX_RUNTIME_ROOT
+    } elseif (-not [string]::IsNullOrWhiteSpace($env:LOCALAPPDATA)) {
+        $RuntimeRoot = Join-Path $env:LOCALAPPDATA "memoriX\runtime"
+    } elseif (-not [string]::IsNullOrWhiteSpace($env:TEMP)) {
+        $RuntimeRoot = Join-Path $env:TEMP "memoriX\runtime"
+    } else {
+        throw (
+            "Impossible de déterminer un runtime memoriX hors du dépôt. " +
+            "Utilise -RuntimeRoot ou MEMORIX_RUNTIME_ROOT."
+        )
+    }
 }
 
 if (-not [System.IO.Path]::IsPathRooted($RuntimeRoot)) {
@@ -87,13 +98,26 @@ if (-not [System.IO.Path]::IsPathRooted($RuntimeRoot)) {
 }
 
 $RuntimeRoot = [System.IO.Path]::GetFullPath($RuntimeRoot)
-$CanonicalDefaultRuntime = [System.IO.Path]::GetFullPath(
+$ForbiddenProjectRuntime = [System.IO.Path]::GetFullPath(
     (Join-Path $ProjectRoot "memory\runtime")
 )
-if ($RuntimeRoot -eq $CanonicalDefaultRuntime) {
+
+$RuntimeSeparator = [System.IO.Path]::DirectorySeparatorChar
+$ForbiddenRuntimePrefix = (
+    $ForbiddenProjectRuntime.TrimEnd($RuntimeSeparator) +
+    $RuntimeSeparator
+)
+
+if (
+    $RuntimeRoot -eq $ForbiddenProjectRuntime -or
+    $RuntimeRoot.StartsWith(
+        $ForbiddenRuntimePrefix,
+        [System.StringComparison]::OrdinalIgnoreCase
+    )
+) {
     throw (
-        "Le runtime racine memory\runtime ne doit pas être utilisé " +
-        "directement pour les tests manuels. Utilise un sous-dossier."
+        "Le runtime memoriX doit rester hors du dépôt. " +
+        "Chemin refusé : $RuntimeRoot"
     )
 }
 

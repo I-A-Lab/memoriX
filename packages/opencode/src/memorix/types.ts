@@ -146,6 +146,12 @@ export type MemoriXServiceEnvironment = {
   MEMORIX_ENABLED?: string
   MEMORIX_PYTHON_EXECUTABLE?: string
   MEMORIX_RUNTIME_ROOT?: string
+  LOCALAPPDATA?: string
+  XDG_DATA_HOME?: string
+  HOME?: string
+  USERPROFILE?: string
+  TEMP?: string
+  TMP?: string
   MEMORIX_TIMEOUT_MS?: string
   MEMORIX_TITAN_D_MODEL?: string
   MEMORIX_TITAN_HIDDEN_DIM?: string
