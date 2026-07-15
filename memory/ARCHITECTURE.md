@@ -1,170 +1,132 @@
-﻿# memoriX Python Memory Architecture
+# memoriX Python Memory Architecture
 
-## Current integration phase
+## Current implementation status
 
-This directory is the Python foundation for the memoriX external-memory
-system.
+memoriX is an operational external-memory system connected to OpenCode.
 
-At this stage:
+The current implementation includes:
 
-- no OpenCode integration is enabled;
-- no MCP server is enabled;
-- no OpenCode hook calls the Python memory;
-- no production memory event is written;
-- Antoine's existing `memory/titan_model.py` is preserved unchanged.
+- a Python gateway coordinating all memory operations;
+- a Python MCP server using JSON-RPC over stdio;
+- an isolated TypeScript MCP client and service;
+- native OpenCode tools for storing, retrieving, reviewing and consolidating memory;
+- optional OpenCode hooks for recording messages and tool results;
+- a Titan neural hot site containing human-validated active memories;
+- a durable cold archive containing the complete event history;
+- candidate validation and rejection workflows;
+- adaptive observation and dry-run components;
+- read-only diagnostics through the Live Probe.
 
-## Target memory contract
+Antoine's existing `memory/titan_model.py` prototype remains preserved.
 
-    short-term memory
-            |
-            +------------------> cold site durable history
-            |
-            +------------------> Titan V2 consolidation
-                                       |
-                                       v
-                                memory candidates
-                                       |
-                                human validation
-                                       |
-                                       v
-                                hot site Titan
+## Core memory contract
 
-The architectural rules are:
+```text
+OpenCode event or explicit memory request
+                |
+                v
+          short-term memory
+                |
+                +--------------------> cold durable archive
+                |
+                v
+         Titan V2 consolidation
+                |
+                v
+          pending candidates
+                |
+         explicit validation
+                |
+                v
+          Titan active hot site
+                |
+                v
+          hot-only retrieval
+```
+
+The non-negotiable architectural rules are:
 
 - short-term events are archived directly in the cold site;
-- the cold site is a complete durable history;
+- the cold site is complete durable audit history;
 - validated candidates are stored in the hot site only;
 - active retrieval uses the hot site only;
 - cold history search is explicit and audit-only;
 - there is no automatic cold-site fallback;
 - there is no automatic cold-to-hot rehydration;
-- updates and soft-forget affect only the hot site;
-- pruning must never alter the cold archive.
+- pending and rejected candidates are not available to retrieval;
+- update and soft-forget operations affect the hot site only;
+- pruning must never alter the cold archive;
+- consolidation may create pending candidates but must never validate them automatically.
 
 ## Package responsibilities
 
 ### `gateway`
 
-The future public Python entry point.
-
-It will coordinate memory operations without exposing storage internals.
+Public Python boundary coordinating storage, retrieval, candidate lifecycle, consolidation, nightly operations and status reporting.
 
 ### `hot_site/short_term_memory`
 
-Recent events received by the memory system.
-
-This package will eventually contain:
-
-- recent event models;
-- short-term event storage;
-- event loading;
-- event cleanup after successful consolidation.
+Stores recent events before consolidation. Every recorded event is also archived directly in the cold site.
 
 ### `hot_site/titan_active_memory`
 
-Curated, validated, active memories available to retrieval.
-
-This package will eventually contain:
-
-- the active Titan backend;
-- validated-memory storage;
-- active retrieval;
-- update handling;
-- hot-site-only soft-forget.
+Stores human-validated active memories and performs normal hot-only retrieval.
 
 ### `cold_site/long_term_store`
 
-Complete durable event history for audit and debugging.
-
-The cold site must:
-
-- receive short-term events directly;
-- preserve the raw historical record;
-- remain independent from candidate validation;
-- remain independent from hot-site pruning;
-- never be used as an automatic retrieval fallback.
+Stores the append-only durable event history used for explicit audit and debugging.
 
 ### `cold_site/project_archive`
 
-Explicit project-level archival operations.
-
-These operations must remain separate from active-memory retrieval.
+Reserved for explicit project-level archival operations. The full Project Archive workflow is not implemented yet.
 
 ### `consolidation`
 
-Short-term processing components.
-
-This package will eventually contain:
-
-- importance scoring;
-- confidence scoring;
-- surprise scoring;
-- event grouping;
-- deterministic or model-assisted summaries;
-- update detection;
-- memory-candidate creation.
-
-Consolidation must never write validated memories directly into the cold site.
+Scores, groups and summarizes short-term events into pending memory candidates.
 
 ### `sync`
 
-Replay and synchronization operations restricted to the active hot-site path.
+Contains protected nightly consolidation and active hot-site replay logic.
 
-Nightly synchronization must:
+### `adaptive`
 
-- process the short-term to hot-site path;
-- replay active validated memories when required;
-- produce execution logs;
-- verify that the cold site was not modified.
-
-### `data`
-
-Shared domain models and storage contracts.
-
-This package will eventually contain models such as:
-
-- short-term events;
-- archived events;
-- memory candidates;
-- validated memories;
-- retrieval results;
-- update and forgetting metadata.
+Provides pressure observations, dynamic Topic Blocks, capacity recommendations, pruning plans and controller decisions. Actions remain observation-only or dry-run.
 
 ### `observability`
 
-Metrics, diagnostics, benchmark support, and live-probe support.
+Provides diagnostics, benchmark reporting and the read-only Live Probe.
 
-This package will eventually contain:
+### `integrations/mcp`
 
-- momentum;
-- entropy;
-- surprise;
-- memory pressure;
-- topic-block diagnostics;
-- benchmark reports;
-- live-probe reports.
+Exposes the gateway through controlled MCP tools. OpenCode never writes directly to Python storage files.
 
-## Important boundaries
+## OpenCode integration
 
-The Python memory package must remain independent from OpenCode during this
-phase.
+The native OpenCode memory tools are:
 
-OpenCode and MCP will be integrated only after the Python memory components
-have their own passing tests.
+- `memory_store`;
+- `memory_retrieve`;
+- `memory_candidates_list`;
+- `memory_candidate_validate`;
+- `memory_candidate_reject`;
+- `memory_consolidate`;
+- `memory_status`.
 
-OpenCode must never write directly into Python memory-storage files.
+The OpenCode hooks are optional and disabled unless configured. Memory tools are excluded from hook capture to prevent self-recording loops.
 
-Future communication must pass through a controlled integration boundary,
-such as the memoriX gateway exposed through MCP.
+## Runtime isolation
 
-## Current implementation status
+Runtime state is selected through `MEMORIX_RUNTIME_ROOT` or the launcher parameter `RuntimeRoot`.
 
-At the end of this initial skeleton phase:
+Tests and manual validation must use a runtime outside the repository. Moving every default runtime path outside the repository remains part of the next security-hardening step.
 
-- package directories exist;
-- Python packages are importable;
-- the architecture contract is documented;
-- Antoine's Titan prototype remains unchanged;
-- no memory backend has been activated;
-- no storage file has been created;
-- no OpenCode source file has been modified.
+## Remaining work
+
+- enforce native OpenCode permission prompts for mutating tools;
+- make mandatory hook exclusions impossible to override;
+- move the default runtime outside the repository;
+- complete Project Archive;
+- operationalize scheduled nightly execution;
+- connect adaptive observation to production runtime data;
+- add transactions, locks, recovery and migrations;
+- complete concurrency, corruption, saturation and cross-platform testing.

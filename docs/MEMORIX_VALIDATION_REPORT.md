@@ -1,86 +1,87 @@
-# memoriX — Rapport final de validation
+# memoriX — Rapport de validation après l'étape 16
 
-## Révision validée
+## Révision fonctionnelle auditée
 
 - Branche : elwen
-- Commit de départ : 05e42de239a3e4505243eaee46b76d116519dd2d
-- Date de validation : 2026-07-14 15:15:15 +02:00
+- Commit fonctionnel de base : 429a4554ce3fea32b1dce451dee31dabd2871b82
+- Date de validation : 2026-07-15 14:24:26 +02:00
 - Python : Python 3.10.11
 - Bun : 1.3.14
 
-## Résultats
+## Résultats automatiques
 
 | Contrôle | Résultat |
 |---|---|
-| Compilation Python globale | PASS |
-| Suite Python complète | PASS |
 | Typecheck OpenCode | PASS |
-| Benchmark adaptatif | PASS |
-| Live Probe read-only | PASS |
+| Tests TypeScript memoriX | PASS |
+| Suite Python complète, 195 tests | PASS |
+| Compilation des scripts MCP, Live Probe et benchmark | PASS |
 | Contrat hot-only | PASS |
-| Recherche cold explicite | PASS |
-| Frontières de l'architecture d'Antoine | PASS |
+| Recherche cold explicite uniquement | PASS |
+| Isolation du runtime de test | PASS |
+| Protection du prototype Titan d'Antoine | PASS |
 
-## Benchmark
+## Validation manuelle OpenCode
 
-- Résultats produits : 15
-- Designs classés : 5
-- Classement observé : adaptive_controller, dynamic_capacity, topic_blocks, baseline, pressure
-- Données synthétiques uniquement : oui
-- Runtime modifié : non
-- Cold site consulté : non
-- Actions adaptatives appliquées : non
+Le scénario complet de gestion des candidates a validé :
+
+- `memory_status` sur un runtime propre ;
+- liste vide des candidates initiales ;
+- création d'une candidate pending ;
+- absence de retrieval avant validation ;
+- validation vers le Titan hot site ;
+- retrieval de la mémoire active validée ;
+- création et rejet d'une seconde candidate ;
+- absence de retrieval de la candidate rejetée ;
+- consolidation manuelle créant une candidate pending ;
+- aucune validation automatique.
+
+État final observé pendant ce scénario :
+
+- candidates pending : 1 ;
+- candidates validated : 1 ;
+- candidates rejected : 1 ;
+- mémoires Titan actives : 1 ;
+- événements short-term : 2 ;
+- événements cold archive : 2.
 
 ## Live Probe
 
-- Statut sur runtime temporaire vide : healthy
-- Lecture seule : True
-- Runtime modifié : False
-- Gateway instanciée : False
-- Titan chargé : False
-
-## Résumé de la suite Python
-
-```text
-Suite Python complète validée avec un code de sortie égal à 0.
-```
+- statut : healthy ;
+- checks failed : 0 ;
+- lecture seule : true ;
+- runtime modifié : false ;
+- gateway instanciée : false ;
+- Titan chargé : false.
 
 ## Architecture validée
 
-La validation couvre :
+1. écriture short-term et cold archive ;
+2. candidates pending ;
+3. validation humaine logique ;
+4. rejet sans écriture Titan ;
+5. Titan active hot site ;
+6. retrieval hot-only ;
+7. consolidation sans validation automatique ;
+8. gateway Python ;
+9. serveur MCP ;
+10. client et service TypeScript ;
+11. outils natifs OpenCode ;
+12. hooks OpenCode configurables ;
+13. observations adaptatives et dry-run ;
+14. benchmark isolé ;
+15. Live Probe read-only.
 
-1. les modèles et contrats Python ;
-2. la short-term memory ;
-3. le cold archive append-only ;
-4. le hot site Titan ;
-5. les candidates et la validation humaine ;
-6. le soft-forget ;
-7. la consolidation ;
-8. la gateway publique ;
-9. le serveur MCP ;
-10. le client et le service TypeScript ;
-11. les façades memory_store et memory_retrieve ;
-12. les hooks OpenCode contrôlés ;
-13. memory pressure ;
-14. Topic Blocks ;
-15. le routage logique des mémoires validées ;
-16. Dynamic Capacity en dry-run ;
-17. Soft Pruning en dry-run ;
-18. le contrôleur adaptatif ;
-19. le benchmark isolé ;
-20. le Live Probe read-only.
+## Limites restant à traiter
 
-## Limites volontaires actuelles
+- confirmation native OpenCode avant les mutations ;
+- exclusions de hooks obligatoires ;
+- runtime par défaut hors du dépôt ;
+- Project Archive ;
+- nightly planifié ;
+- adaptatif connecté au runtime réel ;
+- transactions et verrous ;
+- migrations et reprise après crash ;
+- tests de concurrence, corruption, saturation et multiplateforme.
 
-Les mécanismes suivants ne sont pas appliqués automatiquement :
-
-- redimensionnement de Titan ;
-- déplacement physique par Topic Block ;
-- weakening automatique ;
-- deactivation automatique ;
-- suppression physique ;
-- rehydration cold vers hot ;
-- validation automatique de candidates.
-
-Cette limitation est volontaire. Elle préserve le contrôle humain et le
-contrat de sécurité actuel.
+Les actions adaptatives, la validation automatique, la réhydratation cold vers hot et la suppression physique restent volontairement désactivées.

@@ -1,102 +1,122 @@
-# memoriX — Architecture finale
+# memoriX — Architecture cible et état actuel
 
 ## Objectif
 
-memoriX fournit une mémoire longue durée contrôlée pour OpenCode et ses agents. La mémoire Python est exposée à OpenCode par un serveur MCP, sans remplacer l’architecture d’agents existante.
+memoriX fournit une mémoire longue durée contrôlée à OpenCode et à ses agents, sans remplacer leur architecture d'orchestration.
 
-## Architecture générale
+La mémoire Python est accessible uniquement par une frontière contrôlée :
 
 ```text
-OpenCode / agents
+OpenCode et agents
         |
-        | outils et hooks contrôlés
+        | outils natifs et hooks optionnels
         v
 Service memoriX TypeScript
         |
-        | MCP stdio
+        | MCP JSON-RPC sur stdio
         v
 Serveur MCP Python
         |
         v
 MemoriXGateway
         |
-        +-- Short-term memory
-        +-- Cold archive append-only
-        +-- Candidates pending
-        +-- Validation humaine
-        +-- Titan hot site
-        +-- Consolidation
-        +-- Adaptive-memory observations
+        +-- short-term memory
+        +-- cold archive append-only
+        +-- pending candidates
+        +-- validation ou rejet
+        +-- Titan active hot site
+        +-- consolidation
+        +-- nightly protégé
+        +-- observations adaptatives
 ```
+
+OpenCode ne lit et ne modifie jamais directement les fichiers du runtime Python.
+
+## Outils natifs OpenCode
+
+- `memory_store` propose une candidate en attente de validation ;
+- `memory_retrieve` recherche uniquement dans les mémoires Titan actives ;
+- `memory_candidates_list` liste les candidates par statut ;
+- `memory_candidate_validate` valide une candidate et écrit dans Titan ;
+- `memory_candidate_reject` rejette une candidate sans écriture Titan ;
+- `memory_consolidate` transforme les événements short-term en candidates pending ;
+- `memory_status` retourne l'état de l'architecture et du stockage.
 
 ## Contrat de récupération
 
-La récupération conversationnelle normale est strictement **hot-site only** :
+La récupération conversationnelle normale est strictement hot-site only :
 
 ```text
 memory_retrieve
-    -> Titan hot site
-    -> aucun fallback automatiyue vers le cold site
+    -> Titan active hot site
+    -> aucun fallback automatique vers le cold site
 ```
 
-La recherche dans l’historique cold est une opération explicite et distincte :
+La recherche cold est une opération distincte et explicite :
 
 ```text
-cold audit search
-    -> cold site
-    -> diagnostic ou audit explicite uniquement
+memorix_search_cold_history
+    -> cold archive
+    -> audit ou diagnostic uniquement
 ```
 
-## Cycle d’une information
+Il n'existe aucune réhydratation automatique du cold site vers Titan.
 
-1. Un événement est enregistré en short-term et dans l’archive cold.
-2. Une candidate mémoire peut être proposée.
-3. La candidate reste invisible au retrieval tant qu’elle n’est pas validée.
-4. Une validation humaine explicite transforme la candidate en mémoire Titan.
-5. La mémoire validée devient disponible dans le retrieval hot-only.
-6. Le soft-forget désactive logiquement une mémoire sans effacer l’historique cold.
+## Cycle d'une information
 
-## Topic Blocks
+1. Un événement est écrit dans la short-term memory.
+2. Le même événement est archivé directement dans le cold site.
+3. Une candidate peut être proposée explicitement ou créée par consolidation.
+4. Une candidate pending reste invisible à `memory_retrieve`.
+5. Une validation transforme la candidate en mémoire Titan active.
+6. Une candidate rejetée ne crée aucune mémoire Titan.
+7. Le soft-forget désactive une mémoire active sans supprimer l'historique cold.
 
-Les Topic Blocks sont dynamiques et issus du contenu observé. Ils enrichissent les métadonnées des mémoires validées, sans créer de partition physique de Titan et sans modifier le retrieval.
+## Hooks OpenCode
+
+Les hooks peuvent enregistrer les messages et les résultats d'outils lorsque leur capture est activée.
+
+Tous les outils mémoire sont ignorés par ces hooks afin d'éviter qu'une opération mémoire enregistre son propre résultat.
 
 ## Adaptive Memory
 
-Les composants adaptatifs comprennent :
+Les composants adaptatifs disponibles comprennent :
 
-- memory pressure ;
-- historique de pression ;
+- memory pressure et historique de pression ;
 - Topic Blocks dynamiques ;
+- routage logique des mémoires ;
 - recommandations de capacité ;
 - plans de soft pruning ;
-- contrôleur adaptatif global.
+- décisions du contrôleur adaptatif ;
+- benchmark synthétique isolé.
 
-Les décisions adaptatives restent actuellement observation-only, dry-run, non appliquées, hot-site only, sans modification du cold site et sans changement du contrat de retrieval.
-
-## Dynamic Capacity
-
-La capacité dynamique produit des recommandations KEEP, WATCH ou EXPAND à partir de l’usage ratio, du momentum, de l’entropy, de la surprise et de la pressure persistence. Aucune capacité Titan n’est automatiquement modifiée.
-
-## Soft Pruning
-
-Le soft pruning produit des recommandations KEEP, WEAKEN ou DEACTIVATE. Elles ne provoquent aucune suppression physique, aucune mutation automatique du hot site et aucune modification du cold archive.
-
-## Benchmark
-
-Le benchmark isolé compare la baseline, pressure, Topic Blocks, dynamic capacity et adaptive controller sur des scénarios synthétiques. Il n’applique aucune action.
+Ces fonctions restent en observation ou dry-run. Elles ne modifient ni le hot site ni le cold site automatiquement.
 
 ## Live Probe
 
-Le Live Probe inspecte un runtime en lecture seule. Il n’instancie pas la gateway, ne charge pas Titan, n’appelle pas le retrieval et ne crée aucun fichier dans le runtime inspecté.
+Le Live Probe inspecte un runtime en lecture seule. Il ne charge pas Titan, n'instancie pas la gateway, n'appelle pas le retrieval et ne crée aucun fichier.
 
-## Intégration OpenCode
+## État fonctionnel validé
 
-L’intégration OpenCode est progressive :
+- enregistrement short-term et cold : fonctionnel ;
+- candidates pending : fonctionnel ;
+- validation vers Titan : fonctionnelle ;
+- rejet sans écriture Titan : fonctionnel ;
+- retrieval hot-only : fonctionnel ;
+- consolidation sans validation automatique : fonctionnelle ;
+- statut OpenCode : fonctionnel ;
+- Live Probe read-only : fonctionnel ;
+- intégration MCP et OpenCode : fonctionnelle.
 
-- client MCP TypeScript isolé ;
-- service memoriX non bloquant ;
-- façades `memory_store` et `memory_retrieve` ;
-- hooks activables individuellement ;
-- comportement désactivé par défaut lorsqu’il n’est pas configuré.
+## Travaux encore nécessaires
 
-L’architecture d’agents d’Antoine reste la couche d’orchestration principale.
+- confirmation native OpenCode avant chaque mutation ;
+- exclusions de hooks obligatoires et non contournables ;
+- runtime par défaut hors du dépôt ;
+- Project Archive complet ;
+- exécution nightly planifiée ;
+- observations adaptatives alimentées par le runtime réel ;
+- transactions, verrous, migrations et reprise après crash ;
+- validation finale de concurrence, corruption, saturation et compatibilité multiplateforme.
+
+L'architecture d'agents d'Antoine reste la couche d'orchestration principale.

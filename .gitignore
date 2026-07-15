@@ -44,3 +44,6 @@ venv/
 
 # memoriX runtime data
 memory/runtime/
+
+# Legacy OpenCode memory data
+.opencode/memory/

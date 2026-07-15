@@ -2,32 +2,53 @@
 
 ## Préparation
 
-Se placer à la racine du dépôt :
-
 ```powershell
 Set-Location "D:\Ecole\Vietnam Projet\memoriX"
-```
 
-Identifier l'exécutable Python 3.10 :
-
-```powershell
 $PythonExe = (
     py -3.10 -c "import sys; print(sys.executable)"
 ).Trim()
 ```
 
-## Tests Python complets
+## Règle de runtime
+
+Les tests et validations manuelles doivent utiliser un runtime extérieur au dépôt :
 
 ```powershell
-& $PythonExe -m unittest discover `
-    -s "tests\memory" `
-    -p "test_*.py" `
-    -v
+$RuntimeRoot = Join-Path `
+    $env:TEMP `
+    "memorix-runtime"
 ```
 
-Sous Windows PowerShell 5.1, unittest peut écrire son affichage normal
-sur stderr. Le code de sortie dans $LASTEXITCODE reste la validation
-réelle.
+Le dossier `memory/runtime` ne doit pas être créé par les tests.
+
+## Prévalidation du lanceur OpenCode
+
+```powershell
+& "scripts\start_opencode_with_memorix.ps1" `
+    -RuntimeRoot $RuntimeRoot `
+    -ValidateOnly
+```
+
+## Lancement OpenCode avec memoriX
+
+```powershell
+& "scripts\start_opencode_with_memorix.ps1" `
+    -RuntimeRoot $RuntimeRoot `
+    -ResetRuntime
+```
+
+## Outils OpenCode
+
+- `memory_store` ;
+- `memory_retrieve` ;
+- `memory_candidates_list` ;
+- `memory_candidate_validate` ;
+- `memory_candidate_reject` ;
+- `memory_consolidate` ;
+- `memory_status`.
+
+Une candidate pending ou rejected ne doit jamais être retournée par `memory_retrieve`.
 
 ## Typecheck OpenCode
 
@@ -35,55 +56,95 @@ réelle.
 bun run --cwd "packages\opencode" typecheck
 ```
 
-## Serveur MCP Python
+## Tests TypeScript memoriX
+
+```powershell
+bun test `
+    --cwd "packages\opencode" `
+    --timeout 120000 `
+    "test/memorix"
+```
+
+## Tests Python
+
+Limiter les threads numériques évite les ralentissements excessifs de Torch et de BLAS :
+
+```powershell
+$env:OMP_NUM_THREADS = "1"
+$env:MKL_NUM_THREADS = "1"
+$env:OPENBLAS_NUM_THREADS = "1"
+$env:NUMEXPR_NUM_THREADS = "1"
+
+$env:MEMORIX_RUNTIME_ROOT = Join-Path `
+    $env:TEMP `
+    "memorix-python-tests"
+
+& $PythonExe -m unittest discover `
+    -s "tests\memory" `
+    -p "test_*.py"
+```
+
+Sous Windows PowerShell 5.1, `unittest` peut écrire son affichage normal sur stderr. La validation réelle repose sur `$LASTEXITCODE` et sur la ligne `OK`.
+
+## Serveur MCP
 
 ```powershell
 & $PythonExe "scripts\memorix_mcp_server.py"
 ```
 
-Le serveur MCP utilise stdio et attend des requêtes JSON-RPC sur stdin.
+Le serveur attend des requêtes JSON-RPC sur stdin et répond sur stdout.
 
 ## Benchmark adaptatif
 
 ```powershell
-& $PythonExe "scripts\memorix_adaptive_design_benchmark.py"
+& $PythonExe `
+    "scripts\memorix_adaptive_design_benchmark.py"
 ```
 
-Le benchmark utilise uniquement des scénarios synthétiques.
+Le benchmark utilise des scénarios synthétiques et n'applique aucune action.
 
 ## Live Probe
 
 ```powershell
-& $PythonExe "scripts\memorix_live_probe.py" "CHEMIN_DU_RUNTIME"
+& $PythonExe `
+    "scripts\memorix_live_probe.py" `
+    $RuntimeRoot
 ```
 
-Le Live Probe inspecte le runtime en lecture seule.
-
-## Variables OpenCode principales
+Résultat attendu :
 
 ```text
-MEMORIX_ENABLED
-MEMORIX_PYTHON_EXECUTABLE
-MEMORIX_PROJECT_ROOT
-MEMORIX_RUNTIME_ROOT
+status: healthy
+checks_failed: 0
+read_only: true
+runtime_modified: false
 ```
 
-Les options exactes sont définies dans le service memoriX TypeScript.
+## Variables principales
 
-## Règles de sécurité
+- `MEMORIX_ENABLED` ;
+- `MEMORIX_PYTHON_EXECUTABLE` ;
+- `MEMORIX_PROJECT_ROOT` ;
+- `MEMORIX_RUNTIME_ROOT` ;
+- `MEMORIX_TIMEOUT_MS` ;
+- paramètres `MEMORIX_TITAN_*` ;
+- paramètres `MEMORIX_HOOK_*`.
 
-- memory_retrieve utilise uniquement le hot site.
-- Le cold site n'est jamais un fallback implicite.
-- Une candidate pending n'est pas disponible au retrieval.
-- La validation humaine reste explicite.
-- Les fonctions adaptatives restent en dry-run.
-- Les outils mémoire ne doivent pas déclencher leurs propres hooks.
-- Un échec memoriX ne doit pas casser OpenCode.
+## Contrats de sécurité
 
-## Commandes Git finales
+- retrieval hot-site only ;
+- cold search explicite uniquement ;
+- aucune validation automatique ;
+- aucune réhydratation automatique ;
+- aucune suppression physique du cold site ;
+- fonctions adaptatives en observation ou dry-run ;
+- outils mémoire exclus des hooks ;
+- panne memoriX non bloquante pour OpenCode.
+
+## Vérifications Git
 
 ```powershell
-git status
+git status --short
 git diff --check
 git log -10 --oneline
 ```
