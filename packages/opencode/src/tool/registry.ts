@@ -17,6 +17,13 @@ import { WriteTool } from "./write"
 import { InvalidTool } from "./invalid"
 import { SkillTool } from "./skill"
 import { MemoryStoreTool, MemoryRetrieveTool } from "./memory"
+import {
+  MemoryCandidateRejectTool,
+  MemoryCandidateValidateTool,
+  MemoryCandidatesListTool,
+  MemoryConsolidateTool,
+  MemoryStatusTool,
+} from "./memory-candidates"
 import * as Tool from "./tool"
 import { Config } from "@/config/config"
 import { type ToolContext as PluginToolContext, type ToolDefinition } from "@opencode-ai/plugin"
@@ -107,6 +114,15 @@ const layer = Layer.effect(
     const skilltool = yield* SkillTool
     const memorystore = yield* MemoryStoreTool
     const memoryretrieve = yield* MemoryRetrieveTool
+    const memorycandidateslist =
+      yield* MemoryCandidatesListTool
+    const memorycandidatevalidate =
+      yield* MemoryCandidateValidateTool
+    const memorycandidatereject =
+      yield* MemoryCandidateRejectTool
+    const memoryconsolidate =
+      yield* MemoryConsolidateTool
+    const memorystatus = yield* MemoryStatusTool
     const agent = yield* Agent.Service
 
     const state = yield* InstanceState.make<State>(
@@ -216,6 +232,19 @@ const layer = Layer.effect(
           plan: Tool.init(plan),
           memory_store: Tool.init(memorystore),
           memory_retrieve: Tool.init(memoryretrieve),
+          memory_candidates_list: Tool.init(
+            memorycandidateslist,
+          ),
+          memory_candidate_validate: Tool.init(
+            memorycandidatevalidate,
+          ),
+          memory_candidate_reject: Tool.init(
+            memorycandidatereject,
+          ),
+          memory_consolidate: Tool.init(
+            memoryconsolidate,
+          ),
+          memory_status: Tool.init(memorystatus),
         })
 
         return {
@@ -237,6 +266,11 @@ const layer = Layer.effect(
             tool.patch,
             tool.memory_store,
             tool.memory_retrieve,
+            tool.memory_candidates_list,
+            tool.memory_candidate_validate,
+            tool.memory_candidate_reject,
+            tool.memory_consolidate,
+            tool.memory_status,
             ...(flags.experimentalLspTool ? [tool.lsp] : []),
             ...(flags.experimentalPlanMode && flags.client === "cli" ? [tool.plan] : []),
           ],

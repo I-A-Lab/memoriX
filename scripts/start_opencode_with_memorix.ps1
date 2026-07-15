@@ -28,7 +28,7 @@ param(
 
     [int]$MaxToolOutputCharacters = 16000,
 
-    [string]$IgnoredTools = "memory_store,memory_retrieve"
+    [string]$IgnoredTools = "memory_store,memory_retrieve,memory_candidates_list,memory_candidate_validate,memory_candidate_reject,memory_consolidate,memory_status"
 )
 
 $ErrorActionPreference = "Stop"

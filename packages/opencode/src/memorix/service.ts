@@ -17,6 +17,8 @@ import type {
   MemoriXServiceOptions,
   MemoriXServiceResult,
   MemoriXStatus,
+  JSONObject,
+  MemoriXCandidateStatus,
 } from "./types"
 
 export type MemoriXClientContract = Pick<
@@ -312,6 +314,72 @@ export class MemoriXService {
     )
   }
 
+  async listCandidates(
+    status?: MemoriXCandidateStatus | null,
+  ): Promise<MemoriXServiceResult<MemoriXCandidate[]>> {
+    return this.runSafely(
+      async (client) => {
+        const value = await client.callTool<MemoriXCandidate[]>(
+          "memorix_list_candidates",
+          status ? { status } : {},
+        )
+
+        return value
+      },
+    )
+  }
+
+  async validateCandidate(input: {
+    candidateID: string
+    validatedBy: string
+    validationReason: string
+    finalContent?: string | null
+  }): Promise<MemoriXServiceResult<JSONObject>> {
+    return this.runSafely(
+      (client) =>
+        client.callTool<JSONObject>(
+          "memorix_validate_candidate",
+          {
+            candidate_id: input.candidateID,
+            validated_by: input.validatedBy,
+            validation_reason: input.validationReason,
+            ...(input.finalContent !== undefined
+              ? { final_content: input.finalContent }
+              : {}),
+          },
+        ),
+    )
+  }
+
+  async rejectCandidate(input: {
+    candidateID: string
+    rejectedBy: string
+    rejectionReason: string
+  }): Promise<MemoriXServiceResult<MemoriXCandidate>> {
+    return this.runSafely(
+      (client) =>
+        client.callTool<MemoriXCandidate>(
+          "memorix_reject_candidate",
+          {
+            candidate_id: input.candidateID,
+            rejected_by: input.rejectedBy,
+            rejection_reason: input.rejectionReason,
+          },
+        ),
+    )
+  }
+
+  async runConsolidation(
+    mode = "manual",
+  ): Promise<MemoriXServiceResult<JSONObject>> {
+    return this.runSafely(
+      (client) =>
+        client.callTool<JSONObject>(
+          "memorix_run_consolidation",
+          { mode },
+        ),
+    )
+  }
   async close(): Promise<void> {
     if (this.closing) {
       await this.closing

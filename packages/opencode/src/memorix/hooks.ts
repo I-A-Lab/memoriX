@@ -12,6 +12,11 @@ const DEFAULT_MAX_TOOL_OUTPUT_CHARACTERS = 16_000
 const DEFAULT_IGNORED_TOOLS = [
   "memory_store",
   "memory_retrieve",
+  "memory_candidates_list",
+  "memory_candidate_validate",
+  "memory_candidate_reject",
+  "memory_consolidate",
+  "memory_status",
 ]
 
 export type MemoriXHookService = {

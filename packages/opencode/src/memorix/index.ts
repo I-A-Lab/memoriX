@@ -1,3 +1,17 @@
+export {
+  getMemoriXStatus,
+  listCandidatesThroughMemoriX,
+  rejectCandidateThroughMemoriX,
+  runConsolidationThroughMemoriX,
+  validateCandidateThroughMemoriX,
+} from "./candidate-facade"
+
+export type {
+  CandidateFacadeFailure,
+  CandidateFacadeMetadata,
+  CandidateFacadeResult,
+  CandidateFacadeService,
+} from "./candidate-facade"
 export { MemoriXClient } from "./client"
 
 export {
