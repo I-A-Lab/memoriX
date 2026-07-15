@@ -73,7 +73,7 @@ describe("memoriX hook configuration", () => {
     ).toBe(false)
   })
 
-  test("parses enabled flags and exclusions", () => {
+  test("parses enabled flags and merges custom exclusions", () => {
     const options =
       memoriXHookOptionsFromEnvironment({
         MEMORIX_HOOK_CAPTURE_MESSAGES:
@@ -94,8 +94,74 @@ describe("memoriX hook configuration", () => {
 
     expect(options.ignoredTools).toEqual([
       "memory_store",
+      "memory_retrieve",
+      "memory_candidates_list",
+      "memory_candidate_validate",
+      "memory_candidate_reject",
+      "memory_consolidate",
+      "memory_status",
       "bash",
     ])
+  })
+
+  test("keeps mandatory exclusions when the custom value is empty", () => {
+    const options =
+      memoriXHookOptionsFromEnvironment({
+        MEMORIX_HOOK_IGNORED_TOOLS:
+          "   ",
+      })
+
+    expect(options.ignoredTools).toEqual([
+      "memory_store",
+      "memory_retrieve",
+      "memory_candidates_list",
+      "memory_candidate_validate",
+      "memory_candidate_reject",
+      "memory_consolidate",
+      "memory_status",
+    ])
+  })
+
+  test("normalizes and deduplicates custom exclusions", () => {
+    const options =
+      memoriXHookOptionsFromEnvironment({
+        MEMORIX_HOOK_IGNORED_TOOLS:
+          " Bash, bash , MEMORY_STORE, custom_tool ",
+      })
+
+    expect(options.ignoredTools).toEqual([
+      "memory_store",
+      "memory_retrieve",
+      "memory_candidates_list",
+      "memory_candidate_validate",
+      "memory_candidate_reject",
+      "memory_consolidate",
+      "memory_status",
+      "bash",
+      "custom_tool",
+    ])
+  })
+
+  test("cannot remove mandatory memory tool exclusions", () => {
+    const options =
+      memoriXHookOptionsFromEnvironment({
+        MEMORIX_HOOK_IGNORED_TOOLS:
+          "bash",
+      })
+
+    for (const tool of [
+      "memory_store",
+      "memory_retrieve",
+      "memory_candidates_list",
+      "memory_candidate_validate",
+      "memory_candidate_reject",
+      "memory_consolidate",
+      "memory_status",
+    ]) {
+      expect(options.ignoredTools).toContain(
+        tool,
+      )
+    }
   })
 })
 

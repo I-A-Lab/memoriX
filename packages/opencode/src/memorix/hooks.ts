@@ -103,17 +103,16 @@ function parsePositiveInteger(
 function parseIgnoredTools(
   value: string | undefined,
 ): string[] {
-  if (!value?.trim()) {
-    return [...DEFAULT_IGNORED_TOOLS]
-  }
+  const customIgnoredTools = value
+    ?.split(",")
+    .map((tool) => tool.trim().toLowerCase())
+    .filter(Boolean) ?? []
 
   return [
-    ...new Set(
-      value
-        .split(",")
-        .map((tool) => tool.trim())
-        .filter(Boolean),
-    ),
+    ...new Set([
+      ...DEFAULT_IGNORED_TOOLS,
+      ...customIgnoredTools,
+    ]),
   ]
 }
 
