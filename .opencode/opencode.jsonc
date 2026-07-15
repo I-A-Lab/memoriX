@@ -1,7 +1,12 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "provider": {},
-  "permission": {},
+  "permission": {
+    "memory_store": "ask",
+    "memory_candidate_validate": "ask",
+    "memory_candidate_reject": "ask",
+    "memory_consolidate": "ask",
+  },
   "references": {
     "effect": {
       "repository": "github.com/Effect-TS/effect-smol",

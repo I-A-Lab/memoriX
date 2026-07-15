@@ -49,21 +49,35 @@ export const MemoryStoreTool = Tool.define<
           MemoryStoreFacadeMetadata
         >,
       ) =>
-        Effect.promise(() =>
-          storeMemoryThroughMemoriX(
-            getDefaultMemoriXService(),
-            {
+        Effect.gen(function* () {
+          yield* ctx.ask({
+            permission: "memory_store",
+            patterns: [params.subject],
+            always: [],
+            metadata: {
+              operation: "create_pending_candidate",
               subject: params.subject,
               content: params.content,
               tags: params.tags,
             },
-            {
-              sessionID: String(ctx.sessionID),
-              messageID: String(ctx.messageID),
-              agent: ctx.agent,
-            },
-          ),
-        ),
+          })
+
+          return yield* Effect.promise(() =>
+            storeMemoryThroughMemoriX(
+              getDefaultMemoriXService(),
+              {
+                subject: params.subject,
+                content: params.content,
+                tags: params.tags,
+              },
+              {
+                sessionID: String(ctx.sessionID),
+                messageID: String(ctx.messageID),
+                agent: ctx.agent,
+              },
+            ),
+          )
+        }),
     } satisfies Tool.DefWithoutID<
       typeof StoreParameters,
       MemoryStoreFacadeMetadata

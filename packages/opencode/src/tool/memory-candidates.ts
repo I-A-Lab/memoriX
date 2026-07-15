@@ -114,20 +114,35 @@ export const MemoryCandidateValidateTool = Tool.define<
       params: Schema.Schema.Type<
         typeof CandidateValidateParameters
       >,
-      _ctx: Tool.Context<CandidateFacadeMetadata>,
+      ctx: Tool.Context<CandidateFacadeMetadata>,
     ) =>
-      Effect.promise(() =>
-        validateCandidateThroughMemoriX(
-          getDefaultMemoriXService(),
-          {
-            candidateID: params.candidate_id,
-            validatedBy: params.validated_by,
-            validationReason:
-              params.validation_reason,
-            finalContent: params.final_content,
+      Effect.gen(function* () {
+        yield* ctx.ask({
+          permission: "memory_candidate_validate",
+          patterns: [params.candidate_id],
+          always: [],
+          metadata: {
+            operation: "validate_candidate",
+            candidate_id: params.candidate_id,
+            validated_by: params.validated_by,
+            validation_reason: params.validation_reason,
+            final_content: params.final_content,
           },
-        ),
-      ),
+        })
+
+        return yield* Effect.promise(() =>
+          validateCandidateThroughMemoriX(
+            getDefaultMemoriXService(),
+            {
+              candidateID: params.candidate_id,
+              validatedBy: params.validated_by,
+              validationReason:
+                params.validation_reason,
+              finalContent: params.final_content,
+            },
+          ),
+        )
+      }),
   } satisfies Tool.DefWithoutID<
     typeof CandidateValidateParameters,
     CandidateFacadeMetadata
@@ -148,19 +163,33 @@ export const MemoryCandidateRejectTool = Tool.define<
       params: Schema.Schema.Type<
         typeof CandidateRejectParameters
       >,
-      _ctx: Tool.Context<CandidateFacadeMetadata>,
+      ctx: Tool.Context<CandidateFacadeMetadata>,
     ) =>
-      Effect.promise(() =>
-        rejectCandidateThroughMemoriX(
-          getDefaultMemoriXService(),
-          {
-            candidateID: params.candidate_id,
-            rejectedBy: params.rejected_by,
-            rejectionReason:
-              params.rejection_reason,
+      Effect.gen(function* () {
+        yield* ctx.ask({
+          permission: "memory_candidate_reject",
+          patterns: [params.candidate_id],
+          always: [],
+          metadata: {
+            operation: "reject_candidate",
+            candidate_id: params.candidate_id,
+            rejected_by: params.rejected_by,
+            rejection_reason: params.rejection_reason,
           },
-        ),
-      ),
+        })
+
+        return yield* Effect.promise(() =>
+          rejectCandidateThroughMemoriX(
+            getDefaultMemoriXService(),
+            {
+              candidateID: params.candidate_id,
+              rejectedBy: params.rejected_by,
+              rejectionReason:
+                params.rejection_reason,
+            },
+          ),
+        )
+      }),
   } satisfies Tool.DefWithoutID<
     typeof CandidateRejectParameters,
     CandidateFacadeMetadata
@@ -181,14 +210,28 @@ export const MemoryConsolidateTool = Tool.define<
       params: Schema.Schema.Type<
         typeof ConsolidationParameters
       >,
-      _ctx: Tool.Context<CandidateFacadeMetadata>,
+      ctx: Tool.Context<CandidateFacadeMetadata>,
     ) =>
-      Effect.promise(() =>
-        runConsolidationThroughMemoriX(
-          getDefaultMemoriXService(),
-          params.mode ?? "manual",
-        ),
-      ),
+      Effect.gen(function* () {
+        const mode = params.mode ?? "manual"
+
+        yield* ctx.ask({
+          permission: "memory_consolidate",
+          patterns: [mode],
+          always: [],
+          metadata: {
+            operation: "run_consolidation",
+            mode,
+          },
+        })
+
+        return yield* Effect.promise(() =>
+          runConsolidationThroughMemoriX(
+            getDefaultMemoriXService(),
+            mode,
+          ),
+        )
+      }),
   } satisfies Tool.DefWithoutID<
     typeof ConsolidationParameters,
     CandidateFacadeMetadata
