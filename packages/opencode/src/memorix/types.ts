@@ -20,6 +20,10 @@ export type MemoriXToolName =
   | "memorix_forget_memory"
   | "memorix_run_consolidation"
   | "memorix_run_nightly"
+  | "memorix_project_entry_record"
+  | "memorix_project_entries_list"
+  | "memorix_project_snapshot_rebuild"
+  | "memorix_project_snapshot_get"
   | "memorix_status"
 
 export type MemoriXToolDefinition = {
@@ -44,6 +48,8 @@ export type MemoriXStatus = {
   automatic_rehydration: boolean
   short_term_events: number
   cold_archive_events: number
+  project_archive_entries: number
+  project_archive_snapshots: number
   hot_memories_total: number
   hot_memories_active: number
   candidates: {
@@ -249,3 +255,57 @@ export type MemoriXHookOutcome =
       status: "unavailable"
       reason: string
     }
+
+export type MemoriXProjectArchiveEntryType =
+  | "identity"
+  | "objective"
+  | "decision"
+  | "architecture"
+  | "milestone"
+  | "task_completed"
+  | "task_remaining"
+  | "problem"
+  | "solution"
+  | "change"
+  | "note"
+
+export type MemoriXProjectArchiveEntry = {
+  entry_id: string
+  project_id: string
+  entry_type: MemoriXProjectArchiveEntryType
+  title: string
+  content: string
+  source_event_ids: string[]
+  author: string
+  created_at: string
+  recorded_at: string
+  metadata: JSONObject
+}
+
+export type MemoriXProjectSnapshot = {
+  project_id: string
+  name: string
+  summary: string
+  objectives: string[]
+  decisions: string[]
+  architecture: string[]
+  milestones: string[]
+  completed_tasks: string[]
+  remaining_tasks: string[]
+  problems: string[]
+  solutions: string[]
+  latest_changes: string[]
+  source_entry_ids: string[]
+  version: number
+  updated_at: string
+}
+
+export type MemoriXProjectEntryRecordInput = {
+  project_id: string
+  entry_type: MemoriXProjectArchiveEntryType
+  title: string
+  content: string
+  source_event_ids: string[]
+  author: string
+  metadata?: JSONObject
+}

@@ -53,6 +53,8 @@ class FakeClient implements MemoriXClientContract {
       automatic_rehydration: false,
       short_term_events: 0,
       cold_archive_events: 0,
+      project_archive_entries: 0,
+      project_archive_snapshots: 0,
       hot_memories_total: 0,
       hot_memories_active: 0,
       candidates: {

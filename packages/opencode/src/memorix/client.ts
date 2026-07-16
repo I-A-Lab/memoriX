@@ -16,6 +16,10 @@ import type {
   MemoriXCandidate,
   MemoriXClientOptions,
   MemoriXProposeCandidateInput,
+  MemoriXProjectArchiveEntry,
+  MemoriXProjectArchiveEntryType,
+  MemoriXProjectEntryRecordInput,
+  MemoriXProjectSnapshot,
   MemoriXRecordedEvent,
   MemoriXRecordEventInput,
   MemoriXRetrievalResult,
@@ -343,6 +347,73 @@ export class MemoriXClient {
     )
 
     return asRecord(value) as unknown as MemoriXCandidate
+  }
+
+  async recordProjectArchiveEntry(
+    input: MemoriXProjectEntryRecordInput,
+  ): Promise<MemoriXProjectArchiveEntry> {
+    if (!input.project_id.trim()) {
+      throw new MemoriXClientError("Project ID must not be empty.")
+    }
+    if (!input.title.trim() || !input.content.trim() || !input.author.trim()) {
+      throw new MemoriXClientError("Project archive text fields must not be empty.")
+    }
+    if (
+      input.source_event_ids.length === 0 ||
+      input.source_event_ids.some((value) => !value.trim())
+    ) {
+      throw new MemoriXClientError(
+        "Project archive source_event_ids must contain non-empty IDs.",
+      )
+    }
+
+    const value = await this.callTool(
+      "memorix_project_entry_record",
+      input as unknown as JSONObject,
+    )
+    return asRecord(value) as unknown as MemoriXProjectArchiveEntry
+  }
+
+  async listProjectArchiveEntries(options: {
+    projectID?: string | null
+    entryType?: MemoriXProjectArchiveEntryType | null
+  } = {}): Promise<MemoriXProjectArchiveEntry[]> {
+    return this.callTool<MemoriXProjectArchiveEntry[]>(
+      "memorix_project_entries_list",
+      {
+        ...(options.projectID !== undefined
+          ? { project_id: options.projectID }
+          : {}),
+        ...(options.entryType !== undefined
+          ? { entry_type: options.entryType }
+          : {}),
+      },
+    )
+  }
+
+  async rebuildProjectSnapshot(
+    projectID: string,
+  ): Promise<MemoriXProjectSnapshot> {
+    if (!projectID.trim()) {
+      throw new MemoriXClientError("Project ID must not be empty.")
+    }
+    const value = await this.callTool(
+      "memorix_project_snapshot_rebuild",
+      { project_id: projectID },
+    )
+    return asRecord(value) as unknown as MemoriXProjectSnapshot
+  }
+
+  async getProjectSnapshot(
+    projectID: string,
+  ): Promise<MemoriXProjectSnapshot | null> {
+    if (!projectID.trim()) {
+      throw new MemoriXClientError("Project ID must not be empty.")
+    }
+    return this.callTool<MemoriXProjectSnapshot | null>(
+      "memorix_project_snapshot_get",
+      { project_id: projectID },
+    )
   }
 
   async close(): Promise<void> {

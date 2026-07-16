@@ -10,6 +10,10 @@ import {
 import type {
   MemoriXCandidate,
   MemoriXProposeCandidateInput,
+  MemoriXProjectArchiveEntry,
+  MemoriXProjectArchiveEntryType,
+  MemoriXProjectEntryRecordInput,
+  MemoriXProjectSnapshot,
   MemoriXRecordedEvent,
   MemoriXRecordEventInput,
   MemoriXRetrievalResult,
@@ -402,6 +406,58 @@ export class MemoriXService {
   ): Promise<MemoriXServiceResult<MemoriXCandidate>> {
     return this.runSafely(
       (client) => client.proposeCandidate(input),
+    )
+  }
+
+  async recordProjectArchiveEntry(
+    input: MemoriXProjectEntryRecordInput,
+  ): Promise<MemoriXServiceResult<MemoriXProjectArchiveEntry>> {
+    return this.runSafely((client) =>
+      client.callTool<MemoriXProjectArchiveEntry>(
+        "memorix_project_entry_record",
+        input as unknown as JSONObject,
+      ),
+    )
+  }
+
+  async listProjectArchiveEntries(options: {
+    projectID?: string | null
+    entryType?: MemoriXProjectArchiveEntryType | null
+  } = {}): Promise<MemoriXServiceResult<MemoriXProjectArchiveEntry[]>> {
+    return this.runSafely((client) =>
+      client.callTool<MemoriXProjectArchiveEntry[]>(
+        "memorix_project_entries_list",
+        {
+          ...(options.projectID !== undefined
+            ? { project_id: options.projectID }
+            : {}),
+          ...(options.entryType !== undefined
+            ? { entry_type: options.entryType }
+            : {}),
+        },
+      ),
+    )
+  }
+
+  async rebuildProjectSnapshot(
+    projectID: string,
+  ): Promise<MemoriXServiceResult<MemoriXProjectSnapshot>> {
+    return this.runSafely((client) =>
+      client.callTool<MemoriXProjectSnapshot>(
+        "memorix_project_snapshot_rebuild",
+        { project_id: projectID },
+      ),
+    )
+  }
+
+  async getProjectSnapshot(
+    projectID: string,
+  ): Promise<MemoriXServiceResult<MemoriXProjectSnapshot | null>> {
+    return this.runSafely((client) =>
+      client.callTool<MemoriXProjectSnapshot | null>(
+        "memorix_project_snapshot_get",
+        { project_id: projectID },
+      ),
     )
   }
 
