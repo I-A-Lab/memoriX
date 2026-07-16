@@ -76,6 +76,8 @@ class MemoryStoragePaths:
     titan_neural_state: Path
     titan_metadata: Path
     nightly_logs: Path
+    project_archive_entries: Path
+    project_archive_snapshots: Path
 
     @classmethod
     def from_runtime_root(
@@ -117,6 +119,18 @@ class MemoryStoragePaths:
                 root
                 / "logs"
                 / "nightly_consolidation.jsonl"
+            ),
+            project_archive_entries=(
+                root
+                / "cold_site"
+                / "project_archive"
+                / "project_entries.jsonl"
+            ),
+            project_archive_snapshots=(
+                root
+                / "cold_site"
+                / "project_archive"
+                / "project_snapshots.jsonl"
             ),
         )
 

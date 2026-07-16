@@ -108,6 +108,22 @@ class ForgetAction(str, Enum):
     NOT_FOUND = "not_found"
 
 
+class ProjectArchiveEntryType(str, Enum):
+    """Supported categories for explicit project archive entries."""
+
+    IDENTITY = "identity"
+    OBJECTIVE = "objective"
+    DECISION = "decision"
+    ARCHITECTURE = "architecture"
+    MILESTONE = "milestone"
+    TASK_COMPLETED = "task_completed"
+    TASK_REMAINING = "task_remaining"
+    PROBLEM = "problem"
+    SOLUTION = "solution"
+    CHANGE = "change"
+    NOTE = "note"
+
+
 @dataclass(slots=True)
 class ShortTermEvent:
     """Recent event accepted by the memoriX gateway."""
@@ -591,3 +607,159 @@ class ForgetResult:
             reason=str(payload["reason"]),
             changed_at=str(payload["changed_at"]),
         )
+
+@dataclass(slots=True)
+class ProjectArchiveEntry:
+    """One append-only structured fact about a project."""
+
+    project_id: str
+    entry_type: ProjectArchiveEntryType
+    title: str
+    content: str
+    source_event_ids: tuple[str, ...]
+    author: str
+    entry_id: str = field(default_factory=lambda: new_identifier("project_entry"))
+    created_at: str = field(default_factory=utc_now_iso)
+    recorded_at: str = field(default_factory=utc_now_iso)
+    metadata: Metadata = field(default_factory=dict)
+
+    def __post_init__(self) -> None:
+        require_non_empty(self.entry_id, "entry_id")
+        require_non_empty(self.project_id, "project_id")
+        require_non_empty(self.title, "title")
+        require_non_empty(self.content, "content")
+        require_non_empty(self.author, "author")
+        validate_iso_timestamp(self.created_at, "created_at")
+        validate_iso_timestamp(self.recorded_at, "recorded_at")
+        self.entry_type = ProjectArchiveEntryType(self.entry_type)
+        self.source_event_ids = tuple(self.source_event_ids)
+        self.metadata = copy_metadata(self.metadata)
+
+        if not self.source_event_ids:
+            raise ValueError("source_event_ids must contain at least one event ID.")
+
+        for event_id in self.source_event_ids:
+            require_non_empty(event_id, "source_event_id")
+
+    def to_dict(self) -> dict[str, JSONValue]:
+        """Serialize one project archive entry."""
+
+        return {
+            "entry_id": self.entry_id,
+            "project_id": self.project_id,
+            "entry_type": self.entry_type.value,
+            "title": self.title,
+            "content": self.content,
+            "source_event_ids": list(self.source_event_ids),
+            "author": self.author,
+            "created_at": self.created_at,
+            "recorded_at": self.recorded_at,
+            "metadata": copy_metadata(self.metadata),
+        }
+
+    @classmethod
+    def from_dict(cls, payload: Mapping[str, Any]) -> "ProjectArchiveEntry":
+        """Restore one project archive entry."""
+
+        return cls(
+            entry_id=str(payload["entry_id"]),
+            project_id=str(payload["project_id"]),
+            entry_type=ProjectArchiveEntryType(payload["entry_type"]),
+            title=str(payload["title"]),
+            content=str(payload["content"]),
+            source_event_ids=tuple(str(value) for value in payload["source_event_ids"]),
+            author=str(payload["author"]),
+            created_at=str(payload["created_at"]),
+            recorded_at=str(payload["recorded_at"]),
+            metadata=copy_metadata(payload.get("metadata")),
+        )
+
+
+@dataclass(slots=True)
+class ProjectSnapshot:
+    """Deterministic current-state view derived from archive entries."""
+
+    project_id: str
+    name: str
+    summary: str
+    objectives: tuple[str, ...] = ()
+    decisions: tuple[str, ...] = ()
+    architecture: tuple[str, ...] = ()
+    milestones: tuple[str, ...] = ()
+    completed_tasks: tuple[str, ...] = ()
+    remaining_tasks: tuple[str, ...] = ()
+    problems: tuple[str, ...] = ()
+    solutions: tuple[str, ...] = ()
+    latest_changes: tuple[str, ...] = ()
+    source_entry_ids: tuple[str, ...] = ()
+    version: int = 1
+    updated_at: str = field(default_factory=utc_now_iso)
+
+    def __post_init__(self) -> None:
+        require_non_empty(self.project_id, "project_id")
+        require_non_empty(self.name, "name")
+        require_non_empty(self.summary, "summary")
+        validate_iso_timestamp(self.updated_at, "updated_at")
+
+        if isinstance(self.version, bool) or not isinstance(self.version, int):
+            raise TypeError("version must be an integer.")
+
+        if self.version < 1:
+            raise ValueError("version must be greater than or equal to 1.")
+
+        for field_name in (
+            "objectives", "decisions", "architecture", "milestones",
+            "completed_tasks", "remaining_tasks", "problems", "solutions",
+            "latest_changes", "source_entry_ids",
+        ):
+            values = tuple(getattr(self, field_name))
+            for value in values:
+                require_non_empty(value, field_name)
+            setattr(self, field_name, values)
+
+    def to_dict(self) -> dict[str, JSONValue]:
+        """Serialize one project snapshot."""
+
+        return {
+            "project_id": self.project_id,
+            "name": self.name,
+            "summary": self.summary,
+            "objectives": list(self.objectives),
+            "decisions": list(self.decisions),
+            "architecture": list(self.architecture),
+            "milestones": list(self.milestones),
+            "completed_tasks": list(self.completed_tasks),
+            "remaining_tasks": list(self.remaining_tasks),
+            "problems": list(self.problems),
+            "solutions": list(self.solutions),
+            "latest_changes": list(self.latest_changes),
+            "source_entry_ids": list(self.source_entry_ids),
+            "version": self.version,
+            "updated_at": self.updated_at,
+        }
+
+    @classmethod
+    def from_dict(cls, payload: Mapping[str, Any]) -> "ProjectSnapshot":
+        """Restore one project snapshot."""
+
+        def values(name: str) -> tuple[str, ...]:
+            return tuple(str(value) for value in payload.get(name, []))
+
+        return cls(
+            project_id=str(payload["project_id"]),
+            name=str(payload["name"]),
+            summary=str(payload["summary"]),
+            objectives=values("objectives"),
+            decisions=values("decisions"),
+            architecture=values("architecture"),
+            milestones=values("milestones"),
+            completed_tasks=values("completed_tasks"),
+            remaining_tasks=values("remaining_tasks"),
+            problems=values("problems"),
+            solutions=values("solutions"),
+            latest_changes=values("latest_changes"),
+            source_entry_ids=values("source_entry_ids"),
+            version=int(payload.get("version", 1)),
+            updated_at=str(payload["updated_at"]),
+        )
+
