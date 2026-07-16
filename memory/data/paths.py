@@ -78,6 +78,10 @@ class MemoryStoragePaths:
     nightly_logs: Path
     project_archive_entries: Path
     project_archive_snapshots: Path
+    nightly_operations_dir: Path
+    nightly_lock: Path
+    nightly_runs: Path
+    nightly_latest: Path
 
     @classmethod
     def from_runtime_root(
@@ -131,6 +135,18 @@ class MemoryStoragePaths:
                 / "cold_site"
                 / "project_archive"
                 / "project_snapshots.jsonl"
+            ),
+            nightly_operations_dir=(
+                root / "operations" / "nightly"
+            ),
+            nightly_lock=(
+                root / "operations" / "nightly" / "nightly.lock"
+            ),
+            nightly_runs=(
+                root / "operations" / "nightly" / "runs.jsonl"
+            ),
+            nightly_latest=(
+                root / "operations" / "nightly" / "latest.json"
             ),
         )
 
