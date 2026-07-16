@@ -15,6 +15,10 @@ from memory.cold_site.long_term_store import (
     ColdEventArchive,
     ColdHistorySearchService,
 )
+from memory.cold_site.project_archive import (
+    ProjectArchiveService,
+    ProjectArchiveStore,
+)
 from memory.consolidation import (
     ConsolidationPolicy,
     ConsolidationRunReport,
@@ -28,6 +32,9 @@ from memory.data import (
     MemoryCandidate,
     MemoryStoragePaths,
     Metadata,
+    ProjectArchiveEntry,
+    ProjectArchiveEntryType,
+    ProjectSnapshot,
     RetrievalResult,
     ShortTermEvent,
     ValidatedMemory,
@@ -81,6 +88,22 @@ class MemoriXGateway:
         )
         self._cold_search = ColdHistorySearchService(
             self._cold_archive
+        )
+
+        self._project_archive_store = (
+            ProjectArchiveStore(
+                entries_path=(
+                    self._paths.project_archive_entries
+                ),
+                snapshots_path=(
+                    self._paths.project_archive_snapshots
+                ),
+            )
+        )
+        self._project_archive_service = (
+            ProjectArchiveService(
+                self._project_archive_store
+            )
         )
 
         self._candidate_store = MemoryCandidateStore(
@@ -207,6 +230,93 @@ class MemoriXGateway:
         return self.record_event(
             event,
             archived_at=archived_at,
+        )
+
+    def record_project_archive_entry(
+        self,
+        *,
+        project_id: str,
+        entry_type: ProjectArchiveEntryType | str,
+        title: str,
+        content: str,
+        source_event_ids: Iterable[str],
+        author: str,
+        metadata: Metadata | None = None,
+        entry_id: str | None = None,
+        created_at: str | None = None,
+        recorded_at: str | None = None,
+    ) -> ProjectArchiveEntry:
+        """Append one explicit project archive entry."""
+
+        arguments: dict[str, Any] = {
+            "project_id": project_id,
+            "entry_type": ProjectArchiveEntryType(
+                entry_type
+            ),
+            "title": title,
+            "content": content,
+            "source_event_ids": tuple(
+                source_event_ids
+            ),
+            "author": author,
+            "metadata": dict(metadata or {}),
+        }
+
+        if entry_id is not None:
+            arguments["entry_id"] = entry_id
+
+        if created_at is not None:
+            arguments["created_at"] = created_at
+
+        if recorded_at is not None:
+            arguments["recorded_at"] = recorded_at
+
+        return self._project_archive_service.record_entry(
+            ProjectArchiveEntry(**arguments)
+        )
+
+    def list_project_archive_entries(
+        self,
+        *,
+        project_id: str | None = None,
+        entry_type: (
+            ProjectArchiveEntryType | str | None
+        ) = None,
+    ) -> tuple[ProjectArchiveEntry, ...]:
+        """List explicit cold project archive entries."""
+
+        normalized_entry_type = (
+            ProjectArchiveEntryType(entry_type)
+            if entry_type is not None
+            else None
+        )
+
+        return self._project_archive_store.list_entries(
+            project_id=project_id,
+            entry_type=normalized_entry_type,
+        )
+
+    def rebuild_project_snapshot(
+        self,
+        project_id: str,
+        *,
+        updated_at: str | None = None,
+    ) -> ProjectSnapshot:
+        """Derive and append the next project snapshot."""
+
+        return self._project_archive_service.rebuild_snapshot(
+            project_id,
+            updated_at=updated_at,
+        )
+
+    def get_project_snapshot(
+        self,
+        project_id: str,
+    ) -> ProjectSnapshot | None:
+        """Return the latest snapshot for one project."""
+
+        return self._project_archive_store.latest_snapshot(
+            project_id
         )
 
     def retrieve_memory(
@@ -386,6 +496,12 @@ class MemoriXGateway:
             "cold_archive_events": len(
                 self._cold_archive.list_events()
             ),
+            "project_archive_entries": len(
+                self._project_archive_store.list_entries()
+            ),
+            "project_archive_snapshots": len(
+                self._project_archive_store.list_snapshots()
+            ),
             "candidates": candidate_counts,
             "hot_memories_total": len(
                 all_hot_memories
@@ -415,6 +531,12 @@ class MemoriXGateway:
                 ),
                 "nightly_logs": str(
                     self._paths.nightly_logs
+                ),
+                "project_archive_entries": str(
+                    self._paths.project_archive_entries
+                ),
+                "project_archive_snapshots": str(
+                    self._paths.project_archive_snapshots
                 ),
             },
         }
