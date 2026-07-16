@@ -24,6 +24,12 @@ import {
   MemoryConsolidateTool,
   MemoryStatusTool,
 } from "./memory-candidates"
+import {
+  ProjectArchiveListTool,
+  ProjectArchiveRecordTool,
+  ProjectSnapshotGetTool,
+  ProjectSnapshotRebuildTool,
+} from "./project-archive"
 import * as Tool from "./tool"
 import { Config } from "@/config/config"
 import { type ToolContext as PluginToolContext, type ToolDefinition } from "@opencode-ai/plugin"
@@ -123,6 +129,14 @@ const layer = Layer.effect(
     const memoryconsolidate =
       yield* MemoryConsolidateTool
     const memorystatus = yield* MemoryStatusTool
+    const projectarchiverecord =
+      yield* ProjectArchiveRecordTool
+    const projectarchivelist =
+      yield* ProjectArchiveListTool
+    const projectsnapshotrebuild =
+      yield* ProjectSnapshotRebuildTool
+    const projectsnapshotget =
+      yield* ProjectSnapshotGetTool
     const agent = yield* Agent.Service
 
     const state = yield* InstanceState.make<State>(
@@ -245,6 +259,10 @@ const layer = Layer.effect(
             memoryconsolidate,
           ),
           memory_status: Tool.init(memorystatus),
+          project_archive_record: Tool.init(projectarchiverecord),
+          project_archive_list: Tool.init(projectarchivelist),
+          project_snapshot_rebuild: Tool.init(projectsnapshotrebuild),
+          project_snapshot_get: Tool.init(projectsnapshotget),
         })
 
         return {
@@ -271,6 +289,10 @@ const layer = Layer.effect(
             tool.memory_candidate_reject,
             tool.memory_consolidate,
             tool.memory_status,
+            tool.project_archive_record,
+            tool.project_archive_list,
+            tool.project_snapshot_rebuild,
+            tool.project_snapshot_get,
             ...(flags.experimentalLspTool ? [tool.lsp] : []),
             ...(flags.experimentalPlanMode && flags.client === "cli" ? [tool.plan] : []),
           ],

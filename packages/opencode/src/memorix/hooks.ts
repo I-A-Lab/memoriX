@@ -17,6 +17,10 @@ const DEFAULT_IGNORED_TOOLS = [
   "memory_candidate_reject",
   "memory_consolidate",
   "memory_status",
+  "project_archive_record",
+  "project_archive_list",
+  "project_snapshot_rebuild",
+  "project_snapshot_get",
 ]
 
 export type MemoriXHookService = {

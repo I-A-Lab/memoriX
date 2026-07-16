@@ -1,4 +1,17 @@
 export {
+  getProjectSnapshotThroughMemoriX,
+  listProjectEntriesThroughMemoriX,
+  rebuildProjectSnapshotThroughMemoriX,
+  recordProjectEntryThroughMemoriX,
+} from "./project-archive-facade"
+
+export type {
+  ProjectArchiveFacadeMetadata,
+  ProjectArchiveFacadeResult,
+  ProjectArchiveFacadeService,
+} from "./project-archive-facade"
+
+export {
   getMemoriXStatus,
   listCandidatesThroughMemoriX,
   rejectCandidateThroughMemoriX,

@@ -100,6 +100,10 @@ describe("memoriX hook configuration", () => {
       "memory_candidate_reject",
       "memory_consolidate",
       "memory_status",
+      "project_archive_record",
+      "project_archive_list",
+      "project_snapshot_rebuild",
+      "project_snapshot_get",
       "bash",
     ])
   })
@@ -119,6 +123,10 @@ describe("memoriX hook configuration", () => {
       "memory_candidate_reject",
       "memory_consolidate",
       "memory_status",
+      "project_archive_record",
+      "project_archive_list",
+      "project_snapshot_rebuild",
+      "project_snapshot_get",
     ])
   })
 
@@ -137,6 +145,10 @@ describe("memoriX hook configuration", () => {
       "memory_candidate_reject",
       "memory_consolidate",
       "memory_status",
+      "project_archive_record",
+      "project_archive_list",
+      "project_snapshot_rebuild",
+      "project_snapshot_get",
       "bash",
       "custom_tool",
     ])
@@ -157,6 +169,10 @@ describe("memoriX hook configuration", () => {
       "memory_candidate_reject",
       "memory_consolidate",
       "memory_status",
+      "project_archive_record",
+      "project_archive_list",
+      "project_snapshot_rebuild",
+      "project_snapshot_get",
     ]) {
       expect(options.ignoredTools).toContain(
         tool,
