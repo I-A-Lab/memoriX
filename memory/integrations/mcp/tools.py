@@ -5,7 +5,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Callable, Mapping
 
-from memory.data import CandidateStatus
+from memory.data import (
+    CandidateStatus,
+    ProjectArchiveEntryType,
+)
 from memory.gateway import MemoriXGateway
 from memory.integrations.mcp.serialization import (
     to_json_value,
@@ -272,6 +275,68 @@ TOOL_DEFINITIONS: tuple[McpToolDefinition, ...] = (
         ),
     ),
     McpToolDefinition(
+        name="memorix_project_entry_record",
+        description="Append one explicit structured project archive entry.",
+        input_schema=_object_schema(
+            {
+                "project_id": STRING,
+                "entry_type": {
+                    "type": "string",
+                    "enum": [item.value for item in ProjectArchiveEntryType],
+                },
+                "title": STRING,
+                "content": STRING,
+                "source_event_ids": {
+                    "type": "array",
+                    "items": STRING,
+                    "minItems": 1,
+                },
+                "author": STRING,
+                "metadata": METADATA_SCHEMA,
+            },
+            required=(
+                "project_id",
+                "entry_type",
+                "title",
+                "content",
+                "source_event_ids",
+                "author",
+            ),
+        ),
+    ),
+    McpToolDefinition(
+        name="memorix_project_entries_list",
+        description="List explicit project archive entries.",
+        input_schema=_object_schema(
+            {
+                "project_id": {"type": ["string", "null"]},
+                "entry_type": {
+                    "type": ["string", "null"],
+                    "enum": [
+                        *[item.value for item in ProjectArchiveEntryType],
+                        None,
+                    ],
+                },
+            },
+        ),
+    ),
+    McpToolDefinition(
+        name="memorix_project_snapshot_rebuild",
+        description="Rebuild and append the next project snapshot version.",
+        input_schema=_object_schema(
+            {"project_id": STRING},
+            required=("project_id",),
+        ),
+    ),
+    McpToolDefinition(
+        name="memorix_project_snapshot_get",
+        description="Return the latest snapshot for one project, or null.",
+        input_schema=_object_schema(
+            {"project_id": STRING},
+            required=("project_id",),
+        ),
+    ),
+    McpToolDefinition(
         name="memorix_status",
         description=(
             "Return memoriX architecture, storage, candidate, and "
@@ -385,6 +450,18 @@ class MemoriXMcpTools:
                 self._run_consolidation
             ),
             "memorix_run_nightly": self._run_nightly,
+            "memorix_project_entry_record": (
+                self._project_entry_record
+            ),
+            "memorix_project_entries_list": (
+                self._project_entries_list
+            ),
+            "memorix_project_snapshot_rebuild": (
+                self._project_snapshot_rebuild
+            ),
+            "memorix_project_snapshot_get": (
+                self._project_snapshot_get
+            ),
             "memorix_status": self._status,
         }
 
@@ -601,6 +678,83 @@ class MemoriXMcpTools:
             self._gateway.run_nightly_consolidation(
                 clear_short_term_after_success=clear
             )
+        )
+
+    def _project_entry_record(
+        self,
+        arguments: dict[str, Any],
+    ) -> Any:
+        source_event_ids = arguments.get("source_event_ids")
+
+        if (
+            not isinstance(source_event_ids, list)
+            or not source_event_ids
+            or not all(
+                isinstance(item, str) and item.strip()
+                for item in source_event_ids
+            )
+        ):
+            raise McpInvalidArgumentsError(
+                "source_event_ids must be a non-empty array of strings."
+            )
+
+        try:
+            entry_type = ProjectArchiveEntryType(
+                _require_text(arguments, "entry_type")
+            )
+        except ValueError as error:
+            raise McpInvalidArgumentsError(
+                "entry_type is not supported."
+            ) from error
+
+        return self._gateway.record_project_archive_entry(
+            project_id=_require_text(arguments, "project_id"),
+            entry_type=entry_type,
+            title=_require_text(arguments, "title"),
+            content=_require_text(arguments, "content"),
+            source_event_ids=tuple(
+                item.strip() for item in source_event_ids
+            ),
+            author=_require_text(arguments, "author"),
+            metadata=dict(arguments.get("metadata") or {}),
+        )
+
+    def _project_entries_list(
+        self,
+        arguments: dict[str, Any],
+    ) -> Any:
+        raw_entry_type = arguments.get("entry_type")
+
+        try:
+            entry_type = (
+                ProjectArchiveEntryType(raw_entry_type)
+                if raw_entry_type is not None
+                else None
+            )
+        except ValueError as error:
+            raise McpInvalidArgumentsError(
+                "entry_type is not supported."
+            ) from error
+
+        return self._gateway.list_project_archive_entries(
+            project_id=_optional_text(arguments, "project_id"),
+            entry_type=entry_type,
+        )
+
+    def _project_snapshot_rebuild(
+        self,
+        arguments: dict[str, Any],
+    ) -> Any:
+        return self._gateway.rebuild_project_snapshot(
+            _require_text(arguments, "project_id")
+        )
+
+    def _project_snapshot_get(
+        self,
+        arguments: dict[str, Any],
+    ) -> Any:
+        return self._gateway.get_project_snapshot(
+            _require_text(arguments, "project_id")
         )
 
     def _status(

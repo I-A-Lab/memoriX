@@ -67,6 +67,10 @@ class McpToolDeclarationTests(McpToolsTestCase):
                 "memorix_forget_memory",
                 "memorix_run_consolidation",
                 "memorix_run_nightly",
+                "memorix_project_entry_record",
+                "memorix_project_entries_list",
+                "memorix_project_snapshot_rebuild",
+                "memorix_project_snapshot_get",
                 "memorix_status",
             },
         )
@@ -177,6 +181,73 @@ class McpToolValidationTests(McpToolsTestCase):
             self.tools.call(
                 "memorix_context",
                 {},
+            )
+
+
+class McpProjectArchiveTests(McpToolsTestCase):
+    def test_project_archive_lifecycle_stays_out_of_titan(self) -> None:
+        self.tools.call(
+            "memorix_project_entry_record",
+            {
+                "project_id": "memorix",
+                "entry_type": "identity",
+                "title": "memoriX",
+                "content": "Long-term memory for AI agents.",
+                "source_event_ids": ["event_identity"],
+                "author": "Elwen",
+            },
+        )
+        self.tools.call(
+            "memorix_project_entry_record",
+            {
+                "project_id": "memorix",
+                "entry_type": "objective",
+                "title": "Objective",
+                "content": "Provide durable project memory.",
+                "source_event_ids": ["event_objective"],
+                "author": "Elwen",
+            },
+        )
+
+        entries = self.tools.call(
+            "memorix_project_entries_list",
+            {"project_id": "memorix"},
+        )
+        snapshot = self.tools.call(
+            "memorix_project_snapshot_rebuild",
+            {"project_id": "memorix"},
+        )
+        latest = self.tools.call(
+            "memorix_project_snapshot_get",
+            {"project_id": "memorix"},
+        )
+
+        self.assertEqual(len(entries), 2)
+        self.assertEqual(snapshot.version, 1)
+        self.assertEqual(latest, snapshot)
+        self.assertFalse(self.paths.titan_neural_state.exists())
+        self.assertFalse(self.paths.titan_metadata.exists())
+
+    def test_missing_project_snapshot_is_null(self) -> None:
+        self.assertIsNone(
+            self.tools.call(
+                "memorix_project_snapshot_get",
+                {"project_id": "missing"},
+            )
+        )
+
+    def test_invalid_project_entry_type_is_rejected(self) -> None:
+        with self.assertRaises(McpInvalidArgumentsError):
+            self.tools.call(
+                "memorix_project_entry_record",
+                {
+                    "project_id": "memorix",
+                    "entry_type": "invalid",
+                    "title": "Invalid",
+                    "content": "Invalid",
+                    "source_event_ids": ["event_invalid"],
+                    "author": "Elwen",
+                },
             )
 
 
