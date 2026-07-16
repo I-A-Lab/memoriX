@@ -116,6 +116,17 @@ Learn more about [agents](https://opencode.ai/docs/agents).
 
 For more info on how to configure OpenCode, [**head over to our docs**](https://opencode.ai/docs).
 
+### memoriX integration
+
+This branch includes the memoriX external-memory integration for OpenCode, including controlled candidates, hot-only retrieval, Project Archive, protected nightly consolidation, and a Windows scheduled task.
+
+Project-specific documentation:
+
+- [Architecture](docs/MEMORIX_FINAL_ARCHITECTURE.md)
+- [Operations](docs/MEMORIX_OPERATIONS.md)
+- [Nightly operations](docs/MEMORIX_NIGHTLY_OPERATIONS.md)
+- [Validation report](docs/MEMORIX_VALIDATION_REPORT.md)
+
 ### Contributing
 
 If you're interested in contributing to OpenCode, please read our [contributing docs](./CONTRIBUTING.md) before submitting a pull request.

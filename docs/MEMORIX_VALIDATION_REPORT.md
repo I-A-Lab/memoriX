@@ -1,10 +1,11 @@
-# memoriX — Rapport de validation après la partie 17
+# memoriX — Rapport de validation après la partie 18
 
 ## Révision fonctionnelle auditée
 
 - Branche : elwen
 - Commit fonctionnel de base : 429a4554ce3fea32b1dce451dee31dabd2871b82
-- Date de validation : 2026-07-15 14:24:26 +02:00
+- Validation initiale partie 17 : 2026-07-15 14:24:26 +02:00
+- Validation opérationnelle partie 18 : 2026-07-16
 - Python : Python 3.10.11
 - Bun : 1.3.14
 
@@ -26,6 +27,15 @@
 | Permissions natives des mutations Project Archive | PASS |
 | Exclusions obligatoires des hooks | PASS |
 | Absence d'écriture Titan par Project Archive | PASS |
+| Runner nightly protégé et verrou exclusif | PASS |
+| Journal `latest.json` et historique `runs.jsonl` | PASS |
+| CLI et wrapper PowerShell nightly | PASS |
+| Outil natif OpenCode `memory_nightly_run` | PASS |
+| Permission native avant nightly OpenCode | PASS |
+| Exclusion du nightly dans les hooks | PASS |
+| Tâche Windows quotidienne à 02:00 | PASS |
+| Exécution immédiate via Task Scheduler | PASS |
+| `LastTaskResult = 0` et statut `completed` | PASS |
 
 ## Validation manuelle OpenCode
 
@@ -82,13 +92,37 @@ Le scénario complet de gestion des candidates a validé :
 18. exclusions obligatoires des hooks;
 19. Project Archive append-only;
 20. snapshots de projet versionnés;
-21. intégration Project Archive Gateway, MCP et OpenCode.
+21. intégration Project Archive Gateway, MCP et OpenCode;
+22. runner nightly protégé;
+23. verrou exclusif et récupération de verrou périmé;
+24. journal opérationnel append-only;
+25. CLI Python et wrapper PowerShell;
+26. outil natif OpenCode `memory_nightly_run`;
+27. permission native du nightly;
+28. exclusion du nightly dans les hooks;
+29. tâche Windows quotidienne;
+30. exécution Task Scheduler validée avec résultat Windows `0`.
+
+## Validation opérationnelle du nightly
+
+Le scénario Windows réel a validé :
+
+- runtime `%LOCALAPPDATA%\memoriX\runtime`, hors dépôt;
+- test manuel avec conservation de la mémoire court terme;
+- installation de `memoriX Nightly Consolidation` à 02:00;
+- action PowerShell pointant vers `run_memorix_nightly.ps1`;
+- trigger memoriX `task_scheduler`;
+- lancement immédiat par `Start-ScheduledTask`;
+- état final Windows `Ready`;
+- `LastTaskResult` égal à `0`;
+- statut memoriX `completed`;
+- absence de verrou résiduel;
+- dépôt Git inchangé après les tests opérationnels.
 
 ## Limites restant à traiter
 
-- nightly planifié ;
 - adaptatif connecté au runtime réel ;
-- transactions et verrous ;
+- transactions générales ;
 - migrations et reprise après crash ;
 - tests de concurrence, corruption, saturation et multiplateforme.
 

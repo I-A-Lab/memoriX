@@ -41,6 +41,7 @@ OpenCode ne lit et ne modifie jamais directement les fichiers du runtime Python.
 - `memory_candidate_validate` valide une candidate et écrit dans Titan ;
 - `memory_candidate_reject` rejette une candidate sans écriture Titan ;
 - `memory_consolidate` transforme les événements short-term en candidates pending ;
+- `memory_nightly_run` lance le nightly protégé après confirmation ;
 - `memory_status` retourne l'état de l'architecture et du stockage;
 - `project_archive_record` ajoute une entrée structurée après confirmation;
 - `project_archive_list` lit les entrées du projet;
@@ -127,13 +128,15 @@ Le Live Probe inspecte un runtime en lecture seule. Il ne charge pas Titan, n'in
 - Project Archive Gateway, MCP et OpenCode : fonctionnel;
 - permissions natives des mutations : fonctionnelles;
 - exclusions obligatoires des hooks : fonctionnelles;
-- runtime par défaut hors dépôt : fonctionnel.
+- runtime par défaut hors dépôt : fonctionnel;
+- runner nightly protégé, verrou et journal opérationnel : fonctionnels;
+- outil natif OpenCode `memory_nightly_run` : fonctionnel;
+- tâche Windows quotidienne installable et vérifiée : fonctionnelle.
 
 ## Travaux encore nécessaires
 
-- exécution nightly planifiée ;
 - observations adaptatives alimentées par le runtime réel ;
-- transactions, verrous, migrations et reprise après crash ;
+- transactions générales, migrations et reprise après crash ;
 - validation finale de concurrence, corruption, saturation et compatibilité multiplateforme.
 
 L'architecture d'agents d'Antoine reste la couche d'orchestration principale.

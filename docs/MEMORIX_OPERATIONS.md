@@ -180,3 +180,34 @@ Permissions OpenCode :
 - `project_snapshot_get` : lecture seule.
 
 Les quatre outils sont obligatoirement exclus des hooks.
+
+## Nightly protégé
+
+Le nightly utilise un runner unique avec verrou, historique append-only et état terminal :
+
+```text
+<runtime>/operations/nightly/
+├── latest.json
+├── runs.jsonl
+└── nightly.lock
+```
+
+Commandes principales :
+
+```powershell
+$RuntimeRoot = Join-Path $env:LOCALAPPDATA "memoriX\runtime"
+
+& ".\scripts\run_memorix_nightly.ps1" `
+    -RuntimeRoot $RuntimeRoot `
+    -KeepShortTerm `
+    -Trigger "manual"
+
+& ".\scripts\install_memorix_nightly_task.ps1" `
+    -TaskName "memoriX Nightly Consolidation" `
+    -RuntimeRoot $RuntimeRoot `
+    -DailyAt "02:00"
+```
+
+L'outil OpenCode `memory_nightly_run` demande une permission native avant exécution. Il est exclu des hooks et utilise `clear_short_term_after_success=true` par défaut.
+
+La procédure complète d'installation, de vérification et de dépannage est décrite dans [MEMORIX_NIGHTLY_OPERATIONS.md](MEMORIX_NIGHTLY_OPERATIONS.md).

@@ -16,7 +16,9 @@ The current implementation includes:
 - an explicit append-only Project Archive with versioned snapshots;
 - candidate validation and rejection workflows;
 - adaptive observation and dry-run components;
-- read-only diagnostics through the Live Probe.
+- read-only diagnostics through the Live Probe;
+- protected nightly consolidation with locking and operational journals;
+- native OpenCode nightly execution and Windows Task Scheduler integration.
 
 Antoine's existing `memory/titan_model.py` prototype remains preserved.
 
@@ -117,6 +119,7 @@ The native OpenCode memory tools are:
 - `memory_candidate_validate`;
 - `memory_candidate_reject`;
 - `memory_consolidate`;
+- `memory_nightly_run`;
 - `memory_status`;
 - `project_archive_record`;
 - `project_archive_list`;
@@ -133,7 +136,6 @@ Tests and manual validation must use a runtime outside the repository. Default r
 
 ## Remaining work
 
-- operationalize scheduled nightly execution;
 - connect adaptive observation to production runtime data;
-- add transactions, locks, recovery and migrations;
+- add broader transactions, recovery and migrations;
 - complete concurrency, corruption, saturation and cross-platform testing.
