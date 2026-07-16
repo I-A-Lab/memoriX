@@ -13,6 +13,7 @@ The current implementation includes:
 - optional OpenCode hooks for recording messages and tool results;
 - a Titan neural hot site containing human-validated active memories;
 - a durable cold archive containing the complete event history;
+- an explicit append-only Project Archive with versioned snapshots;
 - candidate validation and rejection workflows;
 - adaptive observation and dry-run components;
 - read-only diagnostics through the Live Probe.
@@ -78,7 +79,13 @@ Stores the append-only durable event history used for explicit audit and debuggi
 
 ### `cold_site/project_archive`
 
-Reserved for explicit project-level archival operations. The full Project Archive workflow is not implemented yet.
+Stores explicit append-only project entries and append-only versioned snapshots. Project Archive is cold, audit-oriented and never participates in automatic retrieval or Titan rehydration.
+
+```text
+runtime/cold_site/project_archive/
+├── project_entries.jsonl
+└── project_snapshots.jsonl
+```
 
 ### `consolidation`
 
@@ -110,22 +117,22 @@ The native OpenCode memory tools are:
 - `memory_candidate_validate`;
 - `memory_candidate_reject`;
 - `memory_consolidate`;
-- `memory_status`.
+- `memory_status`;
+- `project_archive_record`;
+- `project_archive_list`;
+- `project_snapshot_rebuild`;
+- `project_snapshot_get`.
 
-The OpenCode hooks are optional and disabled unless configured. Memory tools are excluded from hook capture to prevent self-recording loops.
+The OpenCode hooks are optional and disabled unless configured. Memory and Project Archive tools are mandatory exclusions from hook capture to prevent self-recording loops. Mutating Project Archive tools require native OpenCode approval.
 
 ## Runtime isolation
 
 Runtime state is selected through `MEMORIX_RUNTIME_ROOT` or the launcher parameter `RuntimeRoot`.
 
-Tests and manual validation must use a runtime outside the repository. Moving every default runtime path outside the repository remains part of the next security-hardening step.
+Tests and manual validation must use a runtime outside the repository. Default runtime resolution is platform-aware and remains outside the source repository.
 
 ## Remaining work
 
-- enforce native OpenCode permission prompts for mutating tools;
-- make mandatory hook exclusions impossible to override;
-- move the default runtime outside the repository;
-- complete Project Archive;
 - operationalize scheduled nightly execution;
 - connect adaptive observation to production runtime data;
 - add transactions, locks, recovery and migrations;

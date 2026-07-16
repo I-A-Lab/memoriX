@@ -22,6 +22,7 @@ MemoriXGateway
         |
         +-- short-term memory
         +-- cold archive append-only
+        +-- Project Archive append-only et snapshots versionnés
         +-- pending candidates
         +-- validation ou rejet
         +-- Titan active hot site
@@ -40,7 +41,11 @@ OpenCode ne lit et ne modifie jamais directement les fichiers du runtime Python.
 - `memory_candidate_validate` valide une candidate et écrit dans Titan ;
 - `memory_candidate_reject` rejette une candidate sans écriture Titan ;
 - `memory_consolidate` transforme les événements short-term en candidates pending ;
-- `memory_status` retourne l'état de l'architecture et du stockage.
+- `memory_status` retourne l'état de l'architecture et du stockage;
+- `project_archive_record` ajoute une entrée structurée après confirmation;
+- `project_archive_list` lit les entrées du projet;
+- `project_snapshot_rebuild` ajoute une nouvelle version de snapshot après confirmation;
+- `project_snapshot_get` lit le dernier snapshot.
 
 ## Contrat de récupération
 
@@ -76,7 +81,19 @@ Il n'existe aucune réhydratation automatique du cold site vers Titan.
 
 Les hooks peuvent enregistrer les messages et les résultats d'outils lorsque leur capture est activée.
 
-Tous les outils mémoire sont ignorés par ces hooks afin d'éviter qu'une opération mémoire enregistre son propre résultat.
+Tous les outils mémoire et Project Archive sont des exclusions obligatoires des hooks afin d'éviter qu'une opération mémoire enregistre son propre résultat.
+
+## Project Archive
+
+Le Project Archive est une branche cold explicite, distincte de l'historique brut :
+
+```text
+runtime/cold_site/project_archive/
+├── project_entries.jsonl
+└── project_snapshots.jsonl
+```
+
+Les entrées et snapshots sont append-only. Les snapshots sont reconstruits de manière déterministe à partir des entrées du projet et leur version augmente sans écrasement silencieux. Le Project Archive n'est jamais interrogé automatiquement par `memory_retrieve`, ne réhydrate jamais Titan et n'est pas modifié par le nightly.
 
 ## Adaptive Memory
 
@@ -106,14 +123,14 @@ Le Live Probe inspecte un runtime en lecture seule. Il ne charge pas Titan, n'in
 - consolidation sans validation automatique : fonctionnelle ;
 - statut OpenCode : fonctionnel ;
 - Live Probe read-only : fonctionnel ;
-- intégration MCP et OpenCode : fonctionnelle.
+- intégration MCP et OpenCode : fonctionnelle;
+- Project Archive Gateway, MCP et OpenCode : fonctionnel;
+- permissions natives des mutations : fonctionnelles;
+- exclusions obligatoires des hooks : fonctionnelles;
+- runtime par défaut hors dépôt : fonctionnel.
 
 ## Travaux encore nécessaires
 
-- confirmation native OpenCode avant chaque mutation ;
-- exclusions de hooks obligatoires et non contournables ;
-- runtime par défaut hors du dépôt ;
-- Project Archive complet ;
 - exécution nightly planifiée ;
 - observations adaptatives alimentées par le runtime réel ;
 - transactions, verrous, migrations et reprise après crash ;

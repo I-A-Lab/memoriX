@@ -1,4 +1,4 @@
-# memoriX — Rapport de validation après l'étape 16
+# memoriX — Rapport de validation après la partie 17
 
 ## Révision fonctionnelle auditée
 
@@ -14,12 +14,18 @@
 |---|---|
 | Typecheck OpenCode | PASS |
 | Tests TypeScript memoriX | PASS |
-| Suite Python complète, 195 tests | PASS |
+| Suite Python complète, incluant Project Archive | PASS |
 | Compilation des scripts MCP, Live Probe et benchmark | PASS |
 | Contrat hot-only | PASS |
 | Recherche cold explicite uniquement | PASS |
 | Isolation du runtime de test | PASS |
 | Protection du prototype Titan d'Antoine | PASS |
+| Project Archive append-only et snapshots versionnés | PASS |
+| Outils MCP Project Archive | PASS |
+| Client, service et outils OpenCode Project Archive | PASS |
+| Permissions natives des mutations Project Archive | PASS |
+| Exclusions obligatoires des hooks | PASS |
+| Absence d'écriture Titan par Project Archive | PASS |
 
 ## Validation manuelle OpenCode
 
@@ -70,14 +76,16 @@ Le scénario complet de gestion des candidates a validé :
 12. hooks OpenCode configurables ;
 13. observations adaptatives et dry-run ;
 14. benchmark isolé ;
-15. Live Probe read-only.
+15. Live Probe read-only;
+16. runtime par défaut hors dépôt;
+17. permissions natives des mutations;
+18. exclusions obligatoires des hooks;
+19. Project Archive append-only;
+20. snapshots de projet versionnés;
+21. intégration Project Archive Gateway, MCP et OpenCode.
 
 ## Limites restant à traiter
 
-- confirmation native OpenCode avant les mutations ;
-- exclusions de hooks obligatoires ;
-- runtime par défaut hors du dépôt ;
-- Project Archive ;
 - nightly planifié ;
 - adaptatif connecté au runtime réel ;
 - transactions et verrous ;
@@ -85,3 +93,20 @@ Le scénario complet de gestion des candidates a validé :
 - tests de concurrence, corruption, saturation et multiplateforme.
 
 Les actions adaptatives, la validation automatique, la réhydratation cold vers hot et la suppression physique restent volontairement désactivées.
+
+## Validation Project Archive
+
+Le flux validé couvre :
+
+1. création d'entrées structurées append-only;
+2. filtrage par projet et type;
+3. reconstruction déterministe du snapshot;
+4. incrément des versions sans écrasement;
+5. persistance après redémarrage de la gateway;
+6. protocole MCP `tools/call`;
+7. client et service TypeScript non bloquants;
+8. outils natifs OpenCode;
+9. confirmation des mutations;
+10. lectures sans permission de mutation;
+11. exclusion obligatoire des hooks;
+12. absence d'écriture dans Titan.

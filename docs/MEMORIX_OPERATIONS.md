@@ -46,7 +46,11 @@ Le dossier `memory/runtime` ne doit pas être créé par les tests.
 - `memory_candidate_validate` ;
 - `memory_candidate_reject` ;
 - `memory_consolidate` ;
-- `memory_status`.
+- `memory_status`;
+- `project_archive_record` — mutation avec confirmation;
+- `project_archive_list` — lecture seule;
+- `project_snapshot_rebuild` — mutation avec confirmation;
+- `project_snapshot_get` — lecture seule.
 
 Une candidate pending ou rejected ne doit jamais être retournée par `memory_retrieve`.
 
@@ -148,3 +152,31 @@ git status --short
 git diff --check
 git log -10 --oneline
 ```
+
+## Project Archive
+
+Le Project Archive est un stockage cold explicite et append-only :
+
+```text
+<runtime>/cold_site/project_archive/
+├── project_entries.jsonl
+└── project_snapshots.jsonl
+```
+
+Outils MCP :
+
+- `memorix_project_entry_record`;
+- `memorix_project_entries_list`;
+- `memorix_project_snapshot_rebuild`;
+- `memorix_project_snapshot_get`.
+
+Les entrées structurées sont immuables. Chaque reconstruction ajoute une nouvelle version de snapshot. Aucune de ces opérations n'écrit dans Titan et aucune donnée Project Archive n'est utilisée comme fallback de retrieval.
+
+Permissions OpenCode :
+
+- `project_archive_record` : `ask`;
+- `project_snapshot_rebuild` : `ask`;
+- `project_archive_list` : lecture seule;
+- `project_snapshot_get` : lecture seule.
+
+Les quatre outils sont obligatoirement exclus des hooks.
