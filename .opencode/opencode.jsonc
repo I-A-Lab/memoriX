@@ -6,6 +6,7 @@
     "memory_candidate_validate": "ask",
     "memory_candidate_reject": "ask",
     "memory_consolidate": "ask",
+    "memory_nightly_run": "ask",
     "project_archive_record": "ask",
     "project_snapshot_rebuild": "ask",
   },

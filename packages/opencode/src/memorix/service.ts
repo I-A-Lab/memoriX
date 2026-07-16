@@ -527,6 +527,21 @@ export class MemoriXService {
         ),
     )
   }
+
+  async runNightly(
+    clearShortTermAfterSuccess = true,
+  ): Promise<MemoriXServiceResult<JSONObject>> {
+    return this.runSafely(
+      (client) =>
+        client.callTool<JSONObject>(
+          "memorix_run_nightly",
+          {
+            clear_short_term_after_success:
+              clearShortTermAfterSuccess,
+          },
+        ),
+    )
+  }
   async close(): Promise<void> {
     if (this.closing) {
       await this.closing

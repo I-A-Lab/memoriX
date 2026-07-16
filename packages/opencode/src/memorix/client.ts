@@ -349,6 +349,18 @@ export class MemoriXClient {
     return asRecord(value) as unknown as MemoriXCandidate
   }
 
+  async runNightly(
+    clearShortTermAfterSuccess = true,
+  ): Promise<JSONObject> {
+    return this.callTool<JSONObject>(
+      "memorix_run_nightly",
+      {
+        clear_short_term_after_success:
+          clearShortTermAfterSuccess,
+      },
+    )
+  }
+
   async recordProjectArchiveEntry(
     input: MemoriXProjectEntryRecordInput,
   ): Promise<MemoriXProjectArchiveEntry> {

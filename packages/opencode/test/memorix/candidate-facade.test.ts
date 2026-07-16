@@ -67,6 +67,19 @@ function successfulService(): CandidateFacadeService {
       },
     }),
 
+    runNightly: async () => ({
+
+      ok: true,
+
+      value: {
+
+        status: "completed",
+
+      },
+
+    }),
+
+
     status: async () => ({
       ok: true,
       value: memoryStatus,

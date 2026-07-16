@@ -16,6 +16,7 @@ export {
   listCandidatesThroughMemoriX,
   rejectCandidateThroughMemoriX,
   runConsolidationThroughMemoriX,
+  runNightlyThroughMemoriX,
   validateCandidateThroughMemoriX,
 } from "./candidate-facade"
 

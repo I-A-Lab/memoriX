@@ -16,6 +16,7 @@ const DEFAULT_IGNORED_TOOLS = [
   "memory_candidate_validate",
   "memory_candidate_reject",
   "memory_consolidate",
+  "memory_nightly_run",
   "memory_status",
   "project_archive_record",
   "project_archive_list",

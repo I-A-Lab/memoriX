@@ -12,6 +12,7 @@ export type CandidateFacadeService = Pick<
   | "validateCandidate"
   | "rejectCandidate"
   | "runConsolidation"
+  | "runNightly"
   | "status"
 >
 
@@ -26,6 +27,7 @@ export type CandidateFacadeMetadata = {
     | "validate_candidate"
     | "reject_candidate"
     | "run_consolidation"
+    | "run_nightly"
     | "status"
   ok: boolean
   candidateCount?: number
@@ -186,6 +188,33 @@ export async function runConsolidationThroughMemoriX(
     output: JSON.stringify(result.value, null, 2),
     metadata: {
       operation: "run_consolidation",
+      ok: true,
+      report: result.value,
+    },
+  }
+}
+
+export async function runNightlyThroughMemoriX(
+  service: CandidateFacadeService,
+  clearShortTermAfterSuccess = true,
+): Promise<CandidateFacadeResult> {
+  const result = await service.runNightly(
+    clearShortTermAfterSuccess,
+  )
+
+  if (!result.ok) {
+    return failureResult(
+      "run_nightly",
+      "memoriX nightly consolidation failed",
+      result,
+    )
+  }
+
+  return {
+    title: "memoriX nightly consolidation completed",
+    output: JSON.stringify(result.value, null, 2),
+    metadata: {
+      operation: "run_nightly",
       ok: true,
       report: result.value,
     },

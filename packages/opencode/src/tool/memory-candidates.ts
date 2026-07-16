@@ -5,6 +5,7 @@ import {
   listCandidatesThroughMemoriX,
   rejectCandidateThroughMemoriX,
   runConsolidationThroughMemoriX,
+  runNightlyThroughMemoriX,
   validateCandidateThroughMemoriX,
   type CandidateFacadeMetadata,
 } from "../memorix"
@@ -66,6 +67,15 @@ export const ConsolidationParameters = Schema.Struct({
     Schema.String.annotate({
       description:
         "Consolidation mode. Defaults to manual.",
+    }),
+  ),
+})
+
+export const NightlyParameters = Schema.Struct({
+  clear_short_term_after_success: Schema.optional(
+    Schema.Boolean.annotate({
+      description:
+        "Clear short-term events only after a successful nightly run. Defaults to true.",
     }),
   ),
 })
@@ -234,6 +244,54 @@ export const MemoryConsolidateTool = Tool.define<
       }),
   } satisfies Tool.DefWithoutID<
     typeof ConsolidationParameters,
+    CandidateFacadeMetadata
+  >),
+)
+
+export const MemoryNightlyRunTool = Tool.define<
+  typeof NightlyParameters,
+  CandidateFacadeMetadata,
+  never
+>(
+  "memory_nightly_run",
+  Effect.succeed({
+    description:
+      "Run the protected memoriX nightly consolidation. This may create pending candidates, replay active Titan memories, and clear short-term events only after success.",
+    parameters: NightlyParameters,
+    execute: (
+      params: Schema.Schema.Type<
+        typeof NightlyParameters
+      >,
+      ctx: Tool.Context<CandidateFacadeMetadata>,
+    ) =>
+      Effect.gen(function* () {
+        const clearShortTermAfterSuccess =
+          params.clear_short_term_after_success ?? true
+
+        yield* ctx.ask({
+          permission: "memory_nightly_run",
+          patterns: [
+            clearShortTermAfterSuccess
+              ? "clear-short-term-after-success"
+              : "keep-short-term",
+          ],
+          always: [],
+          metadata: {
+            operation: "run_nightly",
+            clear_short_term_after_success:
+              clearShortTermAfterSuccess,
+          },
+        })
+
+        return yield* Effect.promise(() =>
+          runNightlyThroughMemoriX(
+            getDefaultMemoriXService(),
+            clearShortTermAfterSuccess,
+          ),
+        )
+      }),
+  } satisfies Tool.DefWithoutID<
+    typeof NightlyParameters,
     CandidateFacadeMetadata
   >),
 )
