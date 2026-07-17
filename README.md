@@ -147,3 +147,7 @@ covering up to 6,000,000 active items without materializing that population.
 See `docs/MEMORIX_CAPACITY_OPERATIONS.md`,
 `docs/MEMORIX_SCALING_POLICY.md`, and
 `docs/MEMORIX_SATURATION_VALIDATION.md`.
+
+## Memory pressure diagnostics
+
+memoriX exposes deterministic read-only pressure status and per-memory inspection through Python, MCP, and native OpenCode tools. See `docs/MEMORIX_MEMORY_PRESSURE.md`.

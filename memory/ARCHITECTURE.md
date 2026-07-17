@@ -146,3 +146,7 @@ Titan active memory is a bounded hot site. Admission is checked before
 candidate validation writes. At exhaustion, the candidate remains pending.
 Soft pruning can deactivate eligible hot memories only after an explicit
 dry-run plan and operator approval. The cold archive is never pruned.
+
+## Memory pressure observation
+
+Persisted Titan metadata is converted into normalized per-memory pressure inputs without loading the neural model or consulting the cold site. The resulting status is observational only.

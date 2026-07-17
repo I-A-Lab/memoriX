@@ -152,3 +152,7 @@ Titan writes, pending-candidate preservation, controlled soft pruning,
 operational locking and logs, MCP/OpenCode exposure, and bounded synthetic
 scenarios through 6,000,000 active items. Benchmarks do not modify runtime data
 or access the cold site.
+
+## Part 20 memory-pressure validation
+
+Part 20 adds deterministic per-memory metrics, read-only runtime inspection, CLI simulation, MCP and OpenCode exposure, bounded benchmarks, and safety documentation.

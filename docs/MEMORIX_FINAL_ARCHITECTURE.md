@@ -147,3 +147,7 @@ The capacity control plane combines read-only runtime inspection, admission
 control, dry-run pruning plans, a mutation lock, append-only operational logs,
 MCP tools, and native OpenCode tools. Status and plan operations are read-only;
 pruning is permission-gated and performs logical hot-site deactivation only.
+
+## Memory pressure plane
+
+The pressure plane sits between persisted hot-site metadata and future adaptive routing. It provides explainable read-only assessments and bounded aggregate reports.

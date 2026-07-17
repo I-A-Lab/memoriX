@@ -219,3 +219,7 @@ Use `memory_capacity_status` for inspection,
 `memory_capacity_prune` for explicitly approved soft deactivation. Capacity
 logs are stored outside Git under `<runtime>/operations/capacity/`. Detailed
 procedures are in `MEMORIX_CAPACITY_OPERATIONS.md`.
+
+## Memory pressure operations
+
+Use `memorix_memory_pressure.py` for local diagnosis, or the read-only MCP/OpenCode pressure tools. Synthetic counts up to 6,000,000 do not allocate equivalent objects.
