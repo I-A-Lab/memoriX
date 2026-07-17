@@ -628,6 +628,35 @@ export class MemoriXService {
     )
   }
 
+  async retentionRankingStatus(
+    simulateCount?: number,
+    assessmentLimit = 100,
+  ): Promise<MemoriXServiceResult<JSONObject>> {
+    const input: JSONObject = {
+      assessment_limit: assessmentLimit,
+    }
+    if (simulateCount !== undefined) {
+      input.simulate_count = simulateCount
+    }
+    return this.runSafely((client) =>
+      client.callTool<JSONObject>(
+        "memorix_retention_ranking_status",
+        input,
+      ),
+    )
+  }
+
+  async retentionRankingInspect(
+    memoryID: string,
+  ): Promise<MemoriXServiceResult<JSONObject | null>> {
+    return this.runSafely((client) =>
+      client.callTool<JSONObject | null>(
+        "memorix_retention_ranking_inspect",
+        { memory_id: memoryID },
+      ),
+    )
+  }
+
   async close(): Promise<void> {
     if (this.closing) {
       await this.closing

@@ -12,6 +12,8 @@
     "memory_capacity_prune": "ask",
     "memory_pressure_status": "allow",
     "memory_pressure_inspect": "allow",
+    "retention_ranking_status": "allow",
+    "retention_ranking_inspect": "allow",
     "project_archive_record": "ask",
     "project_snapshot_rebuild": "ask",
   },

@@ -29,6 +29,8 @@ export type MemoriXToolName =
   | "memorix_capacity_prune"
   | "memorix_memory_pressure_status"
   | "memorix_memory_pressure_inspect"
+  | "memorix_retention_ranking_status"
+  | "memorix_retention_ranking_inspect"
   | "memorix_status"
 
 export type MemoriXToolDefinition = {

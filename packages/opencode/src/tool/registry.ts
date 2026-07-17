@@ -1,4 +1,4 @@
-import { LayerNode } from "@opencode-ai/core/effect/layer-node"
+﻿import { LayerNode } from "@opencode-ai/core/effect/layer-node"
 import { httpClient } from "@opencode-ai/core/effect/app-node-platform"
 import { Ripgrep } from "@opencode-ai/core/ripgrep"
 import { PlanExitTool } from "./plan"
@@ -19,6 +19,7 @@ import { SkillTool } from "./skill"
 import { MemoryStoreTool, MemoryRetrieveTool } from "./memory"
 import { MemoryCapacityPlanTool, MemoryCapacityPruneTool, MemoryCapacityStatusTool } from "./memory-capacity"
 import { MemoryPressureInspectTool, MemoryPressureStatusTool } from "./memory-pressure"
+import { RetentionRankingInspectTool, RetentionRankingStatusTool } from "./retention-ranking"
 import {
   MemoryCandidateRejectTool,
   MemoryCandidateValidateTool,
@@ -143,6 +144,10 @@ const layer = Layer.effect(
       yield* MemoryPressureStatusTool
     const memorypressureinspect =
       yield* MemoryPressureInspectTool
+    const retentionrankingstatus =
+      yield* RetentionRankingStatusTool
+    const retentionrankinginspect =
+      yield* RetentionRankingInspectTool
     const memorystatus = yield* MemoryStatusTool
     const projectarchiverecord =
       yield* ProjectArchiveRecordTool
@@ -281,6 +286,8 @@ const layer = Layer.effect(
           memory_capacity_prune: Tool.init(memorycapacityprune),
           memory_pressure_status: Tool.init(memorypressurestatus),
           memory_pressure_inspect: Tool.init(memorypressureinspect),
+          retention_ranking_status: Tool.init(retentionrankingstatus),
+          retention_ranking_inspect: Tool.init(retentionrankinginspect),
           memory_status: Tool.init(memorystatus),
           project_archive_record: Tool.init(projectarchiverecord),
           project_archive_list: Tool.init(projectarchivelist),

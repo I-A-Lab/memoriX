@@ -1,3 +1,5 @@
+export { getRetentionRankingStatus, inspectRetentionRanking } from "./retention-ranking-facade"
+export type { RetentionRankingFacadeService, RetentionRankingFacadeResult } from "./retention-ranking-facade"
 export { getMemoryPressureStatus, inspectMemoryPressure } from "./memory-pressure-facade"
 export type { MemoryPressureFacadeService, MemoryPressureFacadeResult } from "./memory-pressure-facade"
 export { getCapacityStatus, planCapacityPruning, pruneCapacity } from "./capacity-facade"
