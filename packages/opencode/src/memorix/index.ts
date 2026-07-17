@@ -1,3 +1,5 @@
+export { getMemoryPressureStatus, inspectMemoryPressure } from "./memory-pressure-facade"
+export type { MemoryPressureFacadeService, MemoryPressureFacadeResult } from "./memory-pressure-facade"
 export { getCapacityStatus, planCapacityPruning, pruneCapacity } from "./capacity-facade"
 export type { CapacityFacadeService, CapacityFacadeResult } from "./capacity-facade"
 export {

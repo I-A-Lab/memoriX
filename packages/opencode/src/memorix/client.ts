@@ -379,6 +379,34 @@ export class MemoriXClient {
     })
   }
 
+  async memoryPressureStatus(
+    simulateCount?: number,
+    assessmentLimit = 100,
+  ): Promise<JSONObject> {
+    return this.callTool<JSONObject>(
+      "memorix_memory_pressure_status",
+      {
+        simulate_count: simulateCount ?? null,
+        assessment_limit: assessmentLimit,
+      },
+    )
+  }
+
+  async memoryPressureInspect(
+    memoryID: string,
+  ): Promise<JSONObject | null> {
+    if (!memoryID.trim()) {
+      throw new MemoriXClientError(
+        "Memory ID must not be empty.",
+      )
+    }
+
+    return this.callTool<JSONObject | null>(
+      "memorix_memory_pressure_inspect",
+      { memory_id: memoryID.trim() },
+    )
+  }
+
   async recordProjectArchiveEntry(
     input: MemoriXProjectEntryRecordInput,
   ): Promise<MemoriXProjectArchiveEntry> {

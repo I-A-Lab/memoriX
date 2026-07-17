@@ -18,6 +18,7 @@ import { InvalidTool } from "./invalid"
 import { SkillTool } from "./skill"
 import { MemoryStoreTool, MemoryRetrieveTool } from "./memory"
 import { MemoryCapacityPlanTool, MemoryCapacityPruneTool, MemoryCapacityStatusTool } from "./memory-capacity"
+import { MemoryPressureInspectTool, MemoryPressureStatusTool } from "./memory-pressure"
 import {
   MemoryCandidateRejectTool,
   MemoryCandidateValidateTool,
@@ -138,6 +139,10 @@ const layer = Layer.effect(
       yield* MemoryCapacityPlanTool
     const memorycapacityprune =
       yield* MemoryCapacityPruneTool
+    const memorypressurestatus =
+      yield* MemoryPressureStatusTool
+    const memorypressureinspect =
+      yield* MemoryPressureInspectTool
     const memorystatus = yield* MemoryStatusTool
     const projectarchiverecord =
       yield* ProjectArchiveRecordTool
@@ -274,6 +279,8 @@ const layer = Layer.effect(
           memory_capacity_status: Tool.init(memorycapacitystatus),
           memory_capacity_plan: Tool.init(memorycapacityplan),
           memory_capacity_prune: Tool.init(memorycapacityprune),
+          memory_pressure_status: Tool.init(memorypressurestatus),
+          memory_pressure_inspect: Tool.init(memorypressureinspect),
           memory_status: Tool.init(memorystatus),
           project_archive_record: Tool.init(projectarchiverecord),
           project_archive_list: Tool.init(projectarchivelist),

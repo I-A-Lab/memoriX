@@ -10,6 +10,8 @@
     "memory_capacity_status": "allow",
     "memory_capacity_plan": "allow",
     "memory_capacity_prune": "ask",
+    "memory_pressure_status": "allow",
+    "memory_pressure_inspect": "allow",
     "project_archive_record": "ask",
     "project_snapshot_rebuild": "ask",
   },

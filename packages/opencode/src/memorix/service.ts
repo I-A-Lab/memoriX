@@ -597,6 +597,37 @@ export class MemoriXService {
     )
   }
 
+  async memoryPressureStatus(
+    simulateCount?: number,
+    assessmentLimit = 100,
+  ): Promise<MemoriXServiceResult<JSONObject>> {
+    const input: JSONObject = {
+      assessment_limit: assessmentLimit,
+    }
+
+    if (simulateCount !== undefined) {
+      input.simulate_count = simulateCount
+    }
+
+    return this.runSafely((client) =>
+      client.callTool<JSONObject>(
+        "memorix_memory_pressure_status",
+        input,
+      ),
+    )
+  }
+
+  async memoryPressureInspect(
+    memoryID: string,
+  ): Promise<MemoriXServiceResult<JSONObject | null>> {
+    return this.runSafely((client) =>
+      client.callTool<JSONObject | null>(
+        "memorix_memory_pressure_inspect",
+        { memory_id: memoryID },
+      ),
+    )
+  }
+
   async close(): Promise<void> {
     if (this.closing) {
       await this.closing
