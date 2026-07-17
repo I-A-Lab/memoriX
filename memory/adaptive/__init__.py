@@ -167,3 +167,30 @@ __all__ += [
     "inspect_runtime_capacity",
     "validate_external_runtime_root",
 ]
+from memory.adaptive.memory_pressure import (
+    HotSitePressureSnapshot,
+    MemoryPressureAssessment,
+    MemoryPressureComponents,
+    MemoryPressureInput,
+    MemoryPressureWeights,
+    assess_memory_pressure,
+    normalize_age,
+    normalize_low_usage,
+    normalize_non_negative,
+    normalize_unit,
+    observe_hot_site_pressure,
+)
+
+__all__ += [
+    "HotSitePressureSnapshot",
+    "MemoryPressureAssessment",
+    "MemoryPressureComponents",
+    "MemoryPressureInput",
+    "MemoryPressureWeights",
+    "assess_memory_pressure",
+    "normalize_age",
+    "normalize_low_usage",
+    "normalize_non_negative",
+    "normalize_unit",
+    "observe_hot_site_pressure",
+]
