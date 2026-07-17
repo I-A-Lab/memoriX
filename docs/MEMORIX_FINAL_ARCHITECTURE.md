@@ -140,3 +140,10 @@ Le Live Probe inspecte un runtime en lecture seule. Il ne charge pas Titan, n'in
 - validation finale de concurrence, corruption, saturation et compatibilité multiplateforme.
 
 L'architecture d'agents d'Antoine reste la couche d'orchestration principale.
+
+## Capacity control plane
+
+The capacity control plane combines read-only runtime inspection, admission
+control, dry-run pruning plans, a mutation lock, append-only operational logs,
+MCP tools, and native OpenCode tools. Status and plan operations are read-only;
+pruning is permission-gated and performs logical hot-site deactivation only.

@@ -211,3 +211,11 @@ $RuntimeRoot = Join-Path $env:LOCALAPPDATA "memoriX\runtime"
 L'outil OpenCode `memory_nightly_run` demande une permission native avant exécution. Il est exclu des hooks et utilise `clear_short_term_after_success=true` par défaut.
 
 La procédure complète d'installation, de vérification et de dépannage est décrite dans [MEMORIX_NIGHTLY_OPERATIONS.md](MEMORIX_NIGHTLY_OPERATIONS.md).
+
+## Capacity operations
+
+Use `memory_capacity_status` for inspection,
+`memory_capacity_plan` for a dry-run plan, and
+`memory_capacity_prune` for explicitly approved soft deactivation. Capacity
+logs are stored outside Git under `<runtime>/operations/capacity/`. Detailed
+procedures are in `MEMORIX_CAPACITY_OPERATIONS.md`.

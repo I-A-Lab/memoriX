@@ -138,3 +138,12 @@ If you are working on a project that's related to OpenCode and is using "opencod
 ---
 
 **Join our community** [Discord](https://discord.gg/opencode) | [X.com](https://x.com/opencode)
+
+## Capacity and saturation
+
+memoriX exposes bounded hot-site capacity inspection, dry-run pruning
+planning, permission-gated soft pruning, and a synthetic saturation benchmark
+covering up to 6,000,000 active items without materializing that population.
+See `docs/MEMORIX_CAPACITY_OPERATIONS.md`,
+`docs/MEMORIX_SCALING_POLICY.md`, and
+`docs/MEMORIX_SATURATION_VALIDATION.md`.

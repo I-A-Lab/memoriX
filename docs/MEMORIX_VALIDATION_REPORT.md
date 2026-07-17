@@ -144,3 +144,11 @@ Le flux validé couvre :
 10. lectures sans permission de mutation;
 11. exclusion obligatoire des hooks;
 12. absence d'écriture dans Titan.
+
+## Part 19 capacity and saturation validation
+
+Part 19 validates runtime capacity inspection, admission rejection before
+Titan writes, pending-candidate preservation, controlled soft pruning,
+operational locking and logs, MCP/OpenCode exposure, and bounded synthetic
+scenarios through 6,000,000 active items. Benchmarks do not modify runtime data
+or access the cold site.

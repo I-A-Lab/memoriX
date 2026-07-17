@@ -139,3 +139,10 @@ Tests and manual validation must use a runtime outside the repository. Default r
 - connect adaptive observation to production runtime data;
 - add broader transactions, recovery and migrations;
 - complete concurrency, corruption, saturation and cross-platform testing.
+
+## Capacity boundary
+
+Titan active memory is a bounded hot site. Admission is checked before
+candidate validation writes. At exhaustion, the candidate remains pending.
+Soft pruning can deactivate eligible hot memories only after an explicit
+dry-run plan and operator approval. The cold archive is never pruned.
