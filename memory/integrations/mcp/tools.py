@@ -352,6 +352,19 @@ TOOL_DEFINITIONS: tuple[McpToolDefinition, ...] = (
         input_schema=_object_schema({"applied_by": STRING, "reason": STRING, "max_deactivations": {"type": ["integer", "null"], "minimum": 1}}, required=("applied_by", "reason")),
     ),
     McpToolDefinition(
+        name="memorix_memory_pressure_status",
+        description="Inspect persisted per-memory hot-site pressure without mutation.",
+        input_schema=_object_schema({
+            "simulate_count": {"type": ["integer", "null"], "minimum": 0},
+            "assessment_limit": {"type": "integer", "minimum": 0},
+        }),
+    ),
+    McpToolDefinition(
+        name="memorix_memory_pressure_inspect",
+        description="Inspect one persisted hot-site memory pressure assessment.",
+        input_schema=_object_schema({"memory_id": STRING}, required=("memory_id",)),
+    ),
+    McpToolDefinition(
         name="memorix_status",
         description=(
             "Return memoriX architecture, storage, candidate, and "
@@ -480,6 +493,8 @@ class MemoriXMcpTools:
             "memorix_capacity_status": self._capacity_status,
             "memorix_capacity_plan": self._capacity_plan,
             "memorix_capacity_prune": self._capacity_prune,
+            "memorix_memory_pressure_status": self._memory_pressure_status,
+            "memorix_memory_pressure_inspect": self._memory_pressure_inspect,
             "memorix_status": self._status,
         }
 
@@ -792,6 +807,18 @@ class MemoriXMcpTools:
         if maximum is not None and (isinstance(maximum, bool) or not isinstance(maximum, int) or maximum <= 0):
             raise McpInvalidArgumentsError("max_deactivations must be null or a positive integer.")
         return self._gateway.capacity_prune(applied_by=_require_text(arguments, "applied_by"), reason=_require_text(arguments, "reason"), max_deactivations=maximum)
+
+    def _memory_pressure_status(self, arguments: dict[str, Any]) -> Any:
+        simulated = arguments.get("simulate_count")
+        limit = arguments.get("assessment_limit", 100)
+        if simulated is not None and (isinstance(simulated, bool) or not isinstance(simulated, int) or simulated < 0):
+            raise McpInvalidArgumentsError("simulate_count must be null or a non-negative integer.")
+        if isinstance(limit, bool) or not isinstance(limit, int) or limit < 0:
+            raise McpInvalidArgumentsError("assessment_limit must be a non-negative integer.")
+        return self._gateway.memory_pressure_status(simulate_count=simulated, assessment_limit=limit)
+
+    def _memory_pressure_inspect(self, arguments: dict[str, Any]) -> Any:
+        return self._gateway.memory_pressure_inspect(_require_text(arguments, "memory_id"))
 
     def _status(
         self,

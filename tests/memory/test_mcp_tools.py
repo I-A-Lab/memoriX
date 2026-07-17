@@ -70,6 +70,8 @@ class McpToolDeclarationTests(McpToolsTestCase):
                 "memorix_capacity_status",
                 "memorix_capacity_plan",
                 "memorix_capacity_prune",
+                "memorix_memory_pressure_status",
+                "memorix_memory_pressure_inspect",
                 "memorix_project_entry_record",
                 "memorix_project_entries_list",
                 "memorix_project_snapshot_rebuild",

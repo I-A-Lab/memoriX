@@ -52,6 +52,7 @@ from memory.gateway.capacity_operations import CapacityOperations
 from memory.adaptive import (
     HotMemoryPruningInput, PressureObservationInput,
     inspect_runtime_capacity, observe_memory_pressure, plan_soft_pruning,
+    inspect_runtime_memory_pressure, inspect_runtime_memory_pressure_item,
 )
 from datetime import datetime, timezone
 from memory.hot_site.short_term_memory import (
@@ -534,6 +535,32 @@ class MemoriXGateway:
             payload = report.to_dict()
             self._capacity_operations.record("pruning_completed", payload)
             return payload
+
+    def memory_pressure_status(
+        self,
+        *,
+        simulate_count: int | None = None,
+        assessment_limit: int = 100,
+    ) -> dict[str, Any]:
+        """Inspect persisted hot-site pressure without loading Titan."""
+
+        return inspect_runtime_memory_pressure(
+            runtime_root=self._paths.runtime_root,
+            assessment_limit=assessment_limit,
+            simulated_memory_count=simulate_count,
+        ).to_dict()
+
+    def memory_pressure_inspect(
+        self,
+        memory_id: str,
+    ) -> dict[str, Any] | None:
+        """Inspect one persisted hot-site memory by identifier."""
+
+        assessment = inspect_runtime_memory_pressure_item(
+            runtime_root=self._paths.runtime_root,
+            memory_id=memory_id,
+        )
+        return assessment.to_dict() if assessment is not None else None
 
     def memory_status(self) -> dict[str, Any]:
         """Return a non-mutating status summary of the Python memory."""
