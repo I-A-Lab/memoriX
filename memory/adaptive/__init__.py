@@ -207,3 +207,26 @@ __all__ += [
     "inspect_runtime_memory_pressure_item",
     "pressure_input_from_metadata",
 ]
+from memory.adaptive.retention_scoring import (
+    HotSiteRetentionRanking,
+    RetentionScoreAssessment,
+    RetentionScoreComponents,
+    RetentionScoringInput,
+    RetentionScoringThresholds,
+    RetentionScoringWeights,
+    assess_adaptive_retention,
+    calculate_adaptive_retention_score,
+    rank_hot_site_memories,
+)
+
+__all__ += [
+    "HotSiteRetentionRanking",
+    "RetentionScoreAssessment",
+    "RetentionScoreComponents",
+    "RetentionScoringInput",
+    "RetentionScoringThresholds",
+    "RetentionScoringWeights",
+    "assess_adaptive_retention",
+    "calculate_adaptive_retention_score",
+    "rank_hot_site_memories",
+]
