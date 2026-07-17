@@ -82,6 +82,10 @@ class MemoryStoragePaths:
     nightly_lock: Path
     nightly_runs: Path
     nightly_latest: Path
+    capacity_operations_dir: Path
+    capacity_lock: Path
+    capacity_events: Path
+    capacity_latest: Path
 
     @classmethod
     def from_runtime_root(
@@ -147,6 +151,18 @@ class MemoryStoragePaths:
             ),
             nightly_latest=(
                 root / "operations" / "nightly" / "latest.json"
+            ),
+            capacity_operations_dir=(
+                root / "operations" / "capacity"
+            ),
+            capacity_lock=(
+                root / "operations" / "capacity" / "capacity.lock"
+            ),
+            capacity_events=(
+                root / "operations" / "capacity" / "events.jsonl"
+            ),
+            capacity_latest=(
+                root / "operations" / "capacity" / "latest.json"
             ),
         )
 
