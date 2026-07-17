@@ -365,6 +365,22 @@ TOOL_DEFINITIONS: tuple[McpToolDefinition, ...] = (
         input_schema=_object_schema({"memory_id": STRING}, required=("memory_id",)),
     ),
     McpToolDefinition(
+        name="memorix_retention_ranking_status",
+        description="Rank persisted hot-site memories by retention score in dry-run mode.",
+        input_schema=_object_schema({
+            "simulate_count": {"type": ["integer", "null"], "minimum": 0},
+            "assessment_limit": {"type": "integer", "minimum": 0},
+        }),
+    ),
+    McpToolDefinition(
+        name="memorix_retention_ranking_inspect",
+        description="Inspect one persisted adaptive-retention assessment.",
+        input_schema=_object_schema(
+            {"memory_id": STRING},
+            required=("memory_id",),
+        ),
+    ),
+    McpToolDefinition(
         name="memorix_status",
         description=(
             "Return memoriX architecture, storage, candidate, and "
@@ -495,6 +511,8 @@ class MemoriXMcpTools:
             "memorix_capacity_prune": self._capacity_prune,
             "memorix_memory_pressure_status": self._memory_pressure_status,
             "memorix_memory_pressure_inspect": self._memory_pressure_inspect,
+            "memorix_retention_ranking_status": self._retention_ranking_status,
+            "memorix_retention_ranking_inspect": self._retention_ranking_inspect,
             "memorix_status": self._status,
         }
 
@@ -819,6 +837,44 @@ class MemoriXMcpTools:
 
     def _memory_pressure_inspect(self, arguments: dict[str, Any]) -> Any:
         return self._gateway.memory_pressure_inspect(_require_text(arguments, "memory_id"))
+
+    def _retention_ranking_status(
+        self,
+        arguments: dict[str, Any],
+    ) -> Any:
+        simulated = arguments.get("simulate_count")
+        limit = arguments.get("assessment_limit", 100)
+        if (
+            simulated is not None
+            and (
+                isinstance(simulated, bool)
+                or not isinstance(simulated, int)
+                or simulated < 0
+            )
+        ):
+            raise McpInvalidArgumentsError(
+                "simulate_count must be null or a non-negative integer."
+            )
+        if (
+            isinstance(limit, bool)
+            or not isinstance(limit, int)
+            or limit < 0
+        ):
+            raise McpInvalidArgumentsError(
+                "assessment_limit must be a non-negative integer."
+            )
+        return self._gateway.retention_ranking_status(
+            simulate_count=simulated,
+            assessment_limit=limit,
+        )
+
+    def _retention_ranking_inspect(
+        self,
+        arguments: dict[str, Any],
+    ) -> Any:
+        return self._gateway.retention_ranking_inspect(
+            _require_text(arguments, "memory_id")
+        )
 
     def _status(
         self,

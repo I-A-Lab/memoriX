@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import io
 import json
@@ -96,7 +96,7 @@ class McpToolProtocolTests(McpServerTestCase):
 
         tools = response["result"]["tools"]
 
-        self.assertEqual(len(tools), 20)
+        self.assertEqual(len(tools), 22)
         self.assertIn(
             "memorix_context",
             {

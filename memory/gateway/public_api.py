@@ -53,6 +53,7 @@ from memory.adaptive import (
     HotMemoryPruningInput, PressureObservationInput,
     inspect_runtime_capacity, observe_memory_pressure, plan_soft_pruning,
     inspect_runtime_memory_pressure, inspect_runtime_memory_pressure_item,
+    inspect_runtime_retention_ranking, inspect_runtime_retention_item,
 )
 from datetime import datetime, timezone
 from memory.hot_site.short_term_memory import (
@@ -557,6 +558,32 @@ class MemoriXGateway:
         """Inspect one persisted hot-site memory by identifier."""
 
         assessment = inspect_runtime_memory_pressure_item(
+            runtime_root=self._paths.runtime_root,
+            memory_id=memory_id,
+        )
+        return assessment.to_dict() if assessment is not None else None
+
+    def retention_ranking_status(
+        self,
+        *,
+        simulate_count: int | None = None,
+        assessment_limit: int = 100,
+    ) -> dict[str, Any]:
+        """Rank persisted hot memories without mutation."""
+
+        return inspect_runtime_retention_ranking(
+            runtime_root=self._paths.runtime_root,
+            assessment_limit=assessment_limit,
+            simulated_memory_count=simulate_count,
+        ).to_dict()
+
+    def retention_ranking_inspect(
+        self,
+        memory_id: str,
+    ) -> dict[str, Any] | None:
+        """Inspect one persisted adaptive-retention assessment."""
+
+        assessment = inspect_runtime_retention_item(
             runtime_root=self._paths.runtime_root,
             memory_id=memory_id,
         )

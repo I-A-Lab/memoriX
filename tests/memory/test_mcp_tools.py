@@ -72,6 +72,8 @@ class McpToolDeclarationTests(McpToolsTestCase):
                 "memorix_capacity_prune",
                 "memorix_memory_pressure_status",
                 "memorix_memory_pressure_inspect",
+                "memorix_retention_ranking_status",
+                "memorix_retention_ranking_inspect",
                 "memorix_project_entry_record",
                 "memorix_project_entries_list",
                 "memorix_project_snapshot_rebuild",
