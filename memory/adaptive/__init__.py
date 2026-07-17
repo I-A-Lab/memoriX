@@ -230,3 +230,17 @@ __all__ += [
     "calculate_adaptive_retention_score",
     "rank_hot_site_memories",
 ]
+
+from memory.adaptive.runtime_retention_scoring import (
+    RuntimeRetentionRankingReport,
+    inspect_runtime_retention_item,
+    inspect_runtime_retention_ranking,
+    retention_input_from_metadata,
+)
+
+__all__ += [
+    "RuntimeRetentionRankingReport",
+    "inspect_runtime_retention_item",
+    "inspect_runtime_retention_ranking",
+    "retention_input_from_metadata",
+]
