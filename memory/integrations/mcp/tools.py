@@ -337,6 +337,21 @@ TOOL_DEFINITIONS: tuple[McpToolDefinition, ...] = (
         ),
     ),
     McpToolDefinition(
+        name="memorix_capacity_status",
+        description="Inspect hot-site capacity without mutation.",
+        input_schema=_object_schema({"simulate_active_items": {"type": ["integer", "null"], "minimum": 0}}),
+    ),
+    McpToolDefinition(
+        name="memorix_capacity_plan",
+        description="Build a dry-run hot-site soft-pruning plan.",
+        input_schema=_object_schema({}),
+    ),
+    McpToolDefinition(
+        name="memorix_capacity_prune",
+        description="Apply eligible soft-pruning recommendations after explicit approval.",
+        input_schema=_object_schema({"applied_by": STRING, "reason": STRING, "max_deactivations": {"type": ["integer", "null"], "minimum": 1}}, required=("applied_by", "reason")),
+    ),
+    McpToolDefinition(
         name="memorix_status",
         description=(
             "Return memoriX architecture, storage, candidate, and "
@@ -462,6 +477,9 @@ class MemoriXMcpTools:
             "memorix_project_snapshot_get": (
                 self._project_snapshot_get
             ),
+            "memorix_capacity_status": self._capacity_status,
+            "memorix_capacity_plan": self._capacity_plan,
+            "memorix_capacity_prune": self._capacity_prune,
             "memorix_status": self._status,
         }
 
@@ -756,6 +774,24 @@ class MemoriXMcpTools:
         return self._gateway.get_project_snapshot(
             _require_text(arguments, "project_id")
         )
+
+
+    def _capacity_status(self, arguments: dict[str, Any]) -> Any:
+        value = arguments.get("simulate_active_items")
+        if value is not None and (isinstance(value, bool) or not isinstance(value, int) or value < 0):
+            raise McpInvalidArgumentsError("simulate_active_items must be null or a non-negative integer.")
+        return self._gateway.capacity_status(simulate_active_items=value)
+
+    def _capacity_plan(self, arguments: dict[str, Any]) -> Any:
+        if arguments:
+            raise McpInvalidArgumentsError("memorix_capacity_plan does not accept arguments.")
+        return self._gateway.capacity_plan()
+
+    def _capacity_prune(self, arguments: dict[str, Any]) -> Any:
+        maximum = arguments.get("max_deactivations")
+        if maximum is not None and (isinstance(maximum, bool) or not isinstance(maximum, int) or maximum <= 0):
+            raise McpInvalidArgumentsError("max_deactivations must be null or a positive integer.")
+        return self._gateway.capacity_prune(applied_by=_require_text(arguments, "applied_by"), reason=_require_text(arguments, "reason"), max_deactivations=maximum)
 
     def _status(
         self,

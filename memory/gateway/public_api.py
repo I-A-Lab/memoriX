@@ -47,6 +47,13 @@ from memory.gateway.event_service import (
 from memory.gateway.validation_service import (
     MemoryValidationService,
 )
+from memory.gateway.capacity_control import apply_soft_pruning_plan
+from memory.gateway.capacity_operations import CapacityOperations
+from memory.adaptive import (
+    HotMemoryPruningInput, PressureObservationInput,
+    inspect_runtime_capacity, observe_memory_pressure, plan_soft_pruning,
+)
+from datetime import datetime, timezone
 from memory.hot_site.short_term_memory import (
     ShortTermEventStore,
 )
@@ -79,6 +86,7 @@ class MemoriXGateway:
         ) = None,
     ) -> None:
         self._paths = storage_paths
+        self._titan_max_items = titan_max_items
 
         self._short_term_store = ShortTermEventStore(
             self._paths.short_term_events
@@ -149,6 +157,12 @@ class MemoriXGateway:
                 self._hot_site,
                 policy=consolidation_policy,
             )
+        )
+
+        self._capacity_operations = CapacityOperations(
+            lock_path=self._paths.capacity_lock,
+            events_path=self._paths.capacity_events,
+            latest_path=self._paths.capacity_latest,
         )
 
         self._nightly_service = (
@@ -458,6 +472,68 @@ class MemoriXGateway:
                 clear_short_term_after_success
             )
         )
+
+
+    def capacity_status(self, *, simulate_active_items: int | None = None) -> dict[str, Any]:
+        snapshot = inspect_runtime_capacity(
+            runtime_root=self._paths.runtime_root,
+            configured_capacity=self._titan_max_items,
+            simulated_active_items=simulate_active_items,
+        )
+        payload = snapshot.to_dict()
+        if simulate_active_items is None:
+            self._capacity_operations.record("capacity_checked", payload)
+        return payload
+
+    def capacity_plan(self) -> dict[str, Any]:
+        memories = self._hot_site.list_memories(active_only=False)
+        active_count = sum(memory.active for memory in memories)
+        pressure = observe_memory_pressure(PressureObservationInput(
+            scope_id="hot_site", used_items=active_count, capacity=self._titan_max_items
+        ))
+        now = datetime.now(timezone.utc)
+        inputs = []
+        for memory in memories:
+            metadata = dict(memory.metadata)
+            try:
+                created = datetime.fromisoformat(memory.created_at.replace("Z", "+00:00"))
+                age_days = max(0.0, (now - created).total_seconds() / 86400.0)
+            except ValueError:
+                age_days = 0.0
+            inputs.append(HotMemoryPruningInput(
+                memory_id=memory.memory_id, block_id="hot_site",
+                importance=float(metadata.get("importance", 0.5)),
+                access_count=int(metadata.get("access_count", 0)),
+                age_days=age_days, retrieval_score=float(metadata.get("retrieval_score", 0.0)),
+                active=memory.active, pinned=bool(metadata.get("pinned", False)),
+                human_validated=True, metadata=metadata,
+            ))
+        plan = plan_soft_pruning(scope_id="hot_site", memories=inputs, pressure=pressure)
+        payload = plan.to_dict()
+        self._capacity_operations.record("pruning_planned", payload)
+        return payload
+
+    def capacity_prune(self, *, applied_by: str, reason: str, max_deactivations: int | None = None) -> dict[str, Any]:
+        with self._capacity_operations.mutation_lock("capacity_prune"):
+            plan_payload = self.capacity_plan()
+            from memory.adaptive.contracts import SoftPruningAction, SoftPruningPlan, SoftPruningRecommendation
+            recommendations = tuple(SoftPruningRecommendation(
+                memory_id=item["memory_id"], block_id=item["block_id"],
+                action=SoftPruningAction(item["action"]), retention_score=float(item["retention_score"]),
+                pressure=float(item["pressure"]), protected=bool(item["protected"]),
+                protection_reasons=tuple(item["protection_reasons"]), scoring_components=dict(item["scoring_components"]),
+                explanation=tuple(item["explanation"]),
+            ) for item in plan_payload["recommendations"])
+            plan = SoftPruningPlan(
+                plan_id=plan_payload["plan_id"], scope_id=plan_payload["scope_id"],
+                pressure_observation_id=plan_payload["pressure_observation_id"],
+                pressure=float(plan_payload["pressure"]), recommendations=recommendations,
+                created_at=plan_payload["created_at"],
+            )
+            report = apply_soft_pruning_plan(plan, self._hot_site, applied_by=applied_by, reason=reason, max_deactivations=max_deactivations)
+            payload = report.to_dict()
+            self._capacity_operations.record("pruning_completed", payload)
+            return payload
 
     def memory_status(self) -> dict[str, Any]:
         """Return a non-mutating status summary of the Python memory."""
