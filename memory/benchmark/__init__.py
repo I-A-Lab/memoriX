@@ -37,3 +37,14 @@ __all__ = [
     "run_adaptive_design_benchmark",
     "run_design",
 ]
+from memory.benchmark.memory_pressure import (
+    DEFAULT_PRESSURE_SCENARIOS,
+    MemoryPressureBenchmarkResult,
+    run_memory_pressure_benchmark,
+)
+
+__all__ += [
+    "DEFAULT_PRESSURE_SCENARIOS",
+    "MemoryPressureBenchmarkResult",
+    "run_memory_pressure_benchmark",
+]
