@@ -194,3 +194,16 @@ __all__ += [
     "normalize_unit",
     "observe_hot_site_pressure",
 ]
+from memory.adaptive.runtime_memory_pressure import (
+    RuntimeMemoryPressureReport,
+    inspect_runtime_memory_pressure,
+    inspect_runtime_memory_pressure_item,
+    pressure_input_from_metadata,
+)
+
+__all__ += [
+    "RuntimeMemoryPressureReport",
+    "inspect_runtime_memory_pressure",
+    "inspect_runtime_memory_pressure_item",
+    "pressure_input_from_metadata",
+]
