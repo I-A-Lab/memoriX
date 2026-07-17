@@ -1,5 +1,14 @@
-﻿"""Public gateway for the memoriX memory system."""
+"""Public gateway for the memoriX memory system."""
 
+from memory.gateway.capacity_control import (
+    CapacityAdmissionDecision,
+    CapacityAdmissionError,
+    SoftPruningApplicationError,
+    SoftPruningApplicationReport,
+    apply_soft_pruning_plan,
+    evaluate_capacity_admission,
+    require_capacity_admission,
+)
 from memory.gateway.event_service import (
     DuplicateEventError,
     MemoryEventConsistencyError,
@@ -20,6 +29,13 @@ from memory.gateway.validation_service import (
 )
 
 __all__ = [
+    "require_capacity_admission",
+    "evaluate_capacity_admission",
+    "apply_soft_pruning_plan",
+    "SoftPruningApplicationReport",
+    "SoftPruningApplicationError",
+    "CapacityAdmissionError",
+    "CapacityAdmissionDecision",
     "CandidateValidationError",
     "DuplicateEventError",
     "MemoriXGateway",

@@ -5,6 +5,9 @@ from __future__ import annotations
 from memory.gateway.adaptive_validation import (
     AdaptiveValidationMetadataService,
 )
+from memory.gateway.capacity_control import (
+    require_capacity_admission,
+)
 
 from dataclasses import replace
 
@@ -34,9 +37,15 @@ class MemoryValidationService:
         self,
         candidate_store: MemoryCandidateStore,
         hot_site: HotSiteTitanMemory,
+        *,
+        configured_capacity: int = 50_000,
     ) -> None:
+        if configured_capacity <= 0:
+            raise ValueError("configured_capacity must be positive.")
+
         self._candidate_store = candidate_store
         self._hot_site = hot_site
+        self._configured_capacity = configured_capacity
 
     def validate(
         self,
@@ -61,6 +70,11 @@ class MemoryValidationService:
 
         candidate = self._candidate_store.require_pending(
             candidate_id
+        )
+
+        require_capacity_admission(
+            self._hot_site,
+            configured_capacity=self._configured_capacity,
         )
 
         content = (

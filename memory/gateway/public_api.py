@@ -137,6 +137,7 @@ class MemoriXGateway:
             MemoryValidationService(
                 self._candidate_store,
                 self._hot_site,
+                configured_capacity=titan_max_items,
             )
         )
 
