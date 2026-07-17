@@ -154,3 +154,16 @@ __all__ += [
     "AdaptiveDecisionStore",
     "evaluate_adaptive_controller",
 ]
+from memory.adaptive.runtime_capacity import (
+    RuntimeCapacitySnapshot,
+    classify_runtime_pressure,
+    inspect_runtime_capacity,
+    validate_external_runtime_root,
+)
+
+__all__ += [
+    "RuntimeCapacitySnapshot",
+    "classify_runtime_pressure",
+    "inspect_runtime_capacity",
+    "validate_external_runtime_root",
+]
