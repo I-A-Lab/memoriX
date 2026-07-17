@@ -48,3 +48,15 @@ __all__ += [
     "MemoryPressureBenchmarkResult",
     "run_memory_pressure_benchmark",
 ]
+
+from memory.benchmark.retention_ranking import (
+    DEFAULT_RETENTION_SCENARIOS,
+    RetentionRankingBenchmarkResult,
+    run_retention_ranking_benchmark,
+)
+
+__all__ += [
+    "DEFAULT_RETENTION_SCENARIOS",
+    "RetentionRankingBenchmarkResult",
+    "run_retention_ranking_benchmark",
+]
