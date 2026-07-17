@@ -11,11 +11,23 @@ from memory.benchmark.contracts import (
     BenchmarkScenario,
     BenchmarkSummary,
 )
+from memory.benchmark.capacity_saturation import (
+    CapacitySaturationReport,
+    CapacitySaturationResult,
+    DEFAULT_SCENARIOS,
+    PLAN_SAMPLE_LIMIT,
+    run_capacity_saturation_benchmark,
+)
 from memory.benchmark.scenarios import (
     build_benchmark_scenarios,
 )
 
 __all__ = [
+    "CapacitySaturationReport",
+    "CapacitySaturationResult",
+    "DEFAULT_SCENARIOS",
+    "PLAN_SAMPLE_LIMIT",
+    "run_capacity_saturation_benchmark",
     "BenchmarkDesign",
     "BenchmarkMetrics",
     "BenchmarkResult",
