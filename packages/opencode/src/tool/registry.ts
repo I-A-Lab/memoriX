@@ -17,6 +17,7 @@ import { WriteTool } from "./write"
 import { InvalidTool } from "./invalid"
 import { SkillTool } from "./skill"
 import { MemoryStoreTool, MemoryRetrieveTool } from "./memory"
+import { MemoryCapacityPlanTool, MemoryCapacityPruneTool, MemoryCapacityStatusTool } from "./memory-capacity"
 import {
   MemoryCandidateRejectTool,
   MemoryCandidateValidateTool,
@@ -131,6 +132,12 @@ const layer = Layer.effect(
       yield* MemoryConsolidateTool
     const memorynightlyrun =
       yield* MemoryNightlyRunTool
+    const memorycapacitystatus =
+      yield* MemoryCapacityStatusTool
+    const memorycapacityplan =
+      yield* MemoryCapacityPlanTool
+    const memorycapacityprune =
+      yield* MemoryCapacityPruneTool
     const memorystatus = yield* MemoryStatusTool
     const projectarchiverecord =
       yield* ProjectArchiveRecordTool
@@ -264,6 +271,9 @@ const layer = Layer.effect(
           memory_nightly_run: Tool.init(
             memorynightlyrun,
           ),
+          memory_capacity_status: Tool.init(memorycapacitystatus),
+          memory_capacity_plan: Tool.init(memorycapacityplan),
+          memory_capacity_prune: Tool.init(memorycapacityprune),
           memory_status: Tool.init(memorystatus),
           project_archive_record: Tool.init(projectarchiverecord),
           project_archive_list: Tool.init(projectarchivelist),
@@ -295,6 +305,9 @@ const layer = Layer.effect(
             tool.memory_candidate_reject,
             tool.memory_consolidate,
             tool.memory_nightly_run,
+            tool.memory_capacity_status,
+            tool.memory_capacity_plan,
+            tool.memory_capacity_prune,
             tool.memory_status,
             tool.project_archive_record,
             tool.project_archive_list,

@@ -542,6 +542,61 @@ export class MemoriXService {
         ),
     )
   }
+
+  async capacityStatus(
+    simulateActiveItems?: number,
+  ): Promise<MemoriXServiceResult<JSONObject>> {
+    const input: JSONObject = {}
+
+    if (simulateActiveItems !== undefined) {
+      input.simulate_active_items = simulateActiveItems
+    }
+
+    return this.runSafely(
+      (client) =>
+        client.callTool<JSONObject>(
+          "memorix_capacity_status",
+          input,
+        ),
+    )
+  }
+
+  async capacityPlan(): Promise<
+    MemoriXServiceResult<JSONObject>
+  > {
+    return this.runSafely(
+      (client) =>
+        client.callTool<JSONObject>(
+          "memorix_capacity_plan",
+          {},
+        ),
+    )
+  }
+
+  async capacityPrune(input: {
+    appliedBy: string
+    reason: string
+    maxDeactivations?: number
+  }): Promise<MemoriXServiceResult<JSONObject>> {
+    const arguments_: JSONObject = {
+      applied_by: input.appliedBy,
+      reason: input.reason,
+    }
+
+    if (input.maxDeactivations !== undefined) {
+      arguments_.max_deactivations =
+        input.maxDeactivations
+    }
+
+    return this.runSafely(
+      (client) =>
+        client.callTool<JSONObject>(
+          "memorix_capacity_prune",
+          arguments_,
+        ),
+    )
+  }
+
   async close(): Promise<void> {
     if (this.closing) {
       await this.closing

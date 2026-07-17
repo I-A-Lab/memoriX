@@ -361,6 +361,24 @@ export class MemoriXClient {
     )
   }
 
+
+  async capacityStatus(simulateActiveItems?: number): Promise<JSONObject> {
+    return this.callTool<JSONObject>("memorix_capacity_status", {
+      simulate_active_items: simulateActiveItems ?? null,
+    })
+  }
+
+  async capacityPlan(): Promise<JSONObject> {
+    return this.callTool<JSONObject>("memorix_capacity_plan")
+  }
+
+  async capacityPrune(input: { appliedBy: string; reason: string; maxDeactivations?: number }): Promise<JSONObject> {
+    return this.callTool<JSONObject>("memorix_capacity_prune", {
+      applied_by: input.appliedBy, reason: input.reason,
+      max_deactivations: input.maxDeactivations ?? null,
+    })
+  }
+
   async recordProjectArchiveEntry(
     input: MemoriXProjectEntryRecordInput,
   ): Promise<MemoriXProjectArchiveEntry> {

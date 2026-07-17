@@ -24,6 +24,9 @@ export type MemoriXToolName =
   | "memorix_project_entries_list"
   | "memorix_project_snapshot_rebuild"
   | "memorix_project_snapshot_get"
+  | "memorix_capacity_status"
+  | "memorix_capacity_plan"
+  | "memorix_capacity_prune"
   | "memorix_status"
 
 export type MemoriXToolDefinition = {

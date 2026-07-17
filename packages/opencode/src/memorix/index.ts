@@ -1,3 +1,5 @@
+export { getCapacityStatus, planCapacityPruning, pruneCapacity } from "./capacity-facade"
+export type { CapacityFacadeService, CapacityFacadeResult } from "./capacity-facade"
 export {
   getProjectSnapshotThroughMemoriX,
   listProjectEntriesThroughMemoriX,
