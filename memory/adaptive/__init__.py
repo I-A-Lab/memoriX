@@ -274,3 +274,33 @@ __all__ += [
     "decide_adaptive_routing",
     "plan_adaptive_routing",
 ]
+
+from memory.adaptive.policy_search import (
+    MemoryPolicyCandidate,
+    MemoryPolicyDataset,
+    MemoryPolicyEvaluationCase,
+    MemoryPolicyMetrics,
+    MemoryPolicySearchConfig,
+    MemoryPolicySearchResult,
+    MemoryPolicySearchSpace,
+    MemoryPolicyTrial,
+    default_memory_policy_dataset,
+    default_memory_policy_search_space,
+    evaluate_memory_policy,
+    search_memory_policies,
+)
+
+__all__ += [
+    "MemoryPolicyCandidate",
+    "MemoryPolicyDataset",
+    "MemoryPolicyEvaluationCase",
+    "MemoryPolicyMetrics",
+    "MemoryPolicySearchConfig",
+    "MemoryPolicySearchResult",
+    "MemoryPolicySearchSpace",
+    "MemoryPolicyTrial",
+    "default_memory_policy_dataset",
+    "default_memory_policy_search_space",
+    "evaluate_memory_policy",
+    "search_memory_policies",
+]
