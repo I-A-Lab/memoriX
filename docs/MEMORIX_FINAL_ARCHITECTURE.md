@@ -155,3 +155,7 @@ The pressure plane sits between persisted hot-site metadata and future adaptive 
 ## Adaptive retention ranking
 
 Part 21 adds an observation-only ranking plane above the persisted hot-site metadata. The plane provides scores, reasons, risks, protection status, and recommended dry-run actions without altering memory state.
+
+## Adaptive routing control plane
+
+The control plane combines runtime capacity and retention ranking into deterministic dry-run plans.

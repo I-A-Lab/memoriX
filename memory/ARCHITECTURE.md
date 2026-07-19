@@ -154,3 +154,7 @@ Persisted Titan metadata is converted into normalized per-memory pressure inputs
 ## Adaptive retention ranking boundary
 
 The adaptive retention layer reads persisted Titan metadata and produces ranked assessments only. It is isolated from mutation, cold-site history, automatic rehydration, and neural-model loading.
+
+## Adaptive routing boundary
+
+Adaptive routing is a planning layer only. It does not mutate Titan or the cold site.

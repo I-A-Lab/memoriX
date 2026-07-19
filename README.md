@@ -155,3 +155,7 @@ memoriX exposes deterministic read-only pressure status and per-memory inspectio
 ## Adaptive retention scoring
 
 memoriX can rank persisted hot-site memories using deterministic, explainable retention scores. The ranking is read-only and dry-run: it never prunes, deactivates, writes to the runtime, accesses the cold site, or loads Titan. See `docs/MEMORIX_RETENTION_SCORING.md`.
+
+## Adaptive routing
+
+memoriX can now build explainable, read-only admission and pruning plans from capacity and adaptive-retention signals.

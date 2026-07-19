@@ -160,3 +160,7 @@ Part 20 adds deterministic per-memory metrics, read-only runtime inspection, CLI
 ## Part 21 adaptive retention validation
 
 Part 21 validates deterministic scoring, explainable decisions, persisted-runtime ranking, bounded simulation, MCP and OpenCode exposure, synthetic benchmarks, and the strict no-mutation/no-cold-site/no-Titan contract. Detailed evidence is in `docs/MEMORIX_RETENTION_VALIDATION.md`.
+
+## Part 22 adaptive-routing validation
+
+Part 22 validates deterministic decisions, runtime inspection, MCP/OpenCode contracts, and bounded simulations through 6,000,000 memories.
