@@ -158,3 +158,7 @@ The adaptive retention layer reads persisted Titan metadata and produces ranked 
 ## Adaptive routing boundary
 
 Adaptive routing is a planning layer only. It does not mutate Titan or the cold site.
+
+## Policy-search control plane
+
+Policy search is observation-only and never mutates the memory data plane.

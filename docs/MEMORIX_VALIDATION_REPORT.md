@@ -164,3 +164,7 @@ Part 21 validates deterministic scoring, explainable decisions, persisted-runtim
 ## Part 22 adaptive-routing validation
 
 Part 22 validates deterministic decisions, runtime inspection, MCP/OpenCode contracts, and bounded simulations through 6,000,000 memories.
+
+## Part 23 policy-search validation
+
+Part 23 validates runtime-aware policy search, MCP, OpenCode, and bounded benchmarks.

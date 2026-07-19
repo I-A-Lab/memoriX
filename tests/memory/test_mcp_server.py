@@ -96,7 +96,7 @@ class McpToolProtocolTests(McpServerTestCase):
 
         tools = response["result"]["tools"]
 
-        self.assertEqual(len(tools), 23)
+        self.assertEqual(len(tools), 24)
         self.assertIn(
             "memorix_context",
             {

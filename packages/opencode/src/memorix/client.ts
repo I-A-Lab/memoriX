@@ -444,6 +444,10 @@ export class MemoriXClient {
     )
   }
 
+  async policySearch(input: JSONObject): Promise<JSONObject> {
+    return this.callTool<JSONObject>("memorix_policy_search", input)
+  }
+
   async recordProjectArchiveEntry(
     input: MemoriXProjectEntryRecordInput,
   ): Promise<MemoriXProjectArchiveEntry> {

@@ -399,6 +399,18 @@ TOOL_DEFINITIONS: tuple[McpToolDefinition, ...] = (
         }, required=("target_id",)),
     ),
     McpToolDefinition(
+        name="memorix_policy_search",
+        description="Run bounded read-only memory-policy search.",
+        input_schema=_object_schema({
+            "max_trials": {"type": "integer", "minimum": 1},
+            "seed": {"type": "integer"},
+            "assessment_limit": {"type": "integer", "minimum": 0},
+            "simulate_memory_count": {"type": ["integer", "null"], "minimum": 0},
+            "runtime_only": {"type": "boolean"},
+            "observed_at": {"type": ["string", "null"]},
+        }),
+    ),
+    McpToolDefinition(
         name="memorix_status",
         description=(
             "Return memoriX architecture, storage, candidate, and "
@@ -532,6 +544,7 @@ class MemoriXMcpTools:
             "memorix_retention_ranking_status": self._retention_ranking_status,
             "memorix_retention_ranking_inspect": self._retention_ranking_inspect,
             "memorix_adaptive_routing_plan": self._adaptive_routing_plan,
+            "memorix_policy_search": self._policy_search,
             "memorix_status": self._status,
         }
 
@@ -912,6 +925,16 @@ class MemoriXMcpTools:
             configured_capacity=int(arguments.get("configured_capacity", 50_000)),
             assessment_limit=int(arguments.get("assessment_limit", 100)),
             simulate_memory_count=arguments.get("simulate_memory_count"),
+        )
+
+    def _policy_search(self, arguments: dict[str, Any]) -> Any:
+        return self._gateway.policy_search(
+            max_trials=int(arguments.get("max_trials", 12)),
+            seed=int(arguments.get("seed", 23)),
+            assessment_limit=int(arguments.get("assessment_limit", 100)),
+            simulate_memory_count=arguments.get("simulate_memory_count"),
+            runtime_only=bool(arguments.get("runtime_only", False)),
+            observed_at=arguments.get("observed_at"),
         )
 
     def _status(

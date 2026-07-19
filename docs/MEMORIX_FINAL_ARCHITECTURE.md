@@ -159,3 +159,7 @@ Part 21 adds an observation-only ranking plane above the persisted hot-site meta
 ## Adaptive routing control plane
 
 The control plane combines runtime capacity and retention ranking into deterministic dry-run plans.
+
+## Deterministic policy search
+
+The adaptive control plane includes bounded advisory policy search.

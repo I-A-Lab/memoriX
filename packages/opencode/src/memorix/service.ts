@@ -668,6 +668,10 @@ export class MemoriXService {
     )
   }
 
+  async policySearch(input: JSONObject): Promise<MemoriXServiceResult<JSONObject>> {
+    return this.runSafely((client) => client.callTool<JSONObject>("memorix_policy_search", input))
+  }
+
   async close(): Promise<void> {
     if (this.closing) {
       await this.closing

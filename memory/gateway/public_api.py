@@ -54,7 +54,7 @@ from memory.adaptive import (
     inspect_runtime_capacity, observe_memory_pressure, plan_soft_pruning,
     inspect_runtime_memory_pressure, inspect_runtime_memory_pressure_item,
     inspect_runtime_retention_ranking, inspect_runtime_retention_item,
-    inspect_runtime_adaptive_routing,
+    inspect_runtime_adaptive_routing, inspect_runtime_policy_search,
 )
 from datetime import datetime, timezone
 from memory.hot_site.short_term_memory import (
@@ -622,6 +622,18 @@ class MemoriXGateway:
             configured_capacity=configured_capacity,
             assessment_limit=assessment_limit,
             simulated_memory_count=simulate_memory_count,
+        ).to_dict()
+
+    def policy_search(self, *, max_trials: int = 12, seed: int = 23, assessment_limit: int = 100, simulate_memory_count: int | None = None, runtime_only: bool = False, observed_at: str | None = None) -> dict[str, Any]:
+        """Run bounded read-only memory-policy search."""
+        return inspect_runtime_policy_search(
+            runtime_root=self._paths.runtime_root,
+            max_trials=max_trials,
+            seed=seed,
+            assessment_limit=assessment_limit,
+            simulated_memory_count=simulate_memory_count,
+            include_synthetic_cases=not runtime_only,
+            observed_at=observed_at,
         ).to_dict()
 
     def memory_status(self) -> dict[str, Any]:

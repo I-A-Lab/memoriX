@@ -1,3 +1,5 @@
+export { getPolicySearch } from "./policy-search-facade"
+export type { PolicySearchFacadeResult, PolicySearchFacadeService } from "./policy-search-facade"
 export { getAdaptiveRoutingPlan } from "./adaptive-routing-facade"
 export type { AdaptiveRoutingFacadeResult, AdaptiveRoutingFacadeService } from "./adaptive-routing-facade"
 export { getRetentionRankingStatus, inspectRetentionRanking } from "./retention-ranking-facade"

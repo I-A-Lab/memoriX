@@ -231,3 +231,7 @@ Use `scripts/memorix_retention_ranking.py` for local diagnostics and the MCP/Ope
 ## Adaptive-routing operations
 
 Use `scripts/memorix_adaptive_routing.py`, MCP `memorix_adaptive_routing_plan`, or OpenCode `adaptive_routing_plan` for read-only diagnostics.
+
+## Policy-search operations
+
+Use the policy-search CLI and benchmark scripts for dry-run inspection.

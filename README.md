@@ -159,3 +159,7 @@ memoriX can rank persisted hot-site memories using deterministic, explainable re
 ## Adaptive routing
 
 memoriX can now build explainable, read-only admission and pruning plans from capacity and adaptive-retention signals.
+
+## Memory policy search
+
+memoriX compares bounded retention/routing policies without applying the selected policy. See `docs/MEMORIX_POLICY_SEARCH.md`.

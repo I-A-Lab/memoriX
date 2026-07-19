@@ -1,3 +1,4 @@
+from .policy_search import PolicySearchBenchmarkReport, run_policy_search_benchmark
 """Isolated benchmarks for memoriX adaptive-memory designs."""
 
 from memory.benchmark.adaptive_designs import (
