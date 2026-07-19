@@ -304,3 +304,13 @@ __all__ += [
     "evaluate_memory_policy",
     "search_memory_policies",
 ]
+
+from memory.adaptive.runtime_policy_search import (
+    RuntimePolicySearchReport,
+    inspect_runtime_policy_search,
+)
+
+__all__ += [
+    "RuntimePolicySearchReport",
+    "inspect_runtime_policy_search",
+]
