@@ -156,3 +156,7 @@ or access the cold site.
 ## Part 20 memory-pressure validation
 
 Part 20 adds deterministic per-memory metrics, read-only runtime inspection, CLI simulation, MCP and OpenCode exposure, bounded benchmarks, and safety documentation.
+
+## Part 21 adaptive retention validation
+
+Part 21 validates deterministic scoring, explainable decisions, persisted-runtime ranking, bounded simulation, MCP and OpenCode exposure, synthetic benchmarks, and the strict no-mutation/no-cold-site/no-Titan contract. Detailed evidence is in `docs/MEMORIX_RETENTION_VALIDATION.md`.

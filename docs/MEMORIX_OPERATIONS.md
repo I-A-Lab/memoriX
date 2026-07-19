@@ -223,3 +223,7 @@ procedures are in `MEMORIX_CAPACITY_OPERATIONS.md`.
 ## Memory pressure operations
 
 Use `memorix_memory_pressure.py` for local diagnosis, or the read-only MCP/OpenCode pressure tools. Synthetic counts up to 6,000,000 do not allocate equivalent objects.
+
+## Retention-ranking operations
+
+Use `scripts/memorix_retention_ranking.py` for local diagnostics and the MCP/OpenCode retention-ranking tools for integrated inspection. All operations are read-only. The synthetic benchmark is `scripts/memorix_retention_ranking_benchmark.py`.

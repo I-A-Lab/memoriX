@@ -151,3 +151,7 @@ See `docs/MEMORIX_CAPACITY_OPERATIONS.md`,
 ## Memory pressure diagnostics
 
 memoriX exposes deterministic read-only pressure status and per-memory inspection through Python, MCP, and native OpenCode tools. See `docs/MEMORIX_MEMORY_PRESSURE.md`.
+
+## Adaptive retention scoring
+
+memoriX can rank persisted hot-site memories using deterministic, explainable retention scores. The ranking is read-only and dry-run: it never prunes, deactivates, writes to the runtime, accesses the cold site, or loads Titan. See `docs/MEMORIX_RETENTION_SCORING.md`.

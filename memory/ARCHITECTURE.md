@@ -150,3 +150,7 @@ dry-run plan and operator approval. The cold archive is never pruned.
 ## Memory pressure observation
 
 Persisted Titan metadata is converted into normalized per-memory pressure inputs without loading the neural model or consulting the cold site. The resulting status is observational only.
+
+## Adaptive retention ranking boundary
+
+The adaptive retention layer reads persisted Titan metadata and produces ranked assessments only. It is isolated from mutation, cold-site history, automatic rehydration, and neural-model loading.
