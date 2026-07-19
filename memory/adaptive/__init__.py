@@ -244,3 +244,27 @@ __all__ += [
     "inspect_runtime_retention_ranking",
     "retention_input_from_metadata",
 ]
+
+from memory.adaptive.adaptive_routing_policy import (
+    AdaptiveRoutingContext,
+    AdaptiveRoutingDecision,
+    AdaptiveRoutingDecisionType,
+    AdaptiveRoutingInput,
+    AdaptiveRoutingPlan,
+    AdaptiveRoutingPolicy,
+    RoutingPruningCandidate,
+    decide_adaptive_routing,
+    plan_adaptive_routing,
+)
+
+__all__ += [
+    "AdaptiveRoutingContext",
+    "AdaptiveRoutingDecision",
+    "AdaptiveRoutingDecisionType",
+    "AdaptiveRoutingInput",
+    "AdaptiveRoutingPlan",
+    "AdaptiveRoutingPolicy",
+    "RoutingPruningCandidate",
+    "decide_adaptive_routing",
+    "plan_adaptive_routing",
+]
