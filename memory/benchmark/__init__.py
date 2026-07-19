@@ -60,3 +60,6 @@ __all__ += [
     "RetentionRankingBenchmarkResult",
     "run_retention_ranking_benchmark",
 ]
+
+from memory.benchmark.adaptive_routing import DEFAULT_ROUTING_SCENARIOS, run_adaptive_routing_benchmark
+__all__ += ["DEFAULT_ROUTING_SCENARIOS", "run_adaptive_routing_benchmark"]
