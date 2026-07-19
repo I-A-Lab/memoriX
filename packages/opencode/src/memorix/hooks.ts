@@ -24,6 +24,7 @@ const DEFAULT_IGNORED_TOOLS = [
   "memory_pressure_inspect",
   "retention_ranking_status",
   "retention_ranking_inspect",
+  "adaptive_routing_plan",
   "memory_status",
   "project_archive_record",
   "project_archive_list",

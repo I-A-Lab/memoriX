@@ -14,6 +14,7 @@
     "memory_pressure_inspect": "allow",
     "retention_ranking_status": "allow",
     "retention_ranking_inspect": "allow",
+    "adaptive_routing_plan": "allow",
     "project_archive_record": "ask",
     "project_snapshot_rebuild": "ask",
   },

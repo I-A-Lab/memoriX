@@ -1,4 +1,4 @@
-﻿import { LayerNode } from "@opencode-ai/core/effect/layer-node"
+import { LayerNode } from "@opencode-ai/core/effect/layer-node"
 import { httpClient } from "@opencode-ai/core/effect/app-node-platform"
 import { Ripgrep } from "@opencode-ai/core/ripgrep"
 import { PlanExitTool } from "./plan"
@@ -20,6 +20,7 @@ import { MemoryStoreTool, MemoryRetrieveTool } from "./memory"
 import { MemoryCapacityPlanTool, MemoryCapacityPruneTool, MemoryCapacityStatusTool } from "./memory-capacity"
 import { MemoryPressureInspectTool, MemoryPressureStatusTool } from "./memory-pressure"
 import { RetentionRankingInspectTool, RetentionRankingStatusTool } from "./retention-ranking"
+import { AdaptiveRoutingPlanTool } from "./adaptive-routing"
 import {
   MemoryCandidateRejectTool,
   MemoryCandidateValidateTool,
@@ -148,6 +149,7 @@ const layer = Layer.effect(
       yield* RetentionRankingStatusTool
     const retentionrankinginspect =
       yield* RetentionRankingInspectTool
+    const adaptiveroutingplan = yield* AdaptiveRoutingPlanTool
     const memorystatus = yield* MemoryStatusTool
     const projectarchiverecord =
       yield* ProjectArchiveRecordTool
@@ -288,6 +290,7 @@ const layer = Layer.effect(
           memory_pressure_inspect: Tool.init(memorypressureinspect),
           retention_ranking_status: Tool.init(retentionrankingstatus),
           retention_ranking_inspect: Tool.init(retentionrankinginspect),
+          adaptive_routing_plan: Tool.init(adaptiveroutingplan),
           memory_status: Tool.init(memorystatus),
           project_archive_record: Tool.init(projectarchiverecord),
           project_archive_list: Tool.init(projectarchivelist),

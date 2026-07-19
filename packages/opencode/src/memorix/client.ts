@@ -435,6 +435,15 @@ export class MemoriXClient {
     )
   }
 
+  async adaptiveRoutingPlan(
+    input: JSONObject,
+  ): Promise<JSONObject> {
+    return this.callTool<JSONObject>(
+      "memorix_adaptive_routing_plan",
+      input,
+    )
+  }
+
   async recordProjectArchiveEntry(
     input: MemoriXProjectEntryRecordInput,
   ): Promise<MemoriXProjectArchiveEntry> {

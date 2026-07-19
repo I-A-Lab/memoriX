@@ -1,3 +1,5 @@
+export { getAdaptiveRoutingPlan } from "./adaptive-routing-facade"
+export type { AdaptiveRoutingFacadeResult, AdaptiveRoutingFacadeService } from "./adaptive-routing-facade"
 export { getRetentionRankingStatus, inspectRetentionRanking } from "./retention-ranking-facade"
 export type { RetentionRankingFacadeService, RetentionRankingFacadeResult } from "./retention-ranking-facade"
 export { getMemoryPressureStatus, inspectMemoryPressure } from "./memory-pressure-facade"

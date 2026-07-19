@@ -657,6 +657,17 @@ export class MemoriXService {
     )
   }
 
+  async adaptiveRoutingPlan(
+    input: JSONObject,
+  ): Promise<MemoriXServiceResult<JSONObject>> {
+    return this.runSafely((client) =>
+      client.callTool<JSONObject>(
+        "memorix_adaptive_routing_plan",
+        input,
+      ),
+    )
+  }
+
   async close(): Promise<void> {
     if (this.closing) {
       await this.closing
