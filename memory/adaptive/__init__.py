@@ -237,12 +237,18 @@ from memory.adaptive.runtime_retention_scoring import (
     inspect_runtime_retention_ranking,
     retention_input_from_metadata,
 )
+from memory.adaptive.runtime_adaptive_routing import (
+    RuntimeAdaptiveRoutingReport,
+    inspect_runtime_adaptive_routing,
+)
 
 __all__ += [
     "RuntimeRetentionRankingReport",
     "inspect_runtime_retention_item",
     "inspect_runtime_retention_ranking",
     "retention_input_from_metadata",
+    "RuntimeAdaptiveRoutingReport",
+    "inspect_runtime_adaptive_routing",
 ]
 
 from memory.adaptive.adaptive_routing_policy import (
