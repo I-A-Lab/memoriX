@@ -381,6 +381,24 @@ TOOL_DEFINITIONS: tuple[McpToolDefinition, ...] = (
         ),
     ),
     McpToolDefinition(
+        name="memorix_adaptive_routing_plan",
+        description="Build a read-only adaptive-routing plan for one candidate.",
+        input_schema=_object_schema({
+            "target_id": STRING,
+            "retention_score": {"type": "number"},
+            "importance": {"type": "number"},
+            "confidence": {"type": "number"},
+            "surprise": {"type": "number"},
+            "protected": {"type": "boolean"},
+            "pinned": {"type": "boolean"},
+            "human_validated": {"type": "boolean"},
+            "required_slots": {"type": "integer", "minimum": 1},
+            "configured_capacity": {"type": "integer", "minimum": 1},
+            "assessment_limit": {"type": "integer", "minimum": 0},
+            "simulate_memory_count": {"type": ["integer", "null"], "minimum": 0},
+        }, required=("target_id",)),
+    ),
+    McpToolDefinition(
         name="memorix_status",
         description=(
             "Return memoriX architecture, storage, candidate, and "
@@ -513,6 +531,7 @@ class MemoriXMcpTools:
             "memorix_memory_pressure_inspect": self._memory_pressure_inspect,
             "memorix_retention_ranking_status": self._retention_ranking_status,
             "memorix_retention_ranking_inspect": self._retention_ranking_inspect,
+            "memorix_adaptive_routing_plan": self._adaptive_routing_plan,
             "memorix_status": self._status,
         }
 
@@ -874,6 +893,25 @@ class MemoriXMcpTools:
     ) -> Any:
         return self._gateway.retention_ranking_inspect(
             _require_text(arguments, "memory_id")
+        )
+
+    def _adaptive_routing_plan(
+        self,
+        arguments: dict[str, Any],
+    ) -> Any:
+        return self._gateway.adaptive_routing_plan(
+            target_id=_require_text(arguments, "target_id"),
+            retention_score=float(arguments.get("retention_score", 0.5)),
+            importance=float(arguments.get("importance", 0.5)),
+            confidence=float(arguments.get("confidence", 0.5)),
+            surprise=float(arguments.get("surprise", 0.0)),
+            protected=bool(arguments.get("protected", False)),
+            pinned=bool(arguments.get("pinned", False)),
+            human_validated=bool(arguments.get("human_validated", True)),
+            required_slots=int(arguments.get("required_slots", 1)),
+            configured_capacity=int(arguments.get("configured_capacity", 50_000)),
+            assessment_limit=int(arguments.get("assessment_limit", 100)),
+            simulate_memory_count=arguments.get("simulate_memory_count"),
         )
 
     def _status(

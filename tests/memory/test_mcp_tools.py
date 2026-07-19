@@ -74,6 +74,7 @@ class McpToolDeclarationTests(McpToolsTestCase):
                 "memorix_memory_pressure_inspect",
                 "memorix_retention_ranking_status",
                 "memorix_retention_ranking_inspect",
+                "memorix_adaptive_routing_plan",
                 "memorix_project_entry_record",
                 "memorix_project_entries_list",
                 "memorix_project_snapshot_rebuild",

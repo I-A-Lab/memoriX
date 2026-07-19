@@ -54,6 +54,7 @@ from memory.adaptive import (
     inspect_runtime_capacity, observe_memory_pressure, plan_soft_pruning,
     inspect_runtime_memory_pressure, inspect_runtime_memory_pressure_item,
     inspect_runtime_retention_ranking, inspect_runtime_retention_item,
+    inspect_runtime_adaptive_routing,
 )
 from datetime import datetime, timezone
 from memory.hot_site.short_term_memory import (
@@ -588,6 +589,40 @@ class MemoriXGateway:
             memory_id=memory_id,
         )
         return assessment.to_dict() if assessment is not None else None
+
+    def adaptive_routing_plan(
+        self,
+        *,
+        target_id: str,
+        retention_score: float = 0.5,
+        importance: float = 0.5,
+        confidence: float = 0.5,
+        surprise: float = 0.0,
+        protected: bool = False,
+        pinned: bool = False,
+        human_validated: bool = True,
+        required_slots: int = 1,
+        configured_capacity: int = 50_000,
+        assessment_limit: int = 100,
+        simulate_memory_count: int | None = None,
+    ) -> dict[str, Any]:
+        """Build one read-only adaptive-routing plan."""
+
+        return inspect_runtime_adaptive_routing(
+            runtime_root=self._paths.runtime_root,
+            target_id=target_id,
+            retention_score=retention_score,
+            importance=importance,
+            confidence=confidence,
+            surprise=surprise,
+            protected=protected,
+            pinned=pinned,
+            human_validated=human_validated,
+            required_slots=required_slots,
+            configured_capacity=configured_capacity,
+            assessment_limit=assessment_limit,
+            simulated_memory_count=simulate_memory_count,
+        ).to_dict()
 
     def memory_status(self) -> dict[str, Any]:
         """Return a non-mutating status summary of the Python memory."""
