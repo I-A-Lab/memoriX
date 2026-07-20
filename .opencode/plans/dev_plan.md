@@ -1,80 +1,53 @@
-# Development Plan: Password Generator (Python)
+# Development Plan - Todo List Web App
 
-## 1. Overview
+## Architecture
 
-Create a single-file Python CLI tool (`password_generator.py`) that generates secure random passwords with configurable options.
+Single-file SPA (`index.html`) with no build step. All logic lives in one file.
 
-## 2. Architecture
+## Implementation Steps
 
-- **Single file**: All code lives in `password_generator.py` at repository root.
-- **No external dependencies**: Uses only Python standard library.
-- **Modular internal structure**: Separate functions for generation, argument parsing, validation, and output.
+### Step 1: HTML Skeleton
+- Create `todo-app/index.html` with `<!DOCTYPE html>`, `<head>`, and `<body>`.
+- Import Tailwind CSS CDN, Google Fonts (Inter), and Font Awesome 6 CDN.
+- Set up the dark background (`bg-gray-950`) and centered layout.
 
-## 3. Implementation Steps
+### Step 2: UI Structure
+- Build the main glassmorphism card container (`backdrop-blur`, `bg-white/5`, `rounded-2xl`, `shadow-2xl`).
+- Header with app title and subtitle.
+- Input area: text input + add button, styled with focus ring animations.
+- Task list container (ul/div) for dynamic task items.
+- Empty state message shown when no tasks exist.
 
-### Step 1: Project Setup
-- Create `password_generator.py` with shebang and module docstring.
-- Import required modules: `secrets`, `string`, `argparse`, `sys`.
+### Step 3: Core JavaScript - Data Layer
+- Define `loadTasks()` -- reads from `localStorage`, returns array.
+- Define `saveTasks(tasks)` -- writes to `localStorage`.
+- Define `generateId()` -- returns a unique ID (`Date.now().toString(36) + random`).
+- Define initial in-memory `tasks` array loaded from storage on DOMContentLoaded.
 
-### Step 2: Character Set Definitions
-- Define constants for each character category:
-  - `UPPERCASE = string.ascii_uppercase`
-  - `LOWERCASE = string.ascii_lowercase`
-  - `DIGITS = string.digits`
-  - `SYMBOLS = string.punctuation`
-  - `AMBIGUOUS = "Il1O0"` (characters to exclude when `--ambiguous` is set)
+### Step 4: Core JavaScript - Render
+- Define `renderTasks()` -- clears the list container and re-renders all tasks.
+- Each task item: checkbox, editable text span, delete button.
+- Apply conditional classes for completed state (strikethrough, opacity).
+- Show/hide empty state based on task count.
+- Attach event listeners during render (or use event delegation).
 
-### Step 3: Argument Parser
-- Create `argparse.ArgumentParser` with description.
-- Add arguments: `--length`, `--count`, `--no-upper`, `--no-lower`, `--no-digits`, `--no-symbols`, `--ambiguous`, `--copy`.
-- Set defaults and help text for each argument.
+### Step 5: Core JavaScript - Interactions
+- **Add task**: Listen for Enter key and button click on the input. Validate non-empty, create task object, push to array, save, re-render.
+- **Toggle complete**: Listen for change on checkbox. Toggle `completed` boolean, save, re-render.
+- **Delete task**: Listen for click on delete button. Remove from array by ID, save, re-render with fade animation.
+- **Inline edit**: Listen for dblclick on task text. Replace span with input, pre-fill value. On Enter/blur, update text (or discard if empty), save, re-render.
 
-### Step 4: Validation Function
-- `validate_args(args)`:
-  - Ensure at least one character set remains after exclusions.
-  - Ensure `length >= 4`.
-  - Print error and exit with code 1 on failure.
+### Step 6: Animations & Polish
+- CSS transitions on task items: `transition-all duration-200`.
+- Hover effect on task row (subtle background brighten).
+- Delete button appears on hover (`opacity-0` to `opacity-100` on group hover).
+- Fade-in animation for newly added tasks.
+- Input focus ring glow effect.
 
-### Step 5: Password Generation
-- `generate_password(length, char_pool)`:
-  - Use `secrets.choice(char_pool)` in a loop to build password.
-  - Return the password string.
-- `build_char_pool(args)`:
-  - Start with empty set.
-  - Add character sets based on flags.
-  - Remove ambiguous characters if `args.ambiguous` is True.
-  - Convert to string and return.
+## Key Dependencies (CDN)
 
-### Step 6: Clipboard Support
-- `copy_to_clipboard(text)`:
-  - Try to import `pyperclip`.
-  - If available, copy text and print confirmation.
-  - If not available, print a message that clipboard copy is unavailable.
-
-### Step 7: Main Function
-- `main()`:
-  - Parse arguments.
-  - Validate.
-  - Build character pool.
-  - Generate `count` passwords.
-  - Print each password to stdout.
-  - If `--copy` flag is set, copy the first password to clipboard.
-
-### Step 8: Entry Point
-- Add `if __name__ == "__main__": main()` block.
-
-## 4. File Structure
-
-```
-memoriX/
-└── password_generator.py   # Single file with all code
-```
-
-## 5. Testing Strategy
-
-See `test_plan.md` for details.
-
-## 6. Dependencies
-
-- Python 3.9+
-- Optional: `pyperclip` for clipboard support
+| Library | URL |
+|---------|-----|
+| Tailwind CSS | `https://cdn.tailwindcss.com` |
+| Google Fonts (Inter) | `https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap` |
+| Font Awesome 6 | `https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css` |

@@ -1,82 +1,81 @@
-# Product Requirements Document: Password Generator (Python)
+# Product Requirements Document (PRD) - Todo List Web App
 
 ## 1. Overview
 
-Build a **command-line Python password generator** that produces secure, random passwords with configurable length, complexity, and character set options. The tool runs locally in a terminal and outputs a single password per invocation, with optional clipboard copying.
+A modern, single-page Todo List web application built with vanilla HTML, JavaScript, and Tailwind CSS. The app delivers a visually stunning dark-themed UI with glassmorphism and smooth animations, persisted entirely in the browser via LocalStorage.
 
 ## 2. Goals
 
-| Goal | Description |
-|------|-------------|
-| Security | Use Python's `secrets` module for cryptographically strong randomness |
-| Usability | Single-command invocation with sensible defaults |
-| Configurability | Let users control length, character types, and exclusion rules |
-| Portability | Pure Python, no external dependencies beyond the standard library |
+- Provide a fast, beautiful, and intuitive task management experience.
+- Zero backend dependency -- all data lives in the browser.
+- Demonstrate modern UI/UX patterns with minimal dependencies (Tailwind CSS via CDN).
 
-## 3. User Stories
+## 3. Target Users
 
-1. As a user, I want to run `python password_generator.py` and instantly get a secure 16-character password so I can use it immediately.
-2. As a user, I want to specify the password length via `--length N` so I can meet different site requirements.
-3. As a user, I want to include/exclude uppercase, lowercase, digits, and symbols via flags so I can satisfy specific password policies.
-4. As a user, I want to exclude ambiguous characters (e.g., `l`, `1`, `O`, `0`) so passwords are easy to read aloud.
-5. As a user, I want to generate multiple passwords at once via `--count N` so I can compare or batch-assign.
-6. As a user, I want a `--copy` flag that copies the result to my clipboard so I can paste it directly.
+- Individuals who need a quick, local task tracker in the browser.
+- No account or login required.
 
 ## 4. Features
 
-### 4.1 Core
+### 4.1 Add Task
+- User can type a task description in an input field and press Enter or click an "Add" button.
+- Empty submissions are rejected with subtle inline feedback.
 
-- Generate a single random password using `secrets.choice()`.
-- Default length: 16 characters.
-- Default character set: uppercase + lowercase + digits + symbols.
+### 4.2 Mark Complete / Incomplete
+- Each task has a checkbox. Clicking it toggles the completed state.
+- Completed tasks display a strikethrough style and reduced opacity.
 
-### 4.2 CLI Arguments
+### 4.3 Edit Task
+- Double-clicking a task text enters inline edit mode.
+- Pressing Enter or clicking away saves the edit.
+- Empty edits discard the change.
 
-| Argument | Type | Default | Description |
-|----------|------|---------|-------------|
-| `--length` / `-l` | int | 16 | Password length (min 4, max 256) |
-| `--count` / `-c` | int | 1 | Number of passwords to generate |
-| `--no-upper` | flag | false | Exclude uppercase letters |
-| `--no-lower` | flag | false | Exclude lowercase letters |
-| `--no-digits` | flag | false | Exclude digits |
-| `--no-symbols` | flag | false | Exclude symbols |
-| `--ambiguous` | flag | false | Exclude ambiguous characters (I, l, 1, O, 0) |
-| `--copy` | flag | false | Copy first password to clipboard (uses `pyperclip` if available, else prints a message) |
+### 4.4 Delete Task
+- Each task has a delete button (icon) visible on hover.
+- Clicking it removes the task with a fade-out animation.
 
-### 4.3 Validation
+### 4.5 Persistence
+- All tasks are stored in `localStorage` under a single key.
+- Tasks load automatically on page open.
+- Data shape: `{ id: string, text: string, completed: boolean, createdAt: number }[]`
 
-- Ensure at least one character set remains selected after exclusions.
-- Print a clear error message and exit with code 1 on invalid input.
-- Enforce minimum length of 4 characters.
-
-### 4.4 Output
-
-- Print one password per line to stdout.
-- When `--count > 1`, print all passwords, each on its own line.
+### 4.6 Visual Design
+- Dark background with a centered glassmorphism card container.
+- Tailwind CSS via CDN for styling.
+- Google Fonts (Inter) for clean typography.
+- Lucide or Font Awesome icons for add, delete, and empty-state visuals.
+- Smooth CSS transitions for hover states, task completion, and deletion.
+- Responsive layout that works on mobile and desktop.
 
 ## 5. Non-Goals
 
-- No GUI or web interface.
-- No password storage or vault functionality.
-- No external dependencies (optional clipboard support via `pyperclip` if installed).
-- No password strength scoring or entropy display in v1.
+- User authentication or cloud sync.
+- Collaborative or shared lists.
+- Categories, tags, priorities, or due dates (out of scope for v1).
+- Server-side logic or database.
 
-## 6. Technical Constraints
+## 6. Success Metrics
 
-- **Language**: Python 3.9+
-- **Dependencies**: Standard library only (`secrets`, `string`, `argparse`, `sys`). Clipboard is optional (`pyperclip`).
-- **File**: Single file `password_generator.py` at repository root.
+- App loads and renders in under 100ms.
+- All CRUD operations are instant with no perceivable lag.
+- Data survives browser refresh (LocalStorage persistence works).
 
-## 7. Success Criteria
+## 7. Tech Stack
 
-- Running `python password_generator.py` produces a 16-character password with all character types.
-- Running with `--length 32 --count 5` produces five 32-character passwords.
-- Running with `--no-symbols --ambiguous` produces a password with only lowercase, uppercase, and digits (excluding ambiguous chars).
-- Invalid combinations (e.g., `--no-upper --no-lower --no-digits --no-symbols`) produce a clear error.
+| Layer | Technology |
+|-------|-----------|
+| Markup | HTML5 |
+| Styling | Tailwind CSS (CDN) |
+| Logic | Vanilla JavaScript (ES6+) |
+| Icons | Font Awesome 6 (CDN) |
+| Fonts | Google Fonts - Inter |
+| Storage | localStorage |
 
-## 8. Out of Scope for v1
+## 8. File Structure
 
-- Entropy calculation.
-- Password strength meter.
-- Batch file output.
-- Integration with password managers.
+```
+todo-app/
+  index.html    -- Single file containing all HTML, CSS (Tailwind), and JS
+```
+
+A single `index.html` file is sufficient for this scope. No build step required.

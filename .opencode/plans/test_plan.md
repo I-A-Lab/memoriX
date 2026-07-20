@@ -1,83 +1,34 @@
-# Test Plan: Password Generator (Python)
+# Test Plan - Todo List Web App
 
-## 1. Overview
+## Strategy
 
-Test the password generator CLI tool with unit tests and integration tests using Python's built-in `unittest` framework and subprocess calls.
+Since this is a single HTML file with vanilla JS (no build tool, no Node modules), testing will be done via lightweight inline JavaScript assertions that validate core business logic functions. The test file will be a standalone HTML file that can be opened in a browser.
 
-## 2. Test Categories
+## Test Scope
 
-### 2.1 Unit Tests
+Only core utility/data functions are tested -- no DOM or UI tests (keeping it fast and lightweight).
 
-Test individual functions in isolation:
+## Test Cases (5 max)
 
-| Test | Description |
-|------|-------------|
-| `test_build_char_pool_default` | Default pool includes uppercase, lowercase, digits, symbols |
-| `test_build_char_pool_no_upper` | Pool excludes uppercase when `--no-upper` is set |
-| `test_build_char_pool_no_lower` | Pool excludes lowercase when `--no-lower` is set |
-| `test_build_char_pool_no_digits` | Pool excludes digits when `--no-digits` is set |
-| `test_build_char_pool_no_symbols` | Pool excludes symbols when `--no-symbols` is set |
-| `test_build_char_pool_ambiguous` | Pool excludes ambiguous characters when flag is set |
-| `test_generate_password_length` | Generated password matches requested length |
-| `test_generate_password_characters` | Generated password contains only characters from the pool |
-| `test_validate_args_minimum_length` | Validation fails when length < 4 |
-| `test_validate_args_no_char_set` | Validation fails when all character sets are excluded |
+### Test 1: generateId() returns unique values
+- Call `generateId()` twice and assert the two values are not equal.
 
-### 2.2 Integration Tests
+### Test 2: saveTasks() and loadTasks() round-trip
+- Define a mock task array, call `saveTasks()`, then `loadTasks()`, assert deep equality.
 
-Test the CLI as a subprocess:
+### Test 3: loadTasks() returns empty array when localStorage is empty
+- Clear localStorage, call `loadTasks()`, assert result is an empty array.
 
-| Test | Command | Expected |
-|------|---------|----------|
-| `test_default_run` | `python password_generator.py` | Exit code 0, output length 16 |
-| `test_custom_length` | `python password_generator.py --length 32` | Exit code 0, output length 32 |
-| `test_multiple_count` | `python password_generator.py --count 5` | Exit code 0, 5 lines of output |
-| `test_no_symbols_flag` | `python password_generator.py --no-symbols` | Exit code 0, no symbols in output |
-| `test_ambiguous_flag` | `python password_generator.py --ambiguous` | Exit code 0, no ambiguous chars |
-| `test_invalid_all_excluded` | `python password_generator.py --no-upper --no-lower --no-digits --no-symbols` | Exit code 1, error message |
-| `test_short_length` | `python password_generator.py --length 3` | Exit code 1, error message |
-| `test_copy_flag` | `python password_generator.py --copy` | Exit code 0, clipboard message or success |
+### Test 4: Task object shape validation
+- Create a task using the app's creation logic, assert it has `id`, `text`, `completed`, and `createdAt` properties with correct types.
 
-### 2.3 Edge Cases
+### Test 5: Toggle completed flips boolean
+- Create a task with `completed: false`, apply toggle logic, assert `completed` is `true`.
 
-| Test | Description |
-|------|-------------|
-| `test_minimum_valid_length` | Length=4 works correctly |
-| `test_maximum_length` | Length=256 works correctly |
-| `test_single_char_set` | Only uppercase (all others excluded) produces valid password |
-| `test_empty_output_on_error` | No output to stdout on validation failure |
-
-## 3. Test File Structure
+## Test File
 
 ```
-memoriX/
-├── password_generator.py          # Source code
-└── test_password_generator.py     # All tests
+todo-app/test.html   -- Standalone HTML file with inline JS test runner
 ```
 
-## 4. Test Execution
-
-```bash
-# Run all tests
-python -m unittest test_password_generator -v
-
-# Run specific test class
-python -m unittest test_password_generator.TestUnit -v
-
-# Run specific test
-python -m unittest test_password_generator.TestIntegration.test_default_run -v
-```
-
-## 5. Assertions
-
-- Use `assertRegex` for pattern matching on output.
-- Use `assertEqual` for exact length checks.
-- Use `assertIn` / `assertNotIn` for character presence checks.
-- Use `assertGreaterEqual` for counting lines of output.
-- Use `subprocess.run` with `capture_output=True` for CLI tests.
-
-## 6. Coverage Goals
-
-- 100% function coverage.
-- All CLI argument paths tested.
-- All error conditions tested.
+The test file will log results to the console and display pass/fail in the page body. No external test framework required.
