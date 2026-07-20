@@ -18,6 +18,7 @@
     "policy_search": "allow",
     "policy_lifecycle": "ask",
     "topic_blocks": "ask",
+      "consolidation": "ask",
     "project_archive_record": "ask",
     "project_snapshot_rebuild": "ask",
   },

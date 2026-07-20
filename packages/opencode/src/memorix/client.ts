@@ -456,6 +456,10 @@ export class MemoriXClient {
     return this.callTool<JSONObject>("memorix_topic_blocks", input)
   }
 
+  async consolidation(input: JSONObject): Promise<JSONObject> {
+    return this.callTool<JSONObject>("memorix_consolidation", input)
+  }
+
   async recordProjectArchiveEntry(
     input: MemoriXProjectEntryRecordInput,
   ): Promise<MemoriXProjectArchiveEntry> {

@@ -679,6 +679,18 @@ class MemoriXGateway:
             return rollback_memory_policy(root, rolled_back_by=actor, reason=reason, validation_id=validation_id).to_dict()
         raise ValueError(f"Unknown policy lifecycle action: {action}")
 
+    def consolidation_lifecycle(self, *, action: str, plan_id: str | None = None, session_id: str | None = None, actor: str = "manual", reason: str = "manual operation", validation_id: str = "", assessment_limit: int = 100, frequency: str = "manual", memory_id: str | None = None) -> dict[str, Any]:
+        from memory.adaptive import configure_memory_consolidation_schedule, execute_memory_consolidation, inspect_memory_consolidation_state, plan_memory_tier_transition, recover_memory_consolidation_session, register_memory_consolidation_plan, review_memory_consolidation
+        root = self._paths.runtime_root
+        if action == "inspect": return inspect_memory_consolidation_state(root)
+        if action == "plan": return register_memory_consolidation_plan(root, plan_id=plan_id or "consolidation-plan", assessment_limit=assessment_limit, actor=actor).to_dict()
+        if action in {"approve", "reject"}: return review_memory_consolidation(root, plan_id=plan_id or "", approved=action == "approve", actor=actor, reason=reason, validation_id=validation_id).to_dict()
+        if action == "execute": return execute_memory_consolidation(root, plan_id=plan_id or "", session_id=session_id or "consolidation-session", actor=actor, reason=reason, validation_id=validation_id).to_dict()
+        if action in {"promotion_plan", "demotion_plan", "archive_plan"}: return plan_memory_tier_transition(root, memory_id=memory_id or "", direction={"promotion_plan":"promote","demotion_plan":"demote","archive_plan":"archive"}[action]).to_dict()
+        if action == "schedule_configure": return configure_memory_consolidation_schedule(root, frequency=frequency, actor=actor).to_dict()
+        if action == "recover": return recover_memory_consolidation_session(root, actor=actor, reason=reason).to_dict()
+        raise ValueError(f"Unsupported consolidation action: {action}")
+
     def memory_status(self) -> dict[str, Any]:
         """Return a non-mutating status summary of the Python memory."""
 

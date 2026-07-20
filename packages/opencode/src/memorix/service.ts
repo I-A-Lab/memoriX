@@ -680,6 +680,10 @@ export class MemoriXService {
     return this.runSafely((client) => client.callTool<JSONObject>("memorix_topic_blocks", input))
   }
 
+  async consolidation(input: JSONObject): Promise<MemoriXServiceResult<JSONObject>> {
+    return this.runSafely((client) => client.callTool<JSONObject>("memorix_consolidation", input))
+  }
+
   async close(): Promise<void> {
     if (this.closing) {
       await this.closing

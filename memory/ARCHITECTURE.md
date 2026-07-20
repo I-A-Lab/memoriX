@@ -171,3 +171,7 @@ The policy lifecycle registry is separate from Titan memory data and records ver
 ## Dynamic topic-block control plane
 
 See `docs/MEMORIX_TOPIC_BLOCKS.md` and `docs/MEMORIX_TOPIC_BLOCKS_VALIDATION.md`.
+
+## Part 26 - controlled consolidation
+
+memoriX now supports reviewed consolidation plans, local session state, scheduling, recovery, MCP, and OpenCode integration.

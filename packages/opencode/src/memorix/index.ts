@@ -126,3 +126,5 @@ export type {
 
 export { runPolicyLifecycle } from "./policy-lifecycle-facade"
 export type { PolicyLifecycleFacadeResult, PolicyLifecycleFacadeService } from "./policy-lifecycle-facade"
+
+export * from "./consolidation-facade"

@@ -78,6 +78,7 @@ class McpToolDeclarationTests(McpToolsTestCase):
                 "memorix_policy_search",
                 "memorix_policy_lifecycle",
                 "memorix_topic_blocks",
+                "memorix_consolidation",
                 "memorix_project_entry_record",
                 "memorix_project_entries_list",
                 "memorix_project_snapshot_rebuild",

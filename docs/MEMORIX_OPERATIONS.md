@@ -244,3 +244,7 @@ Use activation and rollback plans before applying registry changes; mutation too
 ## Topic-block operations
 
 See `docs/MEMORIX_TOPIC_BLOCKS.md` and `docs/MEMORIX_TOPIC_BLOCKS_VALIDATION.md`.
+
+## Part 26 - controlled consolidation
+
+memoriX now supports reviewed consolidation plans, local session state, scheduling, recovery, MCP, and OpenCode integration.

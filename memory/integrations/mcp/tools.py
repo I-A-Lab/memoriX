@@ -440,6 +440,17 @@ McpToolDefinition(
         }, required=("action",)),
     ),
     McpToolDefinition(
+        name="memorix_consolidation",
+        description="Inspect, plan, review, execute, schedule, or recover controlled memory consolidation.",
+        input_schema=_object_schema({
+            "action": {"type": "string"}, "plan_id": {"type": ["string", "null"]},
+            "session_id": {"type": ["string", "null"]}, "actor": {"type": "string"},
+            "reason": {"type": "string"}, "validation_id": {"type": "string"},
+            "assessment_limit": {"type": "integer", "minimum": 1}, "frequency": {"type": "string"},
+            "memory_id": {"type": ["string", "null"]}
+        }, required=("action",)),
+    ),
+    McpToolDefinition(
         name="memorix_status",
         description=(
             "Return memoriX architecture, storage, candidate, and "
@@ -576,6 +587,7 @@ class MemoriXMcpTools:
             "memorix_policy_search": self._policy_search,
             "memorix_policy_lifecycle": self._policy_lifecycle,
             "memorix_topic_blocks": self._topic_blocks,
+            "memorix_consolidation": self._consolidation,
             "memorix_status": self._status,
         }
 
@@ -990,6 +1002,19 @@ class MemoriXMcpTools:
             target_block_id=None if arguments.get("target_block_id") is None else str(arguments.get("target_block_id")),
             value=None if arguments.get("value") is None else str(arguments.get("value")),
             actor=str(arguments.get("actor", "mcp")),
+        )
+
+    def _consolidation(self, arguments: dict[str, Any]) -> Any:
+        return self._gateway.consolidation_lifecycle(
+            action=_require_text(arguments, "action"),
+            plan_id=_optional_text(arguments, "plan_id"),
+            session_id=_optional_text(arguments, "session_id"),
+            actor=str(arguments.get("actor", "mcp")),
+            reason=str(arguments.get("reason", "manual operation")),
+            validation_id=str(arguments.get("validation_id", "")),
+            assessment_limit=int(arguments.get("assessment_limit", 100)),
+            frequency=str(arguments.get("frequency", "manual")),
+            memory_id=_optional_text(arguments, "memory_id"),
         )
 
     def _status(

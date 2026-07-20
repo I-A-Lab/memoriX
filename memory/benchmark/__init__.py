@@ -72,3 +72,5 @@ __all__ += ["run_policy_lifecycle_benchmark"]
 from memory.benchmark.topic_blocks import run_topic_block_benchmark
 
 __all__ = [*globals().get("__all__", []), "run_topic_block_benchmark"]
+
+from memory.benchmark.consolidation import run_consolidation_benchmark

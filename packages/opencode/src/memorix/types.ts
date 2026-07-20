@@ -35,6 +35,7 @@ export type MemoriXToolName =
   | "memorix_policy_search"
   | "memorix_policy_lifecycle"
   | "memorix_topic_blocks"
+  | "memorix_consolidation"
   | "memorix_status"
 
 export type MemoriXToolDefinition = {

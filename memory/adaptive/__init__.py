@@ -440,3 +440,14 @@ __all__ += [
     "normalize_consolidation_content",
     "plan_memory_consolidation",
 ]
+
+from memory.adaptive.consolidation_operations import (
+    MemoryConsolidationOperationResult,
+    configure_memory_consolidation_schedule,
+    execute_memory_consolidation,
+    inspect_memory_consolidation_state,
+    plan_memory_tier_transition,
+    recover_memory_consolidation_session,
+    register_memory_consolidation_plan,
+    review_memory_consolidation,
+)

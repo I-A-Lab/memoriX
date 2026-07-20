@@ -24,6 +24,7 @@ import { AdaptiveRoutingPlanTool } from "./adaptive-routing"
 import { PolicySearchTool } from "./policy-search"
 import { PolicyLifecycleTool } from "./policy-lifecycle"
 import { TopicBlocksTool } from "./topic-blocks"
+import { ConsolidationTool } from "./consolidation"
 import {
   MemoryCandidateRejectTool,
   MemoryCandidateValidateTool,
@@ -156,6 +157,7 @@ const layer = Layer.effect(
     const policysearch = yield* PolicySearchTool
     const policylifecycle = yield* PolicyLifecycleTool
         const topicblocks = yield* TopicBlocksTool
+        const consolidation = yield* ConsolidationTool
     const memorystatus = yield* MemoryStatusTool
     const projectarchiverecord =
       yield* ProjectArchiveRecordTool
@@ -300,6 +302,7 @@ const layer = Layer.effect(
           policy_search: Tool.init(policysearch),
           policy_lifecycle: Tool.init(policylifecycle),
           topic_blocks: Tool.init(topicblocks),
+          consolidation: Tool.init(consolidation),
           memory_status: Tool.init(memorystatus),
           project_archive_record: Tool.init(projectarchiverecord),
           project_archive_list: Tool.init(projectarchivelist),

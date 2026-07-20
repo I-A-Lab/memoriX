@@ -177,3 +177,7 @@ Part 24 validates registry persistence, review, activation, rollback, MCP, OpenC
 ## Part 25 topic-block validation
 
 See `docs/MEMORIX_TOPIC_BLOCKS.md` and `docs/MEMORIX_TOPIC_BLOCKS_VALIDATION.md`.
+
+## Part 26 - controlled consolidation
+
+memoriX now supports reviewed consolidation plans, local session state, scheduling, recovery, MCP, and OpenCode integration.
