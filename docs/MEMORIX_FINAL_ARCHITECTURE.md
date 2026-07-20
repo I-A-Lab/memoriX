@@ -176,3 +176,7 @@ See `docs/MEMORIX_TOPIC_BLOCKS.md` and `docs/MEMORIX_TOPIC_BLOCKS_VALIDATION.md`
 ## Part 26 - controlled consolidation
 
 memoriX now supports reviewed consolidation plans, local session state, scheduling, recovery, MCP, and OpenCode integration.
+
+## Part 27 - Observability
+
+Bounded diagnostics, snapshots, alerts, drift comparison, and continuous evaluation are available without loading Titan or mutating memory policies.

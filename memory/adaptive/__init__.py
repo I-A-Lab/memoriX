@@ -483,3 +483,16 @@ __all__ += [
     "calculate_memory_health_indicators",
     "collect_memory_observability_samples",
 ]
+
+from memory.adaptive.observability_history import (
+    MemoryDriftSignal,
+    MemoryObservabilityOperationResult,
+    MemoryPeriodComparison,
+    acknowledge_memory_observability_alert,
+    compare_memory_observability_snapshots,
+    detect_memory_observability_drift,
+    inspect_memory_observability_state,
+    list_memory_observability_alerts,
+    list_memory_observability_snapshots,
+    save_memory_observability_snapshot,
+)

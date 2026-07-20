@@ -25,6 +25,7 @@ import { PolicySearchTool } from "./policy-search"
 import { PolicyLifecycleTool } from "./policy-lifecycle"
 import { TopicBlocksTool } from "./topic-blocks"
 import { ConsolidationTool } from "./consolidation"
+import { ObservabilityTool } from "./observability"
 import {
   MemoryCandidateRejectTool,
   MemoryCandidateValidateTool,
@@ -158,6 +159,7 @@ const layer = Layer.effect(
     const policylifecycle = yield* PolicyLifecycleTool
         const topicblocks = yield* TopicBlocksTool
         const consolidation = yield* ConsolidationTool
+        const observability = yield* ObservabilityTool
     const memorystatus = yield* MemoryStatusTool
     const projectarchiverecord =
       yield* ProjectArchiveRecordTool

@@ -460,6 +460,10 @@ export class MemoriXClient {
     return this.callTool<JSONObject>("memorix_consolidation", input)
   }
 
+  async observability(input: JSONObject): Promise<JSONObject> {
+    return this.callTool<JSONObject>("memorix_observability", input)
+  }
+
   async recordProjectArchiveEntry(
     input: MemoriXProjectEntryRecordInput,
   ): Promise<MemoriXProjectArchiveEntry> {

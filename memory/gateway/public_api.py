@@ -691,6 +691,20 @@ class MemoriXGateway:
         if action == "recover": return recover_memory_consolidation_session(root, actor=actor, reason=reason).to_dict()
         raise ValueError(f"Unsupported consolidation action: {action}")
 
+    def observability(self, *, action: str, snapshot_id: str | None = None, baseline_snapshot_id: str | None = None, current_snapshot_id: str | None = None, alert_id: str | None = None, actor: str = "manual", reason: str = "manual operation", limit: int = 20, threshold: float = 0.10, assessment_limit: int = 1000) -> dict[str, Any]:
+        from memory.adaptive import acknowledge_memory_observability_alert, audit_memory_observability, build_memory_observability_report, collect_memory_observability_samples, detect_memory_observability_drift, inspect_memory_observability_state, list_memory_observability_alerts, list_memory_observability_snapshots, save_memory_observability_snapshot
+        root = self._paths.runtime_root
+        if action == "audit": return audit_memory_observability().to_dict()
+        if action == "collect": return collect_memory_observability_samples(root, assessment_limit=assessment_limit).to_dict()
+        if action == "report": return build_memory_observability_report(collect_memory_observability_samples(root, assessment_limit=assessment_limit)).to_dict()
+        if action == "inspect": return inspect_memory_observability_state(root)
+        if action == "snapshot": return save_memory_observability_snapshot(root, snapshot_id=snapshot_id or "observability-snapshot", actor=actor).to_dict()
+        if action == "snapshots": return {"snapshots": list(list_memory_observability_snapshots(root, limit=limit)), "runtime_modified": False}
+        if action in {"compare", "drift"}: return detect_memory_observability_drift(root, baseline_snapshot_id=baseline_snapshot_id, current_snapshot_id=current_snapshot_id, threshold=threshold).to_dict()
+        if action == "alerts": return {"alerts": list(list_memory_observability_alerts(root, active_only=False, limit=limit)), "runtime_modified": False}
+        if action == "acknowledge": return acknowledge_memory_observability_alert(root, alert_id=alert_id or "", actor=actor, reason=reason).to_dict()
+        raise ValueError(f"Unsupported observability action: {action}")
+
     def memory_status(self) -> dict[str, Any]:
         """Return a non-mutating status summary of the Python memory."""
 

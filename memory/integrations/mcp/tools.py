@@ -451,6 +451,22 @@ McpToolDefinition(
         }, required=("action",)),
     ),
     McpToolDefinition(
+        name="memorix_observability",
+        description="Audit, inspect, snapshot, compare, and acknowledge memoriX observability diagnostics.",
+        input_schema=_object_schema({
+            "action": {"type": "string"},
+            "snapshot_id": {"type": ["string", "null"]},
+            "baseline_snapshot_id": {"type": ["string", "null"]},
+            "current_snapshot_id": {"type": ["string", "null"]},
+            "alert_id": {"type": ["string", "null"]},
+            "actor": {"type": "string"},
+            "reason": {"type": "string"},
+            "limit": {"type": "integer", "minimum": 0},
+            "threshold": {"type": "number", "minimum": 0},
+            "assessment_limit": {"type": "integer", "minimum": 0},
+        }, required=("action",)),
+    ),
+    McpToolDefinition(
         name="memorix_status",
         description=(
             "Return memoriX architecture, storage, candidate, and "
@@ -588,6 +604,7 @@ class MemoriXMcpTools:
             "memorix_policy_lifecycle": self._policy_lifecycle,
             "memorix_topic_blocks": self._topic_blocks,
             "memorix_consolidation": self._consolidation,
+            "memorix_observability": self._observability,
             "memorix_status": self._status,
         }
 
@@ -1015,6 +1032,21 @@ class MemoriXMcpTools:
             assessment_limit=int(arguments.get("assessment_limit", 100)),
             frequency=str(arguments.get("frequency", "manual")),
             memory_id=_optional_text(arguments, "memory_id"),
+        )
+
+
+    def _observability(self, arguments: dict[str, Any]) -> Any:
+        return self._gateway.observability(
+            action=_require_text(arguments, "action"),
+            snapshot_id=_optional_text(arguments, "snapshot_id"),
+            baseline_snapshot_id=_optional_text(arguments, "baseline_snapshot_id"),
+            current_snapshot_id=_optional_text(arguments, "current_snapshot_id"),
+            alert_id=_optional_text(arguments, "alert_id"),
+            actor=str(arguments.get("actor", "mcp")),
+            reason=str(arguments.get("reason", "manual operation")),
+            limit=int(arguments.get("limit", 20)),
+            threshold=float(arguments.get("threshold", 0.10)),
+            assessment_limit=int(arguments.get("assessment_limit", 1000)),
         )
 
     def _status(

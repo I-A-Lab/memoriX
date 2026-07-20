@@ -684,6 +684,10 @@ export class MemoriXService {
     return this.runSafely((client) => client.callTool<JSONObject>("memorix_consolidation", input))
   }
 
+  async observability(input: JSONObject): Promise<MemoriXServiceResult<JSONObject>> {
+    return this.runSafely((client) => client.callTool<JSONObject>("memorix_observability", input))
+  }
+
   async close(): Promise<void> {
     if (this.closing) {
       await this.closing
