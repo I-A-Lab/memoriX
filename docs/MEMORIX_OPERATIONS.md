@@ -239,3 +239,8 @@ Use the policy-search CLI and benchmark scripts for dry-run inspection.
 ## Policy lifecycle operations
 
 Use activation and rollback plans before applying registry changes; mutation tools require explicit permission.
+
+
+## Topic-block operations
+
+See `docs/MEMORIX_TOPIC_BLOCKS.md` and `docs/MEMORIX_TOPIC_BLOCKS_VALIDATION.md`.

@@ -166,3 +166,8 @@ Policy search is observation-only and never mutates the memory data plane.
 ## Policy lifecycle registry
 
 The policy lifecycle registry is separate from Titan memory data and records versioned control-plane state.
+
+
+## Dynamic topic-block control plane
+
+See `docs/MEMORIX_TOPIC_BLOCKS.md` and `docs/MEMORIX_TOPIC_BLOCKS_VALIDATION.md`.

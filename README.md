@@ -167,3 +167,8 @@ memoriX compares bounded retention/routing policies without applying the selecte
 ## Memory policy lifecycle
 
 Part 24 adds human-reviewed, versioned policy proposal, approval, activation, and rollback.
+
+
+## Dynamic topic blocks
+
+See `docs/MEMORIX_TOPIC_BLOCKS.md` and `docs/MEMORIX_TOPIC_BLOCKS_VALIDATION.md`.

@@ -68,3 +68,7 @@ __all__ += ["DEFAULT_ROUTING_SCENARIOS", "run_adaptive_routing_benchmark"]
 from memory.benchmark.policy_lifecycle import run_policy_lifecycle_benchmark
 
 __all__ += ["run_policy_lifecycle_benchmark"]
+
+from memory.benchmark.topic_blocks import run_topic_block_benchmark
+
+__all__ = [*globals().get("__all__", []), "run_topic_block_benchmark"]

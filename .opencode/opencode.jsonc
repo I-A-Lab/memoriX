@@ -17,6 +17,7 @@
     "adaptive_routing_plan": "allow",
     "policy_search": "allow",
     "policy_lifecycle": "ask",
+    "topic_blocks": "ask",
     "project_archive_record": "ask",
     "project_snapshot_rebuild": "ask",
   },

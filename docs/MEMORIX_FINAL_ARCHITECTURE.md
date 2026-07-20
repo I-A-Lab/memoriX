@@ -167,3 +167,8 @@ The adaptive control plane includes bounded advisory policy search.
 ## Versioned policy lifecycle
 
 Policy search feeds a human-governed registry with explicit activation and rollback.
+
+
+## Dynamic topic blocks
+
+See `docs/MEMORIX_TOPIC_BLOCKS.md` and `docs/MEMORIX_TOPIC_BLOCKS_VALIDATION.md`.

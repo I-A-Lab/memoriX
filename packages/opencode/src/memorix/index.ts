@@ -1,3 +1,5 @@
+export { runTopicBlocks } from "./topic-blocks-facade"
+export type { TopicBlocksFacadeResult, TopicBlocksFacadeService } from "./topic-blocks-facade"
 export { getPolicySearch } from "./policy-search-facade"
 export type { PolicySearchFacadeResult, PolicySearchFacadeService } from "./policy-search-facade"
 export { getAdaptiveRoutingPlan } from "./adaptive-routing-facade"

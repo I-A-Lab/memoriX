@@ -34,6 +34,7 @@ export type MemoriXToolName =
   | "memorix_adaptive_routing_plan"
   | "memorix_policy_search"
   | "memorix_policy_lifecycle"
+  | "memorix_topic_blocks"
   | "memorix_status"
 
 export type MemoriXToolDefinition = {

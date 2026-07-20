@@ -442,3 +442,299 @@ def plan_memory_topic_routing(
         alternative_block_ids=alternatives,
         operations=("request_manual_topic_review",),
     )
+
+
+# ---------------------------------------------------------------------------
+# Part 25.6-25.8: controlled topic-block mutations and rebalance planning.
+# ---------------------------------------------------------------------------
+
+from datetime import datetime, timezone
+import os
+import tempfile
+
+
+@dataclass(frozen=True, slots=True)
+class MemoryTopicBlockOperationResult:
+    action: str
+    ok: bool
+    block: MemoryTopicBlock | None = None
+    source_block_id: str | None = None
+    target_block_id: str | None = None
+    assignment_id: str | None = None
+    message: str = ""
+    block_created: bool = False
+    block_updated: bool = False
+    memory_routed: bool = False
+    block_merged: bool = False
+    block_archived: bool = False
+    registry_modified: bool = False
+    runtime_modified: bool = False
+    cold_site_accessed: bool = False
+    neural_model_loaded: bool = False
+
+    def to_dict(self) -> dict[str, Any]:
+        payload = asdict(self)
+        payload["block"] = None if self.block is None else self.block.to_dict()
+        return payload
+
+
+@dataclass(frozen=True, slots=True)
+class MemoryTopicBlockMergePlan:
+    source_block_id: str
+    target_block_id: str
+    allowed: bool
+    reasons: tuple[str, ...]
+    operations: tuple[str, ...]
+    dry_run: bool = True
+    block_merged: bool = False
+    registry_modified: bool = False
+    runtime_modified: bool = False
+    cold_site_accessed: bool = False
+    neural_model_loaded: bool = False
+
+    def to_dict(self) -> dict[str, Any]:
+        return {**asdict(self), "reasons": list(self.reasons), "operations": list(self.operations)}
+
+
+@dataclass(frozen=True, slots=True)
+class MemoryTopicBlockRebalancePlan:
+    total_blocks: int
+    overloaded_block_ids: tuple[str, ...]
+    nearly_empty_block_ids: tuple[str, ...]
+    merge_candidates: tuple[tuple[str, str], ...]
+    recommendations: tuple[str, ...]
+    dry_run: bool = True
+    block_updated: bool = False
+    block_merged: bool = False
+    block_archived: bool = False
+    registry_modified: bool = False
+    runtime_modified: bool = False
+    cold_site_accessed: bool = False
+    neural_model_loaded: bool = False
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            **asdict(self),
+            "overloaded_block_ids": list(self.overloaded_block_ids),
+            "nearly_empty_block_ids": list(self.nearly_empty_block_ids),
+            "merge_candidates": [list(pair) for pair in self.merge_candidates],
+            "recommendations": list(self.recommendations),
+        }
+
+
+def _topic_registry_paths(runtime_root: str | Path) -> tuple[Path, Path, Path]:
+    root = Path(runtime_root).expanduser().resolve()
+    directory = root / "topic_blocks"
+    return directory, directory / "topic_blocks.jsonl", directory / "topic_block_state.json"
+
+
+def _utc_now() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def _atomic_write(path: Path, content: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    descriptor, temporary_name = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=str(path.parent))
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8", newline="\n") as stream:
+            stream.write(content)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary_name, path)
+    finally:
+        temporary = Path(temporary_name)
+        if temporary.exists():
+            temporary.unlink()
+
+
+def _write_topic_registry(runtime_root: str | Path, blocks: Sequence[MemoryTopicBlock], *, default_block_id: str | None = None) -> None:
+    directory, versions_path, state_path = _topic_registry_paths(runtime_root)
+    directory.mkdir(parents=True, exist_ok=True)
+    ordered = sorted(blocks, key=lambda item: item.block_id)
+    versions_content = "".join(json.dumps(block.to_dict(), sort_keys=True) + "\n" for block in ordered)
+    active = [block.block_id for block in ordered if block.status in {MemoryTopicBlockStatus.ACTIVE, MemoryTopicBlockStatus.PROTECTED, MemoryTopicBlockStatus.OVERLOADED}]
+    overloaded = [block.block_id for block in ordered if block.status is MemoryTopicBlockStatus.OVERLOADED]
+    archived = [block.block_id for block in ordered if block.status in {MemoryTopicBlockStatus.ARCHIVED, MemoryTopicBlockStatus.MERGED}]
+    state = {
+        "active_block_ids": active,
+        "default_block_id": default_block_id,
+        "overloaded_block_ids": overloaded,
+        "archived_block_ids": archived,
+        "updated_at": _utc_now(),
+    }
+    _atomic_write(versions_path, versions_content)
+    _atomic_write(state_path, json.dumps(state, indent=2, sort_keys=True) + "\n")
+
+
+def create_memory_topic_block(
+    runtime_root: str | Path,
+    *,
+    canonical_topic: str,
+    display_name: str | None = None,
+    aliases: Sequence[str] = (),
+    protected: bool = False,
+    set_as_default: bool = False,
+) -> MemoryTopicBlockOperationResult:
+    topic = normalize_topic_term(canonical_topic)
+    if not topic:
+        raise ValueError("canonical_topic must be non-empty after normalization.")
+    snapshot = inspect_memory_topic_block_registry(runtime_root)
+    normalized_aliases = tuple(sorted({value for alias in aliases if (value := normalize_topic_term(alias)) and value != topic}))
+    existing = next((block for block in snapshot.blocks if topic in block.normalized_terms()), None)
+    if existing is not None:
+        return MemoryTopicBlockOperationResult(action="create", ok=True, block=existing, target_block_id=existing.block_id, message="existing_block_reused")
+    block = MemoryTopicBlock(
+        block_id=build_topic_block_id(topic),
+        canonical_topic=topic,
+        display_name=(display_name or canonical_topic).strip() or topic,
+        aliases=normalized_aliases,
+        status=MemoryTopicBlockStatus.PROTECTED if protected else MemoryTopicBlockStatus.ACTIVE,
+        created_at=_utc_now(),
+        updated_at=_utc_now(),
+    )
+    block.validate()
+    default_id = block.block_id if set_as_default or (topic == "general" and snapshot.default_block_id is None) else snapshot.default_block_id
+    _write_topic_registry(runtime_root, (*snapshot.blocks, block), default_block_id=default_id)
+    return MemoryTopicBlockOperationResult(action="create", ok=True, block=block, target_block_id=block.block_id, message="block_created", block_created=True, registry_modified=True)
+
+
+def update_memory_topic_block(
+    runtime_root: str | Path,
+    *,
+    block_id: str,
+    action: str,
+    value: str | None = None,
+) -> MemoryTopicBlockOperationResult:
+    snapshot = inspect_memory_topic_block_registry(runtime_root)
+    current = next((block for block in snapshot.blocks if block.block_id == block_id), None)
+    if current is None:
+        return MemoryTopicBlockOperationResult(action=action, ok=False, source_block_id=block_id, message="block_not_found")
+    normalized_action = action.strip().lower()
+    aliases = list(current.aliases)
+    status = current.status
+    display_name = current.display_name
+    archived = False
+    if normalized_action == "rename":
+        if value is None or not value.strip():
+            raise ValueError("rename requires a non-empty value.")
+        display_name = value.strip()
+    elif normalized_action == "add_alias":
+        alias = normalize_topic_term(value or "")
+        if not alias:
+            raise ValueError("add_alias requires a non-empty value.")
+        if alias not in aliases and alias != normalize_topic_term(current.canonical_topic):
+            aliases.append(alias)
+    elif normalized_action == "remove_alias":
+        alias = normalize_topic_term(value or "")
+        aliases = [item for item in aliases if normalize_topic_term(item) != alias]
+    elif normalized_action == "archive":
+        if current.status is MemoryTopicBlockStatus.PROTECTED:
+            return MemoryTopicBlockOperationResult(action=action, ok=False, block=current, source_block_id=block_id, message="protected_block_cannot_be_archived")
+        status = MemoryTopicBlockStatus.ARCHIVED
+        archived = True
+    elif normalized_action == "restore":
+        status = MemoryTopicBlockStatus.ACTIVE
+    else:
+        raise ValueError("Unsupported topic block update action.")
+    updated = MemoryTopicBlock(
+        block_id=current.block_id,
+        canonical_topic=current.canonical_topic,
+        display_name=display_name,
+        aliases=tuple(sorted(set(aliases))),
+        status=status,
+        memory_count=current.memory_count,
+        protected_memory_count=current.protected_memory_count,
+        created_at=current.created_at,
+        updated_at=_utc_now(),
+        parent_block_id=current.parent_block_id,
+        merged_into_block_id=current.merged_into_block_id,
+    )
+    blocks = tuple(updated if item.block_id == block_id else item for item in snapshot.blocks)
+    default_id = None if archived and snapshot.default_block_id == block_id else snapshot.default_block_id
+    _write_topic_registry(runtime_root, blocks, default_block_id=default_id)
+    return MemoryTopicBlockOperationResult(action=normalized_action, ok=True, block=updated, source_block_id=block_id, message="block_updated", block_updated=True, block_archived=archived, registry_modified=True)
+
+
+def route_memory_to_topic_block(runtime_root: str | Path, *, item_id: str, block_id: str, actor: str = "manual") -> MemoryTopicBlockOperationResult:
+    if not item_id.strip():
+        raise ValueError("item_id must be non-empty.")
+    snapshot = inspect_memory_topic_block_registry(runtime_root)
+    block = next((item for item in snapshot.blocks if item.block_id == block_id), None)
+    if block is None or block.status in {MemoryTopicBlockStatus.ARCHIVED, MemoryTopicBlockStatus.MERGED}:
+        return MemoryTopicBlockOperationResult(action="route", ok=False, target_block_id=block_id, message="target_block_unavailable")
+    directory, _, _ = _topic_registry_paths(runtime_root)
+    assignments_path = directory / "topic_assignments.jsonl"
+    existing = assignments_path.read_text(encoding="utf-8").splitlines() if assignments_path.is_file() else []
+    assignment_id = f"assignment-{item_id}-{block_id}"
+    record = {"assignment_id": assignment_id, "item_id": item_id, "block_id": block_id, "actor": actor, "created_at": _utc_now()}
+    if not any(json.loads(line).get("assignment_id") == assignment_id for line in existing if line.strip()):
+        existing.append(json.dumps(record, sort_keys=True))
+        _atomic_write(assignments_path, "\n".join(existing) + "\n")
+    return MemoryTopicBlockOperationResult(action="route", ok=True, block=block, target_block_id=block_id, assignment_id=assignment_id, message="memory_routed", memory_routed=True, registry_modified=True)
+
+
+def plan_memory_topic_block_merge(runtime_root: str | Path, *, source_block_id: str, target_block_id: str) -> MemoryTopicBlockMergePlan:
+    snapshot = inspect_memory_topic_block_registry(runtime_root)
+    by_id = {block.block_id: block for block in snapshot.blocks}
+    reasons: list[str] = []
+    allowed = True
+    if source_block_id == target_block_id:
+        allowed = False
+        reasons.append("source_and_target_are_identical")
+    source = by_id.get(source_block_id)
+    target = by_id.get(target_block_id)
+    if source is None:
+        allowed = False
+        reasons.append("source_block_missing")
+    if target is None:
+        allowed = False
+        reasons.append("target_block_missing")
+    if source is not None and source.status is MemoryTopicBlockStatus.PROTECTED:
+        allowed = False
+        reasons.append("protected_source_block")
+    if target is not None and target.status in {MemoryTopicBlockStatus.ARCHIVED, MemoryTopicBlockStatus.MERGED}:
+        allowed = False
+        reasons.append("target_block_unavailable")
+    if allowed:
+        reasons.append("merge_is_allowed")
+    return MemoryTopicBlockMergePlan(source_block_id=source_block_id, target_block_id=target_block_id, allowed=allowed, reasons=tuple(reasons), operations=("verify_source_and_target", "preserve_source_history", "move_logical_assignments", "mark_source_merged", "verify_registry_state"))
+
+
+def merge_memory_topic_blocks(runtime_root: str | Path, *, source_block_id: str, target_block_id: str) -> MemoryTopicBlockOperationResult:
+    plan = plan_memory_topic_block_merge(runtime_root, source_block_id=source_block_id, target_block_id=target_block_id)
+    if not plan.allowed:
+        return MemoryTopicBlockOperationResult(action="merge", ok=False, source_block_id=source_block_id, target_block_id=target_block_id, message=",".join(plan.reasons))
+    snapshot = inspect_memory_topic_block_registry(runtime_root)
+    by_id = {block.block_id: block for block in snapshot.blocks}
+    source = by_id[source_block_id]
+    target = by_id[target_block_id]
+    source_updated = MemoryTopicBlock(**{**source.__dict__, "status": MemoryTopicBlockStatus.MERGED, "merged_into_block_id": target_block_id, "updated_at": _utc_now()}) if hasattr(source, "__dict__") else MemoryTopicBlock(block_id=source.block_id, canonical_topic=source.canonical_topic, display_name=source.display_name, aliases=source.aliases, status=MemoryTopicBlockStatus.MERGED, memory_count=source.memory_count, protected_memory_count=source.protected_memory_count, created_at=source.created_at, updated_at=_utc_now(), parent_block_id=source.parent_block_id, merged_into_block_id=target_block_id)
+    target_updated = MemoryTopicBlock(block_id=target.block_id, canonical_topic=target.canonical_topic, display_name=target.display_name, aliases=tuple(sorted(set((*target.aliases, source.canonical_topic, *source.aliases)))), status=target.status, memory_count=target.memory_count + source.memory_count, protected_memory_count=target.protected_memory_count + source.protected_memory_count, created_at=target.created_at, updated_at=_utc_now(), parent_block_id=target.parent_block_id, merged_into_block_id=target.merged_into_block_id)
+    blocks = tuple(source_updated if item.block_id == source_block_id else target_updated if item.block_id == target_block_id else item for item in snapshot.blocks)
+    default_id = target_block_id if snapshot.default_block_id == source_block_id else snapshot.default_block_id
+    _write_topic_registry(runtime_root, blocks, default_block_id=default_id)
+    return MemoryTopicBlockOperationResult(action="merge", ok=True, block=target_updated, source_block_id=source_block_id, target_block_id=target_block_id, message="blocks_merged", block_updated=True, block_merged=True, registry_modified=True)
+
+
+def plan_memory_topic_block_rebalance(runtime_root: str | Path, *, overloaded_threshold: int = 50000, nearly_empty_threshold: int = 1) -> MemoryTopicBlockRebalancePlan:
+    if overloaded_threshold < 1 or nearly_empty_threshold < 0:
+        raise ValueError("rebalance thresholds are invalid.")
+    snapshot = inspect_memory_topic_block_registry(runtime_root)
+    active = [block for block in snapshot.blocks if block.status in {MemoryTopicBlockStatus.ACTIVE, MemoryTopicBlockStatus.OVERLOADED}]
+    overloaded = tuple(sorted(block.block_id for block in active if block.memory_count >= overloaded_threshold))
+    nearly_empty = tuple(sorted(block.block_id for block in active if block.memory_count <= nearly_empty_threshold and block.block_id != snapshot.default_block_id))
+    pairs: list[tuple[str, str]] = []
+    for index, source in enumerate(active):
+        for target in active[index + 1:]:
+            if set(source.normalized_terms()) & set(target.normalized_terms()):
+                pairs.append((source.block_id, target.block_id))
+    recommendations: list[str] = []
+    if overloaded:
+        recommendations.append("split_overloaded_blocks")
+    if nearly_empty:
+        recommendations.append("review_or_archive_nearly_empty_blocks")
+    if pairs:
+        recommendations.append("review_similar_blocks_for_merge")
+    if not recommendations:
+        recommendations.append("keep_unchanged")
+    return MemoryTopicBlockRebalancePlan(total_blocks=len(snapshot.blocks), overloaded_block_ids=overloaded, nearly_empty_block_ids=nearly_empty, merge_candidates=tuple(sorted(pairs)), recommendations=tuple(recommendations))

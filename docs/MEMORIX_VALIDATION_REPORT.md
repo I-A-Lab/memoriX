@@ -172,3 +172,8 @@ Part 23 validates runtime-aware policy search, MCP, OpenCode, and bounded benchm
 ## Part 24 policy lifecycle validation
 
 Part 24 validates registry persistence, review, activation, rollback, MCP, OpenCode, and benchmarks.
+
+
+## Part 25 topic-block validation
+
+See `docs/MEMORIX_TOPIC_BLOCKS.md` and `docs/MEMORIX_TOPIC_BLOCKS_VALIDATION.md`.

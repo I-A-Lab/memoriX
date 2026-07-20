@@ -371,6 +371,15 @@ from memory.adaptive.dynamic_topic_blocks import (
     detect_memory_topic,
     inspect_memory_topic_block_registry,
     plan_memory_topic_routing,
+    MemoryTopicBlockOperationResult,
+    MemoryTopicBlockMergePlan,
+    MemoryTopicBlockRebalancePlan,
+    create_memory_topic_block,
+    update_memory_topic_block,
+    route_memory_to_topic_block,
+    plan_memory_topic_block_merge,
+    merge_memory_topic_blocks,
+    plan_memory_topic_block_rebalance,
 )
 
 __all__ += [
@@ -385,4 +394,13 @@ __all__ += [
     "detect_memory_topic",
     "inspect_memory_topic_block_registry",
     "plan_memory_topic_routing",
+    "MemoryTopicBlockOperationResult",
+    "MemoryTopicBlockMergePlan",
+    "MemoryTopicBlockRebalancePlan",
+    "create_memory_topic_block",
+    "update_memory_topic_block",
+    "route_memory_to_topic_block",
+    "plan_memory_topic_block_merge",
+    "merge_memory_topic_blocks",
+    "plan_memory_topic_block_rebalance",
 ]

@@ -23,6 +23,7 @@ import { RetentionRankingInspectTool, RetentionRankingStatusTool } from "./reten
 import { AdaptiveRoutingPlanTool } from "./adaptive-routing"
 import { PolicySearchTool } from "./policy-search"
 import { PolicyLifecycleTool } from "./policy-lifecycle"
+import { TopicBlocksTool } from "./topic-blocks"
 import {
   MemoryCandidateRejectTool,
   MemoryCandidateValidateTool,
@@ -154,6 +155,7 @@ const layer = Layer.effect(
     const adaptiveroutingplan = yield* AdaptiveRoutingPlanTool
     const policysearch = yield* PolicySearchTool
     const policylifecycle = yield* PolicyLifecycleTool
+        const topicblocks = yield* TopicBlocksTool
     const memorystatus = yield* MemoryStatusTool
     const projectarchiverecord =
       yield* ProjectArchiveRecordTool
@@ -297,6 +299,7 @@ const layer = Layer.effect(
           adaptive_routing_plan: Tool.init(adaptiveroutingplan),
           policy_search: Tool.init(policysearch),
           policy_lifecycle: Tool.init(policylifecycle),
+          topic_blocks: Tool.init(topicblocks),
           memory_status: Tool.init(memorystatus),
           project_archive_record: Tool.init(projectarchiverecord),
           project_archive_list: Tool.init(projectarchivelist),

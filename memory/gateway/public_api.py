@@ -639,6 +639,21 @@ class MemoriXGateway:
             observed_at=observed_at,
         ).to_dict()
 
+
+    def topic_blocks(self, *, action: str, item_id: str | None = None, content: str = "", topic: str | None = None, block_id: str | None = None, source_block_id: str | None = None, target_block_id: str | None = None, value: str | None = None, actor: str = "manual") -> dict[str, Any]:
+        from memory.adaptive import create_memory_topic_block, detect_memory_topic, inspect_memory_topic_block_registry, merge_memory_topic_blocks, plan_memory_topic_block_merge, plan_memory_topic_block_rebalance, plan_memory_topic_routing, route_memory_to_topic_block, update_memory_topic_block
+        root = self._paths.runtime_root
+        if action == "inspect": return inspect_memory_topic_block_registry(root).to_dict()
+        if action == "detect": return detect_memory_topic(content, explicit_topic=topic).to_dict()
+        if action == "plan": return plan_memory_topic_routing(item_id=item_id or "preview", content=content, explicit_topic=topic, registry=inspect_memory_topic_block_registry(root)).to_dict()
+        if action == "create": return create_memory_topic_block(root, canonical_topic=topic or "general").to_dict()
+        if action in {"rename", "add_alias", "remove_alias", "archive", "restore"}: return update_memory_topic_block(root, block_id=block_id or "", action=action, value=value).to_dict()
+        if action == "route": return route_memory_to_topic_block(root, item_id=item_id or "", block_id=block_id or "", actor=actor).to_dict()
+        if action == "merge_plan": return plan_memory_topic_block_merge(root, source_block_id=source_block_id or "", target_block_id=target_block_id or "").to_dict()
+        if action == "merge": return merge_memory_topic_blocks(root, source_block_id=source_block_id or "", target_block_id=target_block_id or "").to_dict()
+        if action == "rebalance_plan": return plan_memory_topic_block_rebalance(root).to_dict()
+        raise ValueError(f"Unsupported topic-block action: {action}")
+
     def policy_lifecycle(self, *, action: str, version_id: str | None = None, actor: str = "opencode", reason: str = "manual operation", validation_id: str = "", max_trials: int = 12, seed: int = 23) -> dict[str, Any]:
         """Inspect or mutate the versioned policy registry through explicit actions."""
         normalized = action.strip().lower()

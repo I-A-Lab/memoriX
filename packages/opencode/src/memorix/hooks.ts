@@ -27,6 +27,7 @@ const DEFAULT_IGNORED_TOOLS = [
   "adaptive_routing_plan",
   "policy_search",
   "policy_lifecycle",
+  "topic_blocks",
   "memory_status",
   "project_archive_record",
   "project_archive_list",

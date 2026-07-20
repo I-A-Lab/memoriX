@@ -452,6 +452,10 @@ export class MemoriXClient {
     return this.callTool<JSONObject>("memorix_policy_lifecycle", input)
   }
 
+  async topicBlocks(input: JSONObject): Promise<JSONObject> {
+    return this.callTool<JSONObject>("memorix_topic_blocks", input)
+  }
+
   async recordProjectArchiveEntry(
     input: MemoriXProjectEntryRecordInput,
   ): Promise<MemoriXProjectArchiveEntry> {

@@ -425,6 +425,21 @@ McpToolDefinition(
     }, required=("action",)),
 ),
     McpToolDefinition(
+        name="memorix_topic_blocks",
+        description="Inspect, plan, or explicitly manage dynamic topic blocks.",
+        input_schema=_object_schema({
+            "action": {"type": "string"},
+            "item_id": {"type": ["string", "null"]},
+            "content": {"type": "string"},
+            "topic": {"type": ["string", "null"]},
+            "block_id": {"type": ["string", "null"]},
+            "source_block_id": {"type": ["string", "null"]},
+            "target_block_id": {"type": ["string", "null"]},
+            "value": {"type": ["string", "null"]},
+            "actor": {"type": "string"},
+        }, required=("action",)),
+    ),
+    McpToolDefinition(
         name="memorix_status",
         description=(
             "Return memoriX architecture, storage, candidate, and "
@@ -560,6 +575,7 @@ class MemoriXMcpTools:
             "memorix_adaptive_routing_plan": self._adaptive_routing_plan,
             "memorix_policy_search": self._policy_search,
             "memorix_policy_lifecycle": self._policy_lifecycle,
+            "memorix_topic_blocks": self._topic_blocks,
             "memorix_status": self._status,
         }
 
@@ -961,6 +977,19 @@ class MemoriXMcpTools:
             validation_id=str(arguments.get("validation_id", "")),
             max_trials=int(arguments.get("max_trials", 12)),
             seed=int(arguments.get("seed", 23)),
+        )
+
+    def _topic_blocks(self, arguments: dict[str, Any]) -> Any:
+        return self._gateway.topic_blocks(
+            action=_require_text(arguments, "action"),
+            item_id=None if arguments.get("item_id") is None else str(arguments.get("item_id")),
+            content=str(arguments.get("content", "")),
+            topic=None if arguments.get("topic") is None else str(arguments.get("topic")),
+            block_id=None if arguments.get("block_id") is None else str(arguments.get("block_id")),
+            source_block_id=None if arguments.get("source_block_id") is None else str(arguments.get("source_block_id")),
+            target_block_id=None if arguments.get("target_block_id") is None else str(arguments.get("target_block_id")),
+            value=None if arguments.get("value") is None else str(arguments.get("value")),
+            actor=str(arguments.get("actor", "mcp")),
         )
 
     def _status(
