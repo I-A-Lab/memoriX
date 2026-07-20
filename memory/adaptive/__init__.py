@@ -404,3 +404,39 @@ __all__ += [
     "merge_memory_topic_blocks",
     "plan_memory_topic_block_rebalance",
 ]
+
+from memory.adaptive.consolidation_planning import (
+    MemoryConsolidationAction,
+    MemoryConsolidationAudit,
+    MemoryConsolidationCandidate,
+    MemoryConsolidationCategory,
+    MemoryConsolidationCollection,
+    MemoryConsolidationGroup,
+    MemoryConsolidationPlan,
+    MemoryConsolidationStatus,
+    audit_memory_consolidation,
+    classify_memory_consolidation_pair,
+    collect_memory_consolidation_candidates,
+    consolidation_similarity,
+    detect_memory_consolidation_groups,
+    normalize_consolidation_content,
+    plan_memory_consolidation,
+)
+
+__all__ += [
+    "MemoryConsolidationAction",
+    "MemoryConsolidationAudit",
+    "MemoryConsolidationCandidate",
+    "MemoryConsolidationCategory",
+    "MemoryConsolidationCollection",
+    "MemoryConsolidationGroup",
+    "MemoryConsolidationPlan",
+    "MemoryConsolidationStatus",
+    "audit_memory_consolidation",
+    "classify_memory_consolidation_pair",
+    "collect_memory_consolidation_candidates",
+    "consolidation_similarity",
+    "detect_memory_consolidation_groups",
+    "normalize_consolidation_content",
+    "plan_memory_consolidation",
+]
