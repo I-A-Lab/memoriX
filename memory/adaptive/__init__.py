@@ -358,3 +358,31 @@ __all__ += [
     "plan_memory_policy_rollback",
     "rollback_memory_policy",
 ]
+
+from memory.adaptive.dynamic_topic_blocks import (
+    MemoryTopicBlock,
+    MemoryTopicBlockLifecycleAudit,
+    MemoryTopicBlockRegistrySnapshot,
+    MemoryTopicBlockStatus,
+    MemoryTopicDetection,
+    MemoryTopicRoutingAction,
+    MemoryTopicRoutingPlan,
+    audit_dynamic_topic_blocks,
+    detect_memory_topic,
+    inspect_memory_topic_block_registry,
+    plan_memory_topic_routing,
+)
+
+__all__ += [
+    "MemoryTopicBlock",
+    "MemoryTopicBlockLifecycleAudit",
+    "MemoryTopicBlockRegistrySnapshot",
+    "MemoryTopicBlockStatus",
+    "MemoryTopicDetection",
+    "MemoryTopicRoutingAction",
+    "MemoryTopicRoutingPlan",
+    "audit_dynamic_topic_blocks",
+    "detect_memory_topic",
+    "inspect_memory_topic_block_registry",
+    "plan_memory_topic_routing",
+]
