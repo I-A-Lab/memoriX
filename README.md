@@ -163,3 +163,7 @@ memoriX can now build explainable, read-only admission and pruning plans from ca
 ## Memory policy search
 
 memoriX compares bounded retention/routing policies without applying the selected policy. See `docs/MEMORIX_POLICY_SEARCH.md`.
+
+## Memory policy lifecycle
+
+Part 24 adds human-reviewed, versioned policy proposal, approval, activation, and rollback.

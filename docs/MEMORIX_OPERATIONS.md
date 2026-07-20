@@ -235,3 +235,7 @@ Use `scripts/memorix_adaptive_routing.py`, MCP `memorix_adaptive_routing_plan`, 
 ## Policy-search operations
 
 Use the policy-search CLI and benchmark scripts for dry-run inspection.
+
+## Policy lifecycle operations
+
+Use activation and rollback plans before applying registry changes; mutation tools require explicit permission.

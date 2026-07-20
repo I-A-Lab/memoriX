@@ -55,6 +55,9 @@ from memory.adaptive import (
     inspect_runtime_memory_pressure, inspect_runtime_memory_pressure_item,
     inspect_runtime_retention_ranking, inspect_runtime_retention_item,
     inspect_runtime_adaptive_routing, inspect_runtime_policy_search,
+    inspect_memory_policy_registry, propose_memory_policy, review_memory_policy,
+    plan_memory_policy_activation, activate_memory_policy,
+    plan_memory_policy_rollback, rollback_memory_policy, search_memory_policies,
 )
 from datetime import datetime, timezone
 from memory.hot_site.short_term_memory import (
@@ -635,6 +638,31 @@ class MemoriXGateway:
             include_synthetic_cases=not runtime_only,
             observed_at=observed_at,
         ).to_dict()
+
+    def policy_lifecycle(self, *, action: str, version_id: str | None = None, actor: str = "opencode", reason: str = "manual operation", validation_id: str = "", max_trials: int = 12, seed: int = 23) -> dict[str, Any]:
+        """Inspect or mutate the versioned policy registry through explicit actions."""
+        normalized = action.strip().lower()
+        root = self._paths.runtime_root
+        if normalized in {"inspect", "list"}:
+            return inspect_memory_policy_registry(root).to_dict()
+        if normalized == "propose":
+            if not version_id: raise ValueError("version_id is required for propose")
+            search = search_memory_policies(config=None if max_trials == 12 and seed == 23 else __import__("memory.adaptive", fromlist=["MemoryPolicySearchConfig"]).MemoryPolicySearchConfig(max_trials=max_trials, seed=seed))
+            return propose_memory_policy(root, search, proposal_id=version_id, created_by=actor).to_dict()
+        if normalized in {"approve", "reject"}:
+            if not version_id: raise ValueError("version_id is required for review")
+            return review_memory_policy(root, version_id=version_id, approved=normalized == "approve", reviewed_by=actor, reason=reason, validation_id=validation_id).to_dict()
+        if normalized == "activation_plan":
+            if not version_id: raise ValueError("version_id is required for activation_plan")
+            return plan_memory_policy_activation(root, version_id).to_dict()
+        if normalized == "activate":
+            if not version_id: raise ValueError("version_id is required for activate")
+            return activate_memory_policy(root, version_id=version_id, activated_by=actor, reason=reason, validation_id=validation_id).to_dict()
+        if normalized == "rollback_plan":
+            return plan_memory_policy_rollback(root).to_dict()
+        if normalized == "rollback":
+            return rollback_memory_policy(root, rolled_back_by=actor, reason=reason, validation_id=validation_id).to_dict()
+        raise ValueError(f"Unknown policy lifecycle action: {action}")
 
     def memory_status(self) -> dict[str, Any]:
         """Return a non-mutating status summary of the Python memory."""

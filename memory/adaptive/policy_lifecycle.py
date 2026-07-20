@@ -397,3 +397,304 @@ def compare_memory_policy_versions(
         risks=tuple(risks),
         recommendation="manual_review_required",
     )
+
+@dataclass(frozen=True, slots=True)
+class MemoryPolicyLifecycleResult:
+    action: str
+    ok: bool
+    message: str
+    version: MemoryPolicyVersion | None = None
+    active_policy_version_id: str | None = None
+    previous_policy_version_id: str | None = None
+    policy_proposed: bool = False
+    policy_approved: bool = False
+    policy_rejected: bool = False
+    policy_activated: bool = False
+    policy_rolled_back: bool = False
+    registry_modified: bool = False
+    runtime_modified: bool = False
+    cold_site_accessed: bool = False
+    neural_model_loaded: bool = False
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "action": self.action,
+            "ok": self.ok,
+            "message": self.message,
+            "version": None if self.version is None else self.version.to_dict(),
+            "active_policy_version_id": self.active_policy_version_id,
+            "previous_policy_version_id": self.previous_policy_version_id,
+            "policy_proposed": self.policy_proposed,
+            "policy_approved": self.policy_approved,
+            "policy_rejected": self.policy_rejected,
+            "policy_activated": self.policy_activated,
+            "policy_rolled_back": self.policy_rolled_back,
+            "registry_modified": self.registry_modified,
+            "runtime_modified": self.runtime_modified,
+            "cold_site_accessed": self.cold_site_accessed,
+            "neural_model_loaded": self.neural_model_loaded,
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class MemoryPolicyActivationPlan:
+    version_id: str
+    allowed: bool
+    blocking_reasons: tuple[str, ...]
+    operations: tuple[str, ...]
+    active_policy_version_id: str | None
+    dry_run: bool = True
+    registry_modified: bool = False
+    runtime_modified: bool = False
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True, slots=True)
+class MemoryPolicyRollbackPlan:
+    current_version_id: str | None
+    target_version_id: str | None
+    allowed: bool
+    blocking_reasons: tuple[str, ...]
+    operations: tuple[str, ...]
+    dry_run: bool = True
+    registry_modified: bool = False
+    runtime_modified: bool = False
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+def _registry_paths(runtime_root: str | Path) -> tuple[Path, Path, Path]:
+    root = Path(runtime_root).expanduser().resolve()
+    directory = root / "policies"
+    return directory, directory / "policy_versions.jsonl", directory / "policy_state.json"
+
+
+def _atomic_write(path: Path, content: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary.write_text(content, encoding="utf-8", newline="\n")
+    temporary.replace(path)
+
+
+def _load_versions_for_write(path: Path) -> list[MemoryPolicyVersion]:
+    if not path.is_file():
+        return []
+    versions: list[MemoryPolicyVersion] = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if line.strip():
+            payload = json.loads(line)
+            if not isinstance(payload, Mapping):
+                raise ValueError("policy registry record must be an object")
+            versions.append(MemoryPolicyVersion.from_dict(payload))
+    return versions
+
+
+def _load_state_for_write(path: Path) -> dict[str, Any]:
+    if not path.is_file():
+        return {
+            "active_policy_version_id": None,
+            "previous_policy_version_id": None,
+            "pending_proposal_ids": [],
+            "updated_at": _utc_now(),
+        }
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError("policy registry state must be an object")
+    pending = payload.get("pending_proposal_ids", [])
+    if not isinstance(pending, list):
+        raise ValueError("pending_proposal_ids must be an array")
+    return payload
+
+
+def _persist_registry(
+    versions_path: Path,
+    state_path: Path,
+    versions: list[MemoryPolicyVersion],
+    state: Mapping[str, Any],
+) -> None:
+    versions_text = "".join(
+        json.dumps(version.to_dict(), sort_keys=True) + "\n"
+        for version in versions
+    )
+    _atomic_write(versions_path, versions_text)
+    _atomic_write(state_path, json.dumps(dict(state), indent=2, sort_keys=True) + "\n")
+
+
+def propose_memory_policy(
+    runtime_root: str | Path,
+    search_result: MemoryPolicySearchResult,
+    *,
+    proposal_id: str,
+    created_by: str,
+    created_at: str | None = None,
+) -> MemoryPolicyLifecycleResult:
+    directory, versions_path, state_path = _registry_paths(runtime_root)
+    versions = _load_versions_for_write(versions_path)
+    if any(item.version_id == proposal_id for item in versions):
+        return MemoryPolicyLifecycleResult("propose", False, "proposal_already_exists")
+    state = _load_state_for_write(state_path)
+    preview = preview_memory_policy_proposal(
+        search_result,
+        proposal_id=proposal_id,
+        created_by=created_by,
+        active_version_id=state.get("active_policy_version_id"),
+        created_at=created_at,
+    )
+    versions.append(preview.proposed_version)
+    pending = [str(item) for item in state.get("pending_proposal_ids", [])]
+    pending.append(proposal_id)
+    state.update({"pending_proposal_ids": sorted(set(pending)), "updated_at": _utc_now()})
+    directory.mkdir(parents=True, exist_ok=True)
+    _persist_registry(versions_path, state_path, versions, state)
+    return MemoryPolicyLifecycleResult(
+        "propose", True, "policy_proposed", preview.proposed_version,
+        active_policy_version_id=state.get("active_policy_version_id"),
+        previous_policy_version_id=state.get("previous_policy_version_id"),
+        policy_proposed=True, registry_modified=True,
+    )
+
+
+def review_memory_policy(
+    runtime_root: str | Path,
+    *,
+    version_id: str,
+    approved: bool,
+    reviewed_by: str,
+    reason: str,
+    validation_id: str,
+) -> MemoryPolicyLifecycleResult:
+    if not reviewed_by.strip() or not reason.strip() or not validation_id.strip():
+        raise ValueError("reviewed_by, reason and validation_id must be non-empty")
+    _, versions_path, state_path = _registry_paths(runtime_root)
+    versions = _load_versions_for_write(versions_path)
+    state = _load_state_for_write(state_path)
+    index = next((i for i, item in enumerate(versions) if item.version_id == version_id), None)
+    if index is None:
+        return MemoryPolicyLifecycleResult("approve" if approved else "reject", False, "policy_not_found")
+    current = versions[index]
+    if current.status is not MemoryPolicyLifecycleStatus.PROPOSED:
+        return MemoryPolicyLifecycleResult("approve" if approved else "reject", False, "policy_not_pending", current)
+    status = MemoryPolicyLifecycleStatus.APPROVED if approved else MemoryPolicyLifecycleStatus.REJECTED
+    updated = MemoryPolicyVersion(
+        version_id=current.version_id, policy=current.policy, status=status,
+        created_at=current.created_at, created_by=current.created_by,
+        source=current.source, parent_version_id=current.parent_version_id,
+        metrics=current.metrics,
+    )
+    versions[index] = updated
+    pending = [item for item in state.get("pending_proposal_ids", []) if str(item) != version_id]
+    state.update({"pending_proposal_ids": pending, "updated_at": _utc_now(), "last_validation_id": validation_id, "last_reviewed_by": reviewed_by, "last_review_reason": reason})
+    _persist_registry(versions_path, state_path, versions, state)
+    return MemoryPolicyLifecycleResult(
+        "approve" if approved else "reject", True,
+        "policy_approved" if approved else "policy_rejected", updated,
+        active_policy_version_id=state.get("active_policy_version_id"),
+        previous_policy_version_id=state.get("previous_policy_version_id"),
+        policy_approved=approved, policy_rejected=not approved,
+        registry_modified=True,
+    )
+
+
+def plan_memory_policy_activation(runtime_root: str | Path, version_id: str) -> MemoryPolicyActivationPlan:
+    snapshot = inspect_memory_policy_registry(runtime_root)
+    version = next((item for item in snapshot.versions if item.version_id == version_id), None)
+    blockers: list[str] = []
+    if version is None: blockers.append("policy_not_found")
+    elif version.status is not MemoryPolicyLifecycleStatus.APPROVED: blockers.append("policy_not_approved")
+    if snapshot.malformed_record_count: blockers.append("registry_contains_malformed_records")
+    return MemoryPolicyActivationPlan(
+        version_id=version_id, allowed=not blockers, blocking_reasons=tuple(blockers),
+        operations=("verify_registry", "verify_human_approval", "save_previous_active_version", "activate_registry_version", "verify_registry_state"),
+        active_policy_version_id=snapshot.active_policy_version_id,
+    )
+
+
+def activate_memory_policy(
+    runtime_root: str | Path,
+    *,
+    version_id: str,
+    activated_by: str,
+    reason: str,
+    validation_id: str,
+) -> MemoryPolicyLifecycleResult:
+    if not activated_by.strip() or not reason.strip() or not validation_id.strip():
+        raise ValueError("activated_by, reason and validation_id must be non-empty")
+    plan = plan_memory_policy_activation(runtime_root, version_id)
+    if not plan.allowed:
+        return MemoryPolicyLifecycleResult("activate", False, ",".join(plan.blocking_reasons))
+    _, versions_path, state_path = _registry_paths(runtime_root)
+    versions = _load_versions_for_write(versions_path)
+    state = _load_state_for_write(state_path)
+    old_active = state.get("active_policy_version_id")
+    updated_versions: list[MemoryPolicyVersion] = []
+    activated_version: MemoryPolicyVersion | None = None
+    for item in versions:
+        status = item.status
+        if item.version_id == version_id:
+            status = MemoryPolicyLifecycleStatus.ACTIVE
+        elif item.version_id == old_active and item.status is MemoryPolicyLifecycleStatus.ACTIVE:
+            status = MemoryPolicyLifecycleStatus.SUPERSEDED
+        updated = MemoryPolicyVersion(item.version_id, item.policy, status, item.created_at, item.created_by, item.source, item.parent_version_id, item.metrics)
+        updated_versions.append(updated)
+        if item.version_id == version_id: activated_version = updated
+    state.update({"previous_policy_version_id": old_active, "active_policy_version_id": version_id, "updated_at": _utc_now(), "last_validation_id": validation_id, "last_activated_by": activated_by, "last_activation_reason": reason})
+    _persist_registry(versions_path, state_path, updated_versions, state)
+    return MemoryPolicyLifecycleResult(
+        "activate", True, "policy_activated", activated_version,
+        active_policy_version_id=version_id, previous_policy_version_id=old_active,
+        policy_activated=True, registry_modified=True,
+    )
+
+
+def plan_memory_policy_rollback(runtime_root: str | Path) -> MemoryPolicyRollbackPlan:
+    snapshot = inspect_memory_policy_registry(runtime_root)
+    blockers: list[str] = []
+    if snapshot.active_policy_version_id is None: blockers.append("no_active_policy")
+    if snapshot.previous_policy_version_id is None: blockers.append("no_previous_policy")
+    previous = next((item for item in snapshot.versions if item.version_id == snapshot.previous_policy_version_id), None)
+    if snapshot.previous_policy_version_id is not None and previous is None: blockers.append("previous_policy_not_found")
+    return MemoryPolicyRollbackPlan(
+        current_version_id=snapshot.active_policy_version_id,
+        target_version_id=snapshot.previous_policy_version_id,
+        allowed=not blockers, blocking_reasons=tuple(blockers),
+        operations=("verify_registry", "verify_previous_policy", "mark_current_rolled_back", "restore_previous_policy", "verify_registry_state"),
+    )
+
+
+def rollback_memory_policy(
+    runtime_root: str | Path,
+    *,
+    rolled_back_by: str,
+    reason: str,
+    validation_id: str,
+) -> MemoryPolicyLifecycleResult:
+    if not rolled_back_by.strip() or not reason.strip() or not validation_id.strip():
+        raise ValueError("rolled_back_by, reason and validation_id must be non-empty")
+    plan = plan_memory_policy_rollback(runtime_root)
+    if not plan.allowed or plan.target_version_id is None:
+        return MemoryPolicyLifecycleResult("rollback", False, ",".join(plan.blocking_reasons))
+    _, versions_path, state_path = _registry_paths(runtime_root)
+    versions = _load_versions_for_write(versions_path)
+    state = _load_state_for_write(state_path)
+    restored: MemoryPolicyVersion | None = None
+    updated_versions: list[MemoryPolicyVersion] = []
+    for item in versions:
+        status = item.status
+        if item.version_id == plan.current_version_id:
+            status = MemoryPolicyLifecycleStatus.ROLLED_BACK
+        elif item.version_id == plan.target_version_id:
+            status = MemoryPolicyLifecycleStatus.ACTIVE
+        updated = MemoryPolicyVersion(item.version_id, item.policy, status, item.created_at, item.created_by, item.source, item.parent_version_id, item.metrics)
+        updated_versions.append(updated)
+        if item.version_id == plan.target_version_id: restored = updated
+    state.update({"active_policy_version_id": plan.target_version_id, "previous_policy_version_id": plan.current_version_id, "updated_at": _utc_now(), "last_validation_id": validation_id, "last_rolled_back_by": rolled_back_by, "last_rollback_reason": reason})
+    _persist_registry(versions_path, state_path, updated_versions, state)
+    return MemoryPolicyLifecycleResult(
+        "rollback", True, "policy_rolled_back", restored,
+        active_policy_version_id=plan.target_version_id,
+        previous_policy_version_id=plan.current_version_id,
+        policy_rolled_back=True, registry_modified=True,
+    )

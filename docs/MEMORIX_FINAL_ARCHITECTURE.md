@@ -163,3 +163,7 @@ The control plane combines runtime capacity and retention ranking into determini
 ## Deterministic policy search
 
 The adaptive control plane includes bounded advisory policy search.
+
+## Versioned policy lifecycle
+
+Policy search feeds a human-governed registry with explicit activation and rollback.

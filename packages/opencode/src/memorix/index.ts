@@ -121,3 +121,6 @@ export type {
   MemoriXToolDefinition,
   MemoriXToolName,
 } from "./types"
+
+export { runPolicyLifecycle } from "./policy-lifecycle-facade"
+export type { PolicyLifecycleFacadeResult, PolicyLifecycleFacadeService } from "./policy-lifecycle-facade"

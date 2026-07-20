@@ -22,6 +22,7 @@ import { MemoryPressureInspectTool, MemoryPressureStatusTool } from "./memory-pr
 import { RetentionRankingInspectTool, RetentionRankingStatusTool } from "./retention-ranking"
 import { AdaptiveRoutingPlanTool } from "./adaptive-routing"
 import { PolicySearchTool } from "./policy-search"
+import { PolicyLifecycleTool } from "./policy-lifecycle"
 import {
   MemoryCandidateRejectTool,
   MemoryCandidateValidateTool,
@@ -152,6 +153,7 @@ const layer = Layer.effect(
       yield* RetentionRankingInspectTool
     const adaptiveroutingplan = yield* AdaptiveRoutingPlanTool
     const policysearch = yield* PolicySearchTool
+    const policylifecycle = yield* PolicyLifecycleTool
     const memorystatus = yield* MemoryStatusTool
     const projectarchiverecord =
       yield* ProjectArchiveRecordTool
@@ -294,6 +296,7 @@ const layer = Layer.effect(
           retention_ranking_inspect: Tool.init(retentionrankinginspect),
           adaptive_routing_plan: Tool.init(adaptiveroutingplan),
           policy_search: Tool.init(policysearch),
+          policy_lifecycle: Tool.init(policylifecycle),
           memory_status: Tool.init(memorystatus),
           project_archive_record: Tool.init(projectarchiverecord),
           project_archive_list: Tool.init(projectarchivelist),

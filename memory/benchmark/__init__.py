@@ -64,3 +64,7 @@ __all__ += [
 
 from memory.benchmark.adaptive_routing import DEFAULT_ROUTING_SCENARIOS, run_adaptive_routing_benchmark
 __all__ += ["DEFAULT_ROUTING_SCENARIOS", "run_adaptive_routing_benchmark"]
+
+from memory.benchmark.policy_lifecycle import run_policy_lifecycle_benchmark
+
+__all__ += ["run_policy_lifecycle_benchmark"]

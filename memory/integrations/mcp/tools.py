@@ -410,6 +410,20 @@ TOOL_DEFINITIONS: tuple[McpToolDefinition, ...] = (
             "observed_at": {"type": ["string", "null"]},
         }),
     ),
+
+McpToolDefinition(
+    name="memorix_policy_lifecycle",
+    description="Inspect or explicitly mutate the versioned memory-policy registry.",
+    input_schema=_object_schema({
+        "action": {"type": "string", "enum": ["inspect", "propose", "approve", "reject", "activation_plan", "activate", "rollback_plan", "rollback"]},
+        "version_id": {"type": ["string", "null"]},
+        "actor": {"type": "string"},
+        "reason": {"type": "string"},
+        "validation_id": {"type": "string"},
+        "max_trials": {"type": "integer", "minimum": 1},
+        "seed": {"type": "integer"},
+    }, required=("action",)),
+),
     McpToolDefinition(
         name="memorix_status",
         description=(
@@ -545,6 +559,7 @@ class MemoriXMcpTools:
             "memorix_retention_ranking_inspect": self._retention_ranking_inspect,
             "memorix_adaptive_routing_plan": self._adaptive_routing_plan,
             "memorix_policy_search": self._policy_search,
+            "memorix_policy_lifecycle": self._policy_lifecycle,
             "memorix_status": self._status,
         }
 
@@ -935,6 +950,17 @@ class MemoriXMcpTools:
             simulate_memory_count=arguments.get("simulate_memory_count"),
             runtime_only=bool(arguments.get("runtime_only", False)),
             observed_at=arguments.get("observed_at"),
+        )
+
+    def _policy_lifecycle(self, arguments: dict[str, Any]) -> Any:
+        return self._gateway.policy_lifecycle(
+            action=_require_text(arguments, "action"),
+            version_id=None if arguments.get("version_id") is None else str(arguments.get("version_id")),
+            actor=str(arguments.get("actor", "mcp")),
+            reason=str(arguments.get("reason", "manual operation")),
+            validation_id=str(arguments.get("validation_id", "")),
+            max_trials=int(arguments.get("max_trials", 12)),
+            seed=int(arguments.get("seed", 23)),
         )
 
     def _status(

@@ -162,3 +162,7 @@ Adaptive routing is a planning layer only. It does not mutate Titan or the cold 
 ## Policy-search control plane
 
 Policy search is observation-only and never mutates the memory data plane.
+
+## Policy lifecycle registry
+
+The policy lifecycle registry is separate from Titan memory data and records versioned control-plane state.

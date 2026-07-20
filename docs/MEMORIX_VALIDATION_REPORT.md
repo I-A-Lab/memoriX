@@ -168,3 +168,7 @@ Part 22 validates deterministic decisions, runtime inspection, MCP/OpenCode cont
 ## Part 23 policy-search validation
 
 Part 23 validates runtime-aware policy search, MCP, OpenCode, and bounded benchmarks.
+
+## Part 24 policy lifecycle validation
+
+Part 24 validates registry persistence, review, activation, rollback, MCP, OpenCode, and benchmarks.

@@ -26,6 +26,7 @@ const DEFAULT_IGNORED_TOOLS = [
   "retention_ranking_inspect",
   "adaptive_routing_plan",
   "policy_search",
+  "policy_lifecycle",
   "memory_status",
   "project_archive_record",
   "project_archive_list",

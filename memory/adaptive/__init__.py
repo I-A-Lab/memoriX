@@ -318,6 +318,9 @@ __all__ += [
 from memory.adaptive.policy_lifecycle import (
     MemoryPolicyComparison,
     MemoryPolicyLifecycleAudit,
+    MemoryPolicyLifecycleResult,
+    MemoryPolicyActivationPlan,
+    MemoryPolicyRollbackPlan,
     MemoryPolicyLifecycleStatus,
     MemoryPolicyProposalPreview,
     MemoryPolicyRegistrySnapshot,
@@ -326,11 +329,20 @@ from memory.adaptive.policy_lifecycle import (
     compare_memory_policy_versions,
     inspect_memory_policy_registry,
     preview_memory_policy_proposal,
+    propose_memory_policy,
+    review_memory_policy,
+    plan_memory_policy_activation,
+    activate_memory_policy,
+    plan_memory_policy_rollback,
+    rollback_memory_policy,
 )
 
 __all__ += [
     "MemoryPolicyComparison",
     "MemoryPolicyLifecycleAudit",
+    "MemoryPolicyLifecycleResult",
+    "MemoryPolicyActivationPlan",
+    "MemoryPolicyRollbackPlan",
     "MemoryPolicyLifecycleStatus",
     "MemoryPolicyProposalPreview",
     "MemoryPolicyRegistrySnapshot",
@@ -339,4 +351,10 @@ __all__ += [
     "compare_memory_policy_versions",
     "inspect_memory_policy_registry",
     "preview_memory_policy_proposal",
+    "propose_memory_policy",
+    "review_memory_policy",
+    "plan_memory_policy_activation",
+    "activate_memory_policy",
+    "plan_memory_policy_rollback",
+    "rollback_memory_policy",
 ]
