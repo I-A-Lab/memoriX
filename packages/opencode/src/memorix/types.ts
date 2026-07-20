@@ -33,6 +33,7 @@ export type MemoriXToolName =
   | "memorix_retention_ranking_inspect"
   | "memorix_adaptive_routing_plan"
   | "memorix_policy_search"
+  | "memorix_policy_lifecycle"
   | "memorix_status"
 
 export type MemoriXToolDefinition = {
