@@ -451,3 +451,35 @@ from memory.adaptive.consolidation_operations import (
     register_memory_consolidation_plan,
     review_memory_consolidation,
 )
+
+from memory.adaptive.observability import (
+    MemoryAlert,
+    MemoryHealthIndicator,
+    MemoryMetricSample,
+    MemoryMetricSeverity,
+    MemoryMetricWindow,
+    MemoryObservabilityAudit,
+    MemoryObservabilityCollection,
+    MemoryObservabilityReport,
+    MemoryObservabilityStatus,
+    audit_memory_observability,
+    build_memory_observability_report,
+    calculate_memory_health_indicators,
+    collect_memory_observability_samples,
+)
+
+__all__ += [
+    "MemoryAlert",
+    "MemoryHealthIndicator",
+    "MemoryMetricSample",
+    "MemoryMetricSeverity",
+    "MemoryMetricWindow",
+    "MemoryObservabilityAudit",
+    "MemoryObservabilityCollection",
+    "MemoryObservabilityReport",
+    "MemoryObservabilityStatus",
+    "audit_memory_observability",
+    "build_memory_observability_report",
+    "calculate_memory_health_indicators",
+    "collect_memory_observability_samples",
+]
