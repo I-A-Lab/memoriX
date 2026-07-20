@@ -314,3 +314,29 @@ __all__ += [
     "RuntimePolicySearchReport",
     "inspect_runtime_policy_search",
 ]
+
+from memory.adaptive.policy_lifecycle import (
+    MemoryPolicyComparison,
+    MemoryPolicyLifecycleAudit,
+    MemoryPolicyLifecycleStatus,
+    MemoryPolicyProposalPreview,
+    MemoryPolicyRegistrySnapshot,
+    MemoryPolicyVersion,
+    audit_memory_policy_lifecycle,
+    compare_memory_policy_versions,
+    inspect_memory_policy_registry,
+    preview_memory_policy_proposal,
+)
+
+__all__ += [
+    "MemoryPolicyComparison",
+    "MemoryPolicyLifecycleAudit",
+    "MemoryPolicyLifecycleStatus",
+    "MemoryPolicyProposalPreview",
+    "MemoryPolicyRegistrySnapshot",
+    "MemoryPolicyVersion",
+    "audit_memory_policy_lifecycle",
+    "compare_memory_policy_versions",
+    "inspect_memory_policy_registry",
+    "preview_memory_policy_proposal",
+]
