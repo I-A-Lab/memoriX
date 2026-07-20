@@ -61,8 +61,11 @@ const MemoriXPlugin: Plugin = async () => {
             text,
           },
         )
-      } catch {
-        // memoriX hooks must never interrupt OpenCode.
+      } catch (error) {
+        console.error(
+          "[memoriX] chat.message hook failed:",
+          error,
+        )
       }
     },
 
@@ -84,8 +87,11 @@ const MemoriXPlugin: Plugin = async () => {
             metadata: output.metadata,
           },
         )
-      } catch {
-        // memoriX hooks must never interrupt OpenCode.
+      } catch (error) {
+        console.error(
+          "[memoriX] tool.execute.after hook failed:",
+          error,
+        )
       }
     },
 
