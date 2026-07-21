@@ -28,6 +28,8 @@ const DEFAULT_IGNORED_TOOLS = [
   "policy_search",
   "policy_lifecycle",
   "topic_blocks",
+  "consolidation",
+  "observability",
   "memory_status",
   "project_archive_record",
   "project_archive_list",

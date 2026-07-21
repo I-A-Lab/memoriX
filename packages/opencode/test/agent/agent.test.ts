@@ -742,13 +742,14 @@ it.instance(
 )
 
 it.instance(
-  "defaultAgent throws when all primary agents are disabled",
+  "defaultAgent throws when all visible primary agents are disabled",
   () => expectDefaultAgentError("no primary visible agent found"),
   {
     config: {
       agent: {
         build: { disable: true },
         plan: { disable: true },
+        sdlc: { disable: true },
       },
     },
   },

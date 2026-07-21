@@ -1,19 +1,24 @@
-# OpenCode Desktop
+# memoriX Standalone Desktop Application
 
-The OpenCode Desktop app, built with Electron.
+This package contains the standalone Electron application for **memoriX**, embedding the multi-agent Software Development Life Cycle (SDLC) orchestration runtime (`sdlc`, `dev_branch`, `test_branch`) and deterministic verification gatekeeper (`sdlc-orchestrator`).
 
-## Development
+## Interactive Development
 
+To execute the desktop application from the root monorepo directory with live reloading:
 ```bash
 bun install
-bun dev
+bun run desktop
 ```
+*(Or directly from within this module: `bun dev`)*
 
-## Build
+## Compiling Standalone Executable Artifacts (`.exe` / `.dmg` / `.AppImage`)
 
-Run the `build` script to build the app's JS assets, then `package` to
-bundle the assets as an application. The resulting app will be in `dist/`.
+To compile the internal backend sidecar (`virtual:opencode-server`), bundle all required WebAssembly parsers, and generate the self-contained installer distribution:
 
+From the root monorepo directory:
 ```bash
-bun run build && bun run package
+bun run package:desktop
 ```
+*(Or directly from within this module: `bun run build && bun run package`)*
+
+The resulting executable artifact (e.g., `opencode-desktop-win-x64.exe` for Windows systems) will be synthesized under the `dist/` directory (`packages/desktop/dist/opencode-desktop-win-x64.exe`).

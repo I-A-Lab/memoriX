@@ -112,6 +112,26 @@ This is used internally and can be invoked using `@general` in messages.
 
 Learn more about [agents](https://opencode.ai/docs/agents).
 
+### memoriX SDLC orchestration
+
+memoriX includes a gated multi-agent SDLC workflow in addition to the default `build` agent:
+
+- **sdlc** — clarifies requirements, produces PRD/SRS and plans, requests explicit approval, delegates implementation and tests, and runs the validation gate.
+- **dev_branch** — implements application code from approved immutable contracts.
+- **test_branch** — creates focused automated tests independently from implementation.
+- **sdlc-orchestrator** — evaluates targeted test output and supports bounded correction cycles.
+
+Memory is not restricted to `build`. Native memoriX tools are registered in the shared OpenCode tool registry and are available to `sdlc`, `dev_branch`, and `test_branch` subject to permissions. The SDLC prompts now retrieve validated project memory before planning or implementation, pass relevant context to subagents, and keep all durable memory writes human-reviewed.
+
+Useful commands:
+
+```bash
+bun run desktop
+bun run package:desktop
+```
+
+See [SDLC and memory integration](docs/MEMORIX_SDLC_INTEGRATION.md).
+
 ### Documentation
 
 For more info on how to configure OpenCode, [**head over to our docs**](https://opencode.ai/docs).
