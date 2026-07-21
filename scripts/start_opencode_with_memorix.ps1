@@ -125,11 +125,21 @@ if (
 }
 
 if ($ResetRuntime) {
-    if (Test-Path $RuntimeRoot) {
-        Write-Host "Suppression du runtime de test :" -ForegroundColor Yellow
-        Write-Host $RuntimeRoot
-
-        Remove-Item $RuntimeRoot -Recurse -Force
+    $ResolvedRuntimeRoot = [System.IO.Path]::GetFullPath($RuntimeRoot)
+    $ResolvedProjectRoot = [System.IO.Path]::GetFullPath($ProjectRoot)
+    $DriveRoot = [System.IO.Path]::GetPathRoot($ResolvedRuntimeRoot)
+    $UnsafeRuntimeRoots = @(
+        $DriveRoot
+        $env:USERPROFILE
+        $ResolvedProjectRoot
+        (Join-Path $ResolvedProjectRoot "memory")
+        (Join-Path $ResolvedProjectRoot "memory\runtime")
+    ) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | ForEach-Object { [System.IO.Path]::GetFullPath($_) }
+    if ($UnsafeRuntimeRoots -contains $ResolvedRuntimeRoot -or $ResolvedRuntimeRoot.StartsWith($ResolvedProjectRoot + [System.IO.Path]::DirectorySeparatorChar, [System.StringComparison]::OrdinalIgnoreCase)) {
+        throw "Refus de supprimer un chemin runtime dangereux : $ResolvedRuntimeRoot"
+    }
+    if (Test-Path $ResolvedRuntimeRoot) {
+        Remove-Item $ResolvedRuntimeRoot -Recurse -Force
     }
 }
 

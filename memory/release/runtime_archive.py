@@ -12,6 +12,8 @@ from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
 from typing import Any
 
+from memory.release.path_safety import validate_destructive_runtime_path
+
 
 MANIFEST_NAME = "memorix-runtime-manifest.json"
 SCHEMA_VERSION = 1
@@ -164,7 +166,7 @@ def restore_runtime_backup(
     """Restore a verified archive through a temporary directory."""
 
     archive_file = Path(archive_path).expanduser().resolve()
-    destination = Path(runtime_root).expanduser().resolve()
+    destination = validate_destructive_runtime_path(runtime_root, project_root=Path(__file__).resolve().parents[2])
     manifest = inspect_runtime_backup(archive_file)
     if destination.exists() and any(destination.iterdir()) and not overwrite:
         raise FileExistsError(

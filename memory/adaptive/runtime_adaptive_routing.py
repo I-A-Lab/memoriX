@@ -4,6 +4,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
+from memory.adaptive.active_policy import load_active_memory_policy
 from memory.adaptive.adaptive_routing_policy import (
     AdaptiveRoutingInput,
     AdaptiveRoutingPlan,
@@ -31,7 +32,9 @@ class RuntimeAdaptiveRoutingReport:
     runtime_modified: bool = False
     cold_site_accessed: bool = False
     neural_model_loaded: bool = False
-    schema_version: int = 1
+    active_policy_version_id: str | None = None
+    policy_registry_used: bool = False
+    schema_version: int = 2
 
     def to_dict(self) -> dict[str, Any]:
         payload = asdict(self)
@@ -61,6 +64,7 @@ def inspect_runtime_adaptive_routing(
     if assessment_limit < 0:
         raise ValueError("assessment_limit must be non-negative.")
 
+    active_policy = load_active_memory_policy(runtime_root)
     capacity = inspect_runtime_capacity(
         runtime_root=runtime_root,
         configured_capacity=configured_capacity,
@@ -96,7 +100,7 @@ def inspect_runtime_adaptive_routing(
         required_slots=required_slots,
         pruning_candidates=pruning_candidates,
     )
-    plan = plan_adaptive_routing(source)
+    plan = plan_adaptive_routing(source, policy=active_policy.routing_policy)
     return RuntimeAdaptiveRoutingReport(
         status="ok",
         runtime_root=str(Path(runtime_root)),
@@ -104,4 +108,6 @@ def inspect_runtime_adaptive_routing(
         target_id=target,
         plan=plan,
         retention_assessments_considered=len(pruning_candidates),
+        active_policy_version_id=active_policy.version_id,
+        policy_registry_used=active_policy.registry_used,
     )

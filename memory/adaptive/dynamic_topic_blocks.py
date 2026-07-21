@@ -15,6 +15,7 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
+from memory.adaptive.topic_schema import normalize_topic_assignment_record, normalize_topic_block_record
 from memory.adaptive.topic_blocks import (
     build_topic_block_id,
     calculate_routing_confidence,
@@ -235,7 +236,7 @@ def inspect_memory_topic_block_registry(runtime_root: str | Path) -> MemoryTopic
                 payload = json.loads(line)
                 if not isinstance(payload, Mapping):
                     raise ValueError("topic block record must be an object")
-                blocks.append(MemoryTopicBlock.from_dict(payload))
+                blocks.append(MemoryTopicBlock.from_dict(normalize_topic_block_record(payload)))
             except (json.JSONDecodeError, TypeError, ValueError):
                 malformed += 1
     elif legacy_path.is_file():
@@ -250,7 +251,7 @@ def inspect_memory_topic_block_registry(runtime_root: str | Path) -> MemoryTopic
                 try:
                     if not isinstance(record, Mapping):
                         raise ValueError("legacy block record must be an object")
-                    blocks.append(MemoryTopicBlock.from_dict(record))
+                    blocks.append(MemoryTopicBlock.from_dict(normalize_topic_block_record(record)))
                 except (TypeError, ValueError):
                     malformed += 1
         except json.JSONDecodeError:
@@ -666,7 +667,7 @@ def route_memory_to_topic_block(runtime_root: str | Path, *, item_id: str, block
     assignments_path = directory / "topic_assignments.jsonl"
     existing = assignments_path.read_text(encoding="utf-8").splitlines() if assignments_path.is_file() else []
     assignment_id = f"assignment-{item_id}-{block_id}"
-    record = {"assignment_id": assignment_id, "item_id": item_id, "block_id": block_id, "actor": actor, "created_at": _utc_now()}
+    record = normalize_topic_assignment_record({"assignment_id": assignment_id, "item_id": item_id, "block_id": block_id, "actor": actor, "created_at": _utc_now()})
     if not any(json.loads(line).get("assignment_id") == assignment_id for line in existing if line.strip()):
         existing.append(json.dumps(record, sort_keys=True))
         _atomic_write(assignments_path, "\n".join(existing) + "\n")

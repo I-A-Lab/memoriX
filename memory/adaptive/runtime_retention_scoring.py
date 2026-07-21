@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping
 
+from memory.adaptive.active_policy import load_active_memory_policy
 from memory.adaptive.retention_scoring import (
     HotSiteRetentionRanking,
     RetentionScoreAssessment,
@@ -131,7 +132,9 @@ class RuntimeRetentionRankingReport:
     applied: bool = False
     cold_site_accessed: bool = False
     neural_model_loaded: bool = False
-    schema_version: int = 1
+    active_policy_version_id: str | None = None
+    policy_registry_used: bool = False
+    schema_version: int = 2
 
     def to_dict(self) -> dict[str, Any]:
         payload = asdict(self)
@@ -147,6 +150,7 @@ def inspect_runtime_retention_ranking(
     observed_at: str | None = None,
 ) -> RuntimeRetentionRankingReport:
     root = validate_external_runtime_root(runtime_root)
+    active_policy = load_active_memory_policy(root)
     if assessment_limit < 0:
         raise ValueError("assessment_limit must be non-negative.")
 
@@ -172,6 +176,8 @@ def inspect_runtime_retention_ranking(
         )
         assessment = assess_adaptive_retention(
             sample,
+            weights=active_policy.retention_weights,
+            thresholds=active_policy.retention_thresholds,
             assessment_id="simulated_retention",
             rank=1,
         )
@@ -218,6 +224,8 @@ def inspect_runtime_retention_ranking(
                 simulated_memory_count > len(ranking.assessments)
             ),
             ranking=ranking,
+            active_policy_version_id=active_policy.version_id,
+            policy_registry_used=active_policy.registry_used,
         )
 
     paths = MemoryStoragePaths.from_runtime_root(root)
@@ -241,6 +249,8 @@ def inspect_runtime_retention_ranking(
 
     full = rank_hot_site_memories(
         inputs,
+        weights=active_policy.retention_weights,
+        thresholds=active_policy.retention_thresholds,
         observed_at=now.isoformat(),
         ranking_id="runtime_retention_ranking",
     )
@@ -266,6 +276,8 @@ def inspect_runtime_retention_ranking(
             len(full.assessments) > len(limited.assessments)
         ),
         ranking=limited,
+        active_policy_version_id=active_policy.version_id,
+        policy_registry_used=active_policy.registry_used,
     )
 
 

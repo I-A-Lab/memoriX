@@ -10,8 +10,11 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 from enum import Enum
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
+
+from memory.adaptive.topic_schema import normalize_topic_assignment_record, normalize_topic_block_record
 
 
 class MemoryObservabilityStatus(str, Enum):
@@ -251,6 +254,46 @@ def _read_json_object(path: Path, *, maximum_bytes: int) -> tuple[dict[str, Any]
     return dict(payload), 0, size, False
 
 
+
+def _timestamp(value: Any) -> datetime | None:
+    if not isinstance(value, str) or not value.strip():
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
+
+
+def _record_time(record: Mapping[str, Any]) -> datetime | None:
+    metadata = record.get("metadata") if isinstance(record.get("metadata"), Mapping) else {}
+    for value in (record.get("recorded_at"), record.get("created_at"), record.get("updated_at"), record.get("stored_at"), metadata.get("created_at"), metadata.get("validated_at")):
+        parsed = _timestamp(value)
+        if parsed is not None:
+            return parsed
+    return None
+
+
+def _filter_window(records: Sequence[Mapping[str, Any]], start_time: str | None, end_time: str | None) -> tuple[dict[str, Any], ...]:
+    start = _timestamp(start_time) if start_time else None
+    end = _timestamp(end_time) if end_time else None
+    if start_time and start is None:
+        raise ValueError("start_time must be an ISO-8601 timestamp.")
+    if end_time and end is None:
+        raise ValueError("end_time must be an ISO-8601 timestamp.")
+    if start and end and start > end:
+        raise ValueError("start_time must not be after end_time.")
+    if start is None and end is None:
+        return tuple(dict(record) for record in records)
+    return tuple(
+        dict(record) for record in records
+        if (observed := _record_time(record)) is not None
+        and (start is None or observed >= start)
+        and (end is None or observed <= end)
+    )
+
 def _latest_by_id(records: Sequence[Mapping[str, Any]], id_key: str) -> tuple[dict[str, Any], ...]:
     latest: dict[str, dict[str, Any]] = {}
     anonymous: list[dict[str, Any]] = []
@@ -317,7 +360,8 @@ def collect_memory_observability_samples(
                 limit=assessment_limit,
                 maximum_bytes=remaining_bytes,
             )
-            value: Any = _latest_by_id(records, str(id_key))
+            windowed = _filter_window(records, start_time, end_time)
+            value: Any = _latest_by_id(windowed, str(id_key))
             count = len(value)
         else:
             value, bad, used, was_truncated = _read_json_object(path, maximum_bytes=remaining_bytes)
@@ -348,12 +392,15 @@ def collect_memory_observability_samples(
         1 for record in memories
         if bool(record.get("superseded", False)) or bool(record.get("superseded_by_memory_id"))
     )
+    access_counts = [max(0, int((record.get("metadata") or {}).get("access_count", record.get("access_count", 0)) or 0)) for record in memories]
+    retrieval_scores = [max(0.0, min(1.0, float((record.get("metadata") or {}).get("retrieval_score", record.get("retrieval_score", 0.0)) or 0.0))) for record in memories]
+    retrieved_memory_count = sum(count > 0 for count in access_counts)
     hot_capacity = max(
         [int(record.get("capacity", 0) or 0) for record in memories if str(record.get("capacity", "")).isdigit()] or [0]
     )
     hot_utilization = _ratio(len(memories), hot_capacity) if hot_capacity else min(1.0, len(memories) / max(assessment_limit, 1))
 
-    blocks = tuple(loaded.get("topic_blocks", ()))
+    blocks = tuple(normalize_topic_block_record(record) for record in loaded.get("topic_blocks", ()))
     active_blocks = [record for record in blocks if str(record.get("status", "active")) in {"active", "protected", "overloaded"}]
     overloaded_blocks = [record for record in blocks if str(record.get("status", "")) == "overloaded"]
     archived_blocks = [record for record in blocks if str(record.get("status", "")) in {"archived", "merged"}]
@@ -366,7 +413,7 @@ def collect_memory_observability_samples(
         if str(record.get("canonical_topic", record.get("label", ""))).lower() == "general"
     )
 
-    assignments = tuple(loaded.get("topic_assignments", ()))
+    assignments = tuple(normalize_topic_assignment_record(record) for record in loaded.get("topic_assignments", ()))
     fallback_assignments = sum(
         1 for record in assignments
         if str(record.get("block_id", record.get("target_block_id", ""))) == "block_general"
@@ -387,6 +434,10 @@ def collect_memory_observability_samples(
         "protected_memory_ratio": _ratio(protected_count, len(memories)),
         "inactive_memory_ratio": _ratio(inactive_count, len(memories)),
         "superseded_memory_ratio": _ratio(superseded_count, len(memories)),
+        "retrieved_memory_ratio": _ratio(retrieved_memory_count, len(memories)),
+        "retrieval_access_count": float(sum(access_counts)),
+        "mean_retrieval_score": round(sum(retrieval_scores) / len(retrieval_scores), 6) if retrieval_scores else 0.0,
+        "weak_retrieval_ratio": _ratio(sum(score < 0.25 for score in retrieval_scores), len(retrieval_scores)),
         "active_block_count": float(len(active_blocks)),
         "overloaded_block_count": float(len(overloaded_blocks)),
         "archived_block_count": float(len(archived_blocks)),

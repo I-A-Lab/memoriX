@@ -496,3 +496,6 @@ from memory.adaptive.observability_history import (
     list_memory_observability_snapshots,
     save_memory_observability_snapshot,
 )
+
+from memory.adaptive.active_policy import ActiveMemoryPolicy, load_active_memory_policy
+from memory.adaptive.topic_schema import TOPIC_SCHEMA_VERSION, normalize_topic_assignment_record, normalize_topic_block_record

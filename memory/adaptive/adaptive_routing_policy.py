@@ -424,6 +424,14 @@ def decide_adaptive_routing(
         requires_permission = False
         blockers.append("candidate_not_human_validated")
         next_step = "request_manual_candidate_validation"
+    elif (
+        context.retention_score
+        < resolved_policy.minimum_admission_score
+    ):
+        decision = AdaptiveRoutingDecisionType.DEFER
+        allowed = False
+        requires_permission = False
+        next_step = "keep_candidate_pending"
     elif enough_capacity:
         decision = (
             AdaptiveRoutingDecisionType.PROTECT
@@ -437,15 +445,6 @@ def decide_adaptive_routing(
             if context.protected
             else "admit_candidate"
         )
-    elif (
-        context.retention_score
-        < resolved_policy.minimum_admission_score
-    ):
-        decision = AdaptiveRoutingDecisionType.DEFER
-        allowed = False
-        requires_permission = False
-        blockers.append("insufficient_capacity")
-        next_step = "keep_candidate_pending"
     else:
         eligible = _eligible_pruning_candidates(
             source,
