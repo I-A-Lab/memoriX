@@ -180,3 +180,6 @@ memoriX now supports reviewed consolidation plans, local session state, scheduli
 ## Part 27 - Observability
 
 Bounded diagnostics, snapshots, alerts, drift comparison, and continuous evaluation are available without loading Titan or mutating memory policies.
+## Part 28 - final release readiness
+
+Final operator tooling adds a verified runtime backup/restore format, an isolated QuickTemp end-to-end smoke test, release-readiness diagnostics, and an installable one-command PowerShell launcher. See `docs/MEMORIX_FINAL_RELEASE.md`.

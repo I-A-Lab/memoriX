@@ -168,6 +168,19 @@ try {
         }
     }
 
+    Invoke-VerificationStep "Release readiness" {
+        $ReadinessOutput = & py -3.10 "scripts\memorix_release_readiness.py" --project-root $ProjectRoot --runtime-root $RuntimeRoot
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host $ReadinessOutput
+            throw "The final release-readiness inspection failed."
+        }
+        $ReadinessReport = ($ReadinessOutput -join [Environment]::NewLine) | ConvertFrom-Json
+        if ($ReadinessReport.status -ne "ready") {
+            throw "The final release-readiness report is not ready."
+        }
+        Write-Host "Release readiness: ready"
+    }
+
     Invoke-VerificationStep "Live Probe" {
         $ProbeOutput = & py -3.10 "scripts\memorix_live_probe.py" $RuntimeRoot --compact
         $ProbeExitCode = $LASTEXITCODE

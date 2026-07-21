@@ -179,3 +179,6 @@ memoriX now supports reviewed consolidation plans, local session state, scheduli
 ## Part 27 - Observability
 
 Bounded diagnostics, snapshots, alerts, drift comparison, and continuous evaluation are available without loading Titan or mutating memory policies.
+## Final release boundary
+
+Release-readiness, runtime backup/restore, and the isolated demo smoke test live under `memory/release`. These operator controls are intentionally not exposed as MCP tools: restore and launcher installation require explicit local administration.

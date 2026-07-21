@@ -185,3 +185,6 @@ memoriX now supports reviewed consolidation plans, local session state, scheduli
 ## Part 27 - Observability
 
 Bounded diagnostics, snapshots, alerts, drift comparison, and continuous evaluation are available without loading Titan or mutating memory policies.
+## Part 28 validation
+
+The final release suite covers read-only readiness inspection, safe runtime archive verification, atomic restore, path traversal rejection, and an isolated QuickTemp event-to-Titan acceptance workflow.

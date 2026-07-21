@@ -252,3 +252,6 @@ memoriX now supports reviewed consolidation plans, local session state, scheduli
 ## Part 27 - Observability
 
 Bounded diagnostics, snapshots, alerts, drift comparison, and continuous evaluation are available without loading Titan or mutating memory policies.
+## Final release operations
+
+Use `memorix_release_readiness.py` before demonstrations, `memorix_demo_smoke.py` for an isolated full lifecycle check, and the verified runtime backup/restore scripts before moving or resetting operator data.

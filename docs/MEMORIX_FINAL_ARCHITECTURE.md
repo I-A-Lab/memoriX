@@ -180,3 +180,6 @@ memoriX now supports reviewed consolidation plans, local session state, scheduli
 ## Part 27 - Observability
 
 Bounded diagnostics, snapshots, alerts, drift comparison, and continuous evaluation are available without loading Titan or mutating memory policies.
+## Release and operator layer
+
+The final operator layer provides readiness inspection, portable hashed runtime archives, atomic restore, a PowerShell command installer, and an isolated end-to-end smoke scenario without expanding the LLM-facing tool surface.

@@ -28,7 +28,10 @@ param(
 
     [int]$MaxToolOutputCharacters = 16000,
 
-    [string]$IgnoredTools = "memory_store,memory_retrieve,memory_candidates_list,memory_candidate_validate,memory_candidate_reject,memory_consolidate,memory_status"
+    [string]$IgnoredTools = "memory_store,memory_retrieve,memory_candidates_list,memory_candidate_validate,memory_candidate_reject,memory_consolidate,memory_status",
+
+    [Parameter(ValueFromRemainingArguments = $true)]
+    [string[]]$OpenCodeArguments
 )
 
 $ErrorActionPreference = "Stop"
@@ -203,7 +206,7 @@ if ($ValidateOnly) {
 Write-Host "`nLancement d'OpenCode..." -ForegroundColor Green
 Write-Host "Ferme OpenCode normalement pour arrêter le serveur MCP."
 
-& $BunCommand.Source run --cwd "packages\opencode" dev
+& $BunCommand.Source run --cwd "packages\opencode" dev -- $ProjectRoot @OpenCodeArguments
 
 $OpenCodeExitCode = $LASTEXITCODE
 
