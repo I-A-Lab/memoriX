@@ -116,6 +116,25 @@ export const TodoTable = sqliteTable(
   ],
 )
 
+export const SdlcTable = sqliteTable(
+  "sdlc",
+  {
+    session_id: text()
+      .$type<SessionSchema.ID>()
+      .notNull()
+      .references(() => SessionTable.id, { onDelete: "cascade" }),
+    content: text().notNull(),
+    status: text().notNull(),
+    priority: text().notNull(),
+    position: integer().notNull(),
+    ...Timestamps,
+  },
+  (table) => [
+    primaryKey({ columns: [table.session_id, table.position] }),
+    index("sdlc_session_idx").on(table.session_id),
+  ],
+)
+
 export const SessionMessageTable = sqliteTable(
   "session_message",
   {

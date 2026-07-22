@@ -7,7 +7,7 @@ import { Database } from "../database/database"
 import { makeLocationNode } from "../effect/app-node"
 import { EventV2 } from "../event"
 import { SessionSchema } from "./schema"
-import { TodoTable } from "./sql"
+import { TodoTable, SdlcTable } from "./sql"
 
 export const Info = SessionTodo.Info
 export type Info = typeof Info.Type
@@ -17,8 +17,9 @@ export interface Interface {
   readonly update: (input: {
     readonly sessionID: SessionSchema.ID
     readonly todos: ReadonlyArray<Info>
+    readonly agent?: string
   }) => Effect.Effect<void>
-  readonly get: (sessionID: SessionSchema.ID) => Effect.Effect<ReadonlyArray<Info>>
+  readonly get: (sessionID: SessionSchema.ID, agent?: string) => Effect.Effect<ReadonlyArray<Info>>
 }
 
 export class Service extends Context.Service<Service, Interface>()("@opencode/v2/SessionTodo") {}
@@ -32,14 +33,16 @@ export const layer = Layer.effect(
     const update = Effect.fn("SessionTodo.update")(function* (input: {
       readonly sessionID: SessionSchema.ID
       readonly todos: ReadonlyArray<Info>
+      readonly agent?: string
     }) {
+      const table = input.agent === "sdlc" ? SdlcTable : TodoTable
       yield* db
         .transaction((tx) =>
           Effect.gen(function* () {
-            yield* tx.delete(TodoTable).where(eq(TodoTable.session_id, input.sessionID)).run()
+            yield* tx.delete(table).where(eq(table.session_id, input.sessionID)).run()
             if (input.todos.length === 0) return
             yield* tx
-              .insert(TodoTable)
+              .insert(table)
               .values(
                 input.todos.map((todo, position) => ({
                   session_id: input.sessionID,
@@ -56,12 +59,13 @@ export const layer = Layer.effect(
       yield* events.publish(Event.Updated, input)
     })
 
-    const get = Effect.fn("SessionTodo.get")(function* (sessionID: SessionSchema.ID) {
+    const get = Effect.fn("SessionTodo.get")(function* (sessionID: SessionSchema.ID, agent?: string) {
+      const table = agent === "sdlc" ? SdlcTable : TodoTable
       const rows = yield* db
         .select()
-        .from(TodoTable)
-        .where(eq(TodoTable.session_id, sessionID))
-        .orderBy(asc(TodoTable.position))
+        .from(table)
+        .where(eq(table.session_id, sessionID))
+        .orderBy(asc(table.position))
         .all()
         .pipe(Effect.orDie)
       return rows.map((row) => ({

@@ -31,6 +31,7 @@ export const TodoWriteTool = Tool.define<typeof Parameters, Metadata, Todo.Servi
           yield* todo.update({
             sessionID: ctx.sessionID,
             todos: params.todos,
+            agent: ctx.agent,
           })
 
           return {
