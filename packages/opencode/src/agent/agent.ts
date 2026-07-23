@@ -14,6 +14,9 @@ import PROMPT_COMPACTION from "./prompt/compaction.txt"
 import PROMPT_EXPLORE from "./prompt/explore.txt"
 import PROMPT_SUMMARY from "./prompt/summary.txt"
 import PROMPT_TITLE from "./prompt/title.txt"
+import PROMPT_SDLC from "./prompt/sdlc.txt"
+import PROMPT_DEV_BRANCH from "./prompt/dev-branch.txt"
+import PROMPT_TEST_BRANCH from "./prompt/test-branch.txt"
 import { Permission } from "@/permission"
 import { mergeDeep, pipe, sortBy, values } from "remeda"
 import { Global } from "@opencode-ai/core/global"
@@ -261,6 +264,77 @@ const layer = Layer.effect(
               user,
             ),
             prompt: PROMPT_SUMMARY,
+          },
+          sdlc: {
+            name: "sdlc",
+            description: "SDLC Architect & Tech Lead agent. Translates requirements into PRD/SRS and triggers parallel DEV and TEST branches.",
+            options: {},
+            permission: Permission.merge(
+              defaults,
+              Permission.fromConfig({
+                todowrite: "allow",
+                question: "allow",
+                plan_enter: "allow",
+                plan_exit: "allow",
+                edit: {
+                  "*": "deny",
+                  [path.join(".opencode", "specs", "*.md")]: "allow",
+                  [path.join(".opencode", "plans", "*.md")]: "allow",
+                  [path.relative(ctx.worktree, path.join(Global.Path.data, "specs", "*.md"))]: "allow",
+                  [path.relative(ctx.worktree, path.join(Global.Path.data, "plans", "*.md"))]: "allow",
+                },
+              }),
+              user,
+            ),
+            mode: "primary",
+            native: true,
+            prompt: PROMPT_SDLC,
+          },
+          dev_branch: {
+            name: "dev_branch",
+            description: "Full-Stack Developer subagent for parallel implementation.",
+            options: {},
+            permission: Permission.merge(
+              defaults,
+              Permission.fromConfig({
+                todowrite: "allow",
+                edit: {
+                  "*": "allow",
+                  [path.join("test", "**", "*")]: "deny",
+                  [path.join("tests", "**", "*")]: "deny",
+                  [path.join("specs", "**", "*")]: "deny",
+                  [path.join(".opencode", "specs", "*.md")]: "deny",
+                  [path.join(".opencode", "plans", "*.md")]: "deny",
+                },
+              }),
+              user,
+            ),
+            mode: "subagent",
+            native: true,
+            prompt: PROMPT_DEV_BRANCH,
+          },
+          test_branch: {
+            name: "test_branch",
+            description: "QA & TDD subagent for parallel test creation.",
+            options: {},
+            permission: Permission.merge(
+              defaults,
+              Permission.fromConfig({
+                todowrite: "allow",
+                edit: {
+                  "*": "deny",
+                  [path.join("test", "**", "*")]: "allow",
+                  [path.join("tests", "**", "*")]: "allow",
+                  [path.join("specs", "**", "*")]: "deny",
+                  [path.join(".opencode", "specs", "*.md")]: "deny",
+                  [path.join(".opencode", "plans", "*.md")]: "deny",
+                },
+              }),
+              user,
+            ),
+            mode: "subagent",
+            native: true,
+            prompt: PROMPT_TEST_BRANCH,
           },
         }
 

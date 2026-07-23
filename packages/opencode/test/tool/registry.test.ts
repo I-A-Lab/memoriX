@@ -71,6 +71,35 @@ describe("tool.registry", () => {
     }),
   )
 
+  it.instance("exposes read-only memoriX tools to build and SDLC agents", () =>
+    Effect.gen(function* () {
+      const registry = yield* ToolRegistry.Service
+      const agents = yield* Agent.Service
+      const names = ["build", "sdlc", "dev_branch", "test_branch"]
+      const required = ["memory_retrieve", "memory_status", "project_archive_list", "project_snapshot_get"]
+
+      const available = yield* Effect.forEach(
+        names,
+        Effect.fnUntraced(function* (name) {
+          const agent = yield* agents.get(name)
+          if (!agent) throw new Error(`${name} agent not found`)
+          const tools = yield* registry.tools({
+            providerID: ProviderV2.ID.opencode,
+            modelID: ModelV2.ID.make("test"),
+            agent,
+          })
+          return [name, tools.map((tool) => tool.id)] as const
+        }),
+      )
+
+      available.forEach(([name, ids]) => {
+        required.forEach((id) => {
+          expect(ids, `${id} should be available to ${name}`).toContain(id)
+        })
+      })
+    }),
+  )
+
   it.instance("hides task background parameter unless experimental background subagents are enabled", () =>
     Effect.gen(function* () {
       const registry = yield* ToolRegistry.Service

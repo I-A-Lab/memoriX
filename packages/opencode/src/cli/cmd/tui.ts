@@ -105,6 +105,10 @@ export const TuiThreadCommand = cmd({
         type: "string",
         describe: "agent to use",
       })
+      .option("sdlc", {
+        type: "boolean",
+        describe: "run using the autonomous SDLC agent architecture",
+      })
       .option("mini", {
         type: "boolean",
         describe: "start the minimal interactive interface",
@@ -127,6 +131,9 @@ export const TuiThreadCommand = cmd({
         hidden: true,
       }),
   handler: async (args) => {
+    if ((args as any).sdlc) {
+      args.agent = "sdlc"
+    }
     if (args.replay === true) {
       UI.error("--replay is not supported; replay is enabled by default")
       process.exitCode = 1

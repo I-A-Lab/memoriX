@@ -112,9 +112,40 @@ This is used internally and can be invoked using `@general` in messages.
 
 Learn more about [agents](https://opencode.ai/docs/agents).
 
+### memoriX SDLC orchestration
+
+memoriX includes a gated multi-agent SDLC workflow in addition to the default `build` agent:
+
+- **sdlc** — clarifies requirements, produces PRD/SRS and plans, requests explicit approval, delegates implementation and tests, and runs the validation gate.
+- **dev_branch** — implements application code from approved immutable contracts.
+- **test_branch** — creates focused automated tests independently from implementation.
+- **sdlc-orchestrator** — evaluates targeted test output and supports bounded correction cycles.
+
+Memory is not restricted to `build`. Native memoriX tools are registered in the shared OpenCode tool registry and are available to `sdlc`, `dev_branch`, and `test_branch` subject to permissions. The SDLC prompts now retrieve validated project memory before planning or implementation, pass relevant context to subagents, and keep all durable memory writes human-reviewed.
+
+Useful commands:
+
+```bash
+bun run desktop
+bun run package:desktop
+```
+
+See [SDLC and memory integration](docs/MEMORIX_SDLC_INTEGRATION.md).
+
 ### Documentation
 
 For more info on how to configure OpenCode, [**head over to our docs**](https://opencode.ai/docs).
+
+### memoriX integration
+
+This branch includes the memoriX external-memory integration for OpenCode, including controlled candidates, hot-only retrieval, Project Archive, protected nightly consolidation, and a Windows scheduled task.
+
+Project-specific documentation:
+
+- [Architecture](docs/MEMORIX_FINAL_ARCHITECTURE.md)
+- [Operations](docs/MEMORIX_OPERATIONS.md)
+- [Nightly operations](docs/MEMORIX_NIGHTLY_OPERATIONS.md)
+- [Validation report](docs/MEMORIX_VALIDATION_REPORT.md)
 
 ### Contributing
 
@@ -127,3 +158,48 @@ If you are working on a project that's related to OpenCode and is using "opencod
 ---
 
 **Join our community** [Discord](https://discord.gg/opencode) | [X.com](https://x.com/opencode)
+
+## Capacity and saturation
+
+memoriX exposes bounded hot-site capacity inspection, dry-run pruning
+planning, permission-gated soft pruning, and a synthetic saturation benchmark
+covering up to 6,000,000 active items without materializing that population.
+See `docs/MEMORIX_CAPACITY_OPERATIONS.md`,
+`docs/MEMORIX_SCALING_POLICY.md`, and
+`docs/MEMORIX_SATURATION_VALIDATION.md`.
+
+## Memory pressure diagnostics
+
+memoriX exposes deterministic read-only pressure status and per-memory inspection through Python, MCP, and native OpenCode tools. See `docs/MEMORIX_MEMORY_PRESSURE.md`.
+
+## Adaptive retention scoring
+
+memoriX can rank persisted hot-site memories using deterministic, explainable retention scores. The ranking is read-only and dry-run: it never prunes, deactivates, writes to the runtime, accesses the cold site, or loads Titan. See `docs/MEMORIX_RETENTION_SCORING.md`.
+
+## Adaptive routing
+
+memoriX can now build explainable, read-only admission and pruning plans from capacity and adaptive-retention signals.
+
+## Memory policy search
+
+memoriX compares bounded retention/routing policies without applying the selected policy. See `docs/MEMORIX_POLICY_SEARCH.md`.
+
+## Memory policy lifecycle
+
+Part 24 adds human-reviewed, versioned policy proposal, approval, activation, and rollback.
+
+
+## Dynamic topic blocks
+
+See `docs/MEMORIX_TOPIC_BLOCKS.md` and `docs/MEMORIX_TOPIC_BLOCKS_VALIDATION.md`.
+
+## Part 26 - controlled consolidation
+
+memoriX now supports reviewed consolidation plans, local session state, scheduling, recovery, MCP, and OpenCode integration.
+
+## Part 27 - Observability
+
+Bounded diagnostics, snapshots, alerts, drift comparison, and continuous evaluation are available without loading Titan or mutating memory policies.
+## Part 28 - final release readiness
+
+Final operator tooling adds a verified runtime backup/restore format, an isolated QuickTemp end-to-end smoke test, release-readiness diagnostics, and an installable one-command PowerShell launcher. See `docs/MEMORIX_FINAL_RELEASE.md`.

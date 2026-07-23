@@ -16,6 +16,30 @@ import { WebFetchTool } from "./webfetch"
 import { WriteTool } from "./write"
 import { InvalidTool } from "./invalid"
 import { SkillTool } from "./skill"
+import { MemoryStoreTool, MemoryRetrieveTool } from "./memory"
+import { MemoryCapacityPlanTool, MemoryCapacityPruneTool, MemoryCapacityStatusTool } from "./memory-capacity"
+import { MemoryPressureInspectTool, MemoryPressureStatusTool } from "./memory-pressure"
+import { RetentionRankingInspectTool, RetentionRankingStatusTool } from "./retention-ranking"
+import { AdaptiveRoutingPlanTool } from "./adaptive-routing"
+import { PolicySearchTool } from "./policy-search"
+import { PolicyLifecycleTool } from "./policy-lifecycle"
+import { TopicBlocksTool } from "./topic-blocks"
+import { ConsolidationTool } from "./consolidation"
+import { ObservabilityTool } from "./observability"
+import {
+  MemoryCandidateRejectTool,
+  MemoryCandidateValidateTool,
+  MemoryCandidatesListTool,
+  MemoryConsolidateTool,
+  MemoryNightlyRunTool,
+  MemoryStatusTool,
+} from "./memory-candidates"
+import {
+  ProjectArchiveListTool,
+  ProjectArchiveRecordTool,
+  ProjectSnapshotGetTool,
+  ProjectSnapshotRebuildTool,
+} from "./project-archive"
 import * as Tool from "./tool"
 import { Config } from "@/config/config"
 import { type ToolContext as PluginToolContext, type ToolDefinition } from "@opencode-ai/plugin"
@@ -104,6 +128,47 @@ const layer = Layer.effect(
     const greptool = yield* GrepTool
     const patchtool = yield* ApplyPatchTool
     const skilltool = yield* SkillTool
+    const memorystore = yield* MemoryStoreTool
+    const memoryretrieve = yield* MemoryRetrieveTool
+    const memorycandidateslist =
+      yield* MemoryCandidatesListTool
+    const memorycandidatevalidate =
+      yield* MemoryCandidateValidateTool
+    const memorycandidatereject =
+      yield* MemoryCandidateRejectTool
+    const memoryconsolidate =
+      yield* MemoryConsolidateTool
+    const memorynightlyrun =
+      yield* MemoryNightlyRunTool
+    const memorycapacitystatus =
+      yield* MemoryCapacityStatusTool
+    const memorycapacityplan =
+      yield* MemoryCapacityPlanTool
+    const memorycapacityprune =
+      yield* MemoryCapacityPruneTool
+    const memorypressurestatus =
+      yield* MemoryPressureStatusTool
+    const memorypressureinspect =
+      yield* MemoryPressureInspectTool
+    const retentionrankingstatus =
+      yield* RetentionRankingStatusTool
+    const retentionrankinginspect =
+      yield* RetentionRankingInspectTool
+    const adaptiveroutingplan = yield* AdaptiveRoutingPlanTool
+    const policysearch = yield* PolicySearchTool
+    const policylifecycle = yield* PolicyLifecycleTool
+        const topicblocks = yield* TopicBlocksTool
+        const consolidation = yield* ConsolidationTool
+        const observability = yield* ObservabilityTool
+    const memorystatus = yield* MemoryStatusTool
+    const projectarchiverecord =
+      yield* ProjectArchiveRecordTool
+    const projectarchivelist =
+      yield* ProjectArchiveListTool
+    const projectsnapshotrebuild =
+      yield* ProjectSnapshotRebuildTool
+    const projectsnapshotget =
+      yield* ProjectSnapshotGetTool
     const agent = yield* Agent.Service
 
     const state = yield* InstanceState.make<State>(
@@ -211,6 +276,40 @@ const layer = Layer.effect(
           question: Tool.init(question),
           lsp: Tool.init(lsptool),
           plan: Tool.init(plan),
+          memory_store: Tool.init(memorystore),
+          memory_retrieve: Tool.init(memoryretrieve),
+          memory_candidates_list: Tool.init(
+            memorycandidateslist,
+          ),
+          memory_candidate_validate: Tool.init(
+            memorycandidatevalidate,
+          ),
+          memory_candidate_reject: Tool.init(
+            memorycandidatereject,
+          ),
+          memory_consolidate: Tool.init(
+            memoryconsolidate,
+          ),
+          memory_nightly_run: Tool.init(
+            memorynightlyrun,
+          ),
+          memory_capacity_status: Tool.init(memorycapacitystatus),
+          memory_capacity_plan: Tool.init(memorycapacityplan),
+          memory_capacity_prune: Tool.init(memorycapacityprune),
+          memory_pressure_status: Tool.init(memorypressurestatus),
+          memory_pressure_inspect: Tool.init(memorypressureinspect),
+          retention_ranking_status: Tool.init(retentionrankingstatus),
+          retention_ranking_inspect: Tool.init(retentionrankinginspect),
+          adaptive_routing_plan: Tool.init(adaptiveroutingplan),
+          policy_search: Tool.init(policysearch),
+          policy_lifecycle: Tool.init(policylifecycle),
+          topic_blocks: Tool.init(topicblocks),
+          consolidation: Tool.init(consolidation),
+          memory_status: Tool.init(memorystatus),
+          project_archive_record: Tool.init(projectarchiverecord),
+          project_archive_list: Tool.init(projectarchivelist),
+          project_snapshot_rebuild: Tool.init(projectsnapshotrebuild),
+          project_snapshot_get: Tool.init(projectsnapshotget),
         })
 
         return {
@@ -230,6 +329,21 @@ const layer = Layer.effect(
             tool.search,
             tool.skill,
             tool.patch,
+            tool.memory_store,
+            tool.memory_retrieve,
+            tool.memory_candidates_list,
+            tool.memory_candidate_validate,
+            tool.memory_candidate_reject,
+            tool.memory_consolidate,
+            tool.memory_nightly_run,
+            tool.memory_capacity_status,
+            tool.memory_capacity_plan,
+            tool.memory_capacity_prune,
+            tool.memory_status,
+            tool.project_archive_record,
+            tool.project_archive_list,
+            tool.project_snapshot_rebuild,
+            tool.project_snapshot_get,
             ...(flags.experimentalLspTool ? [tool.lsp] : []),
             ...(flags.experimentalPlanMode && flags.client === "cli" ? [tool.plan] : []),
           ],
