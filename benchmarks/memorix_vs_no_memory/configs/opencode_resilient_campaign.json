@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "campaign_version": "40.8.0",
+  "campaign_type": "resilient_real_opencode_ab",
+  "default_profile": "large",
+  "large": {
+    "seeds": [101, 202, 303],
+    "task_count": 8,
+    "distractor_count": 1000,
+    "expected_runs": 48,
+    "timeout_seconds": 480
+  },
+  "stress": {
+    "seeds": [101, 202, 303, 404, 505],
+    "task_count": 8,
+    "distractor_count": 1000,
+    "expected_runs": 80,
+    "timeout_seconds": 480
+  },
+  "max_attempts": 3,
+  "retry_wait_seconds": 20,
+  "resume_supported": true,
+  "exclude_technical_failures_from_quality_metrics": true,
+  "require_zero_invalid_pairs_for_validation": true
+}

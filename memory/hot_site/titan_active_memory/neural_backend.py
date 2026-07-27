@@ -197,22 +197,68 @@ class NeuralTitanBackend:
 
         return by_item_id
 
+    def _allowed_titan_item_ids(
+        self,
+        *,
+        project_id: str | None,
+        user_id: str | None,
+    ) -> set[int] | None:
+        """Return Titan item ids allowed by exact metadata scope filters."""
+
+        if project_id is None and user_id is None:
+            return None
+
+        allowed: set[int] = set()
+        for record in _read_jsonl(self.metadata_path):
+            if record.get("active", True) is False:
+                continue
+
+            metadata = dict(record.get("metadata") or {})
+            if (
+                project_id is not None
+                and metadata.get("project_id") != project_id
+            ):
+                continue
+            if (
+                user_id is not None
+                and metadata.get("user_id") != user_id
+            ):
+                continue
+
+            for raw_item_id in record.get("titan_item_ids", []) or []:
+                try:
+                    allowed.add(int(raw_item_id))
+                except (TypeError, ValueError):
+                    continue
+
+        return allowed
+
     def retrieve(
         self,
         query: str,
         role: str | None = None,
         top_k: int | None = None,
+        project_id: str | None = None,
+        user_id: str | None = None,
     ) -> List[Dict[str, Any]]:
         """
         Retrieve memories from the real TitanExternalMemory.
+
+        Optional project and user filters are exact metadata constraints. They
+        restrict the candidate set before Titan scores and ranks memories.
         """
 
         k = self.top_k if top_k is None else int(top_k)
+        allowed_item_ids = self._allowed_titan_item_ids(
+            project_id=project_id,
+            user_id=user_id,
+        )
 
         retrieved = self.memory.retrieve(
             query=query,
             k=k,
             min_score=self.min_score,
+            allowed_item_ids=allowed_item_ids,
         )
 
         metadata_by_content = self._metadata_by_content()

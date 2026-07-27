@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "memorix://benchmark/run-manifest.schema.json",
+  "title": "memoriX benchmark run manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "benchmark_id",
+    "run_id",
+    "created_at_utc",
+    "request",
+    "environment",
+    "runtime_root",
+    "configuration_fingerprint",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "benchmark_id": {"const": "memorix_vs_no_memory"},
+    "run_id": {"type": "string", "minLength": 8, "maxLength": 128},
+    "created_at_utc": {"type": "string"},
+    "runtime_root": {"type": ["string", "null"]},
+    "configuration_fingerprint": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "status": {"const": "planned"},
+    "request": {"type": "object"},
+    "environment": {"type": "object"}
+  }
+}

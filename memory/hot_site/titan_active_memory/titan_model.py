@@ -1035,9 +1035,19 @@ class TitanExternalMemory:
             "message": f"Consolidated {len(selected)} memory item(s) into Titans LTM.",
         }
 
-    def retrieve(self, query: str, k: int=5, min_score: float=0.12) -> List[Tuple[float,Dict[str,float],MemoryItem]]:
-        active=self.active_items
-        if not active: return []
+    def retrieve(
+        self,
+        query: str,
+        k: int = 5,
+        min_score: float = 0.12,
+        allowed_item_ids: Iterable[int] | None = None,
+    ) -> List[Tuple[float, Dict[str, float], MemoryItem]]:
+        active = self.active_items
+        if allowed_item_ids is not None:
+            allowed = {int(item_id) for item_id in allowed_item_ids}
+            active = [item for item in active if int(item.id) in allowed]
+        if not active:
+            return []
         if is_broad_memory_question(query):
             return [(1.0, {"neural":1.0,"key":0.0,"lexical":0.0,"entity":0.0,"property":0.0,"recency":0.0}, i) for i in sorted(active, key=lambda i: i.updated_at, reverse=True)[:max(k,8)]]
         qkey,_=self._make_key_value(query); qents=extract_entities(query); qprop=property_key(query)

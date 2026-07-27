@@ -120,6 +120,12 @@ TOOL_DEFINITIONS: tuple[McpToolDefinition, ...] = (
                     "type": ["string", "null"]
                 },
                 "top_k": POSITIVE_INTEGER,
+                "project_id": {
+                    "type": ["string", "null"]
+                },
+                "user_id": {
+                    "type": ["string", "null"]
+                },
             },
             required=("query",),
         ),
@@ -663,6 +669,14 @@ class MemoriXMcpTools:
                 int(top_k)
                 if top_k is not None
                 else None
+            ),
+            project_id=_optional_text(
+                arguments,
+                "project_id",
+            ),
+            user_id=_optional_text(
+                arguments,
+                "user_id",
             ),
         )
 

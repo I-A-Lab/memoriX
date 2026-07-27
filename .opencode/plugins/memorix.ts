@@ -9,6 +9,7 @@ import {
   recordToolResultHook,
   recordUserMessageHook,
   resetDefaultMemoriXService,
+  strictNoMemoryMode,
 } from "../../packages/opencode/src/memorix"
 
 function textFromParts(
@@ -36,6 +37,8 @@ function textFromParts(
 }
 
 const MemoriXPlugin: Plugin = async () => {
+  if (strictNoMemoryMode()) return {}
+
   const service =
     getDefaultMemoriXService()
 

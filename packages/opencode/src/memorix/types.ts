@@ -162,6 +162,7 @@ export type MemoriXServiceOptions = {
 }
 
 export type MemoriXServiceEnvironment = {
+  MEMORIX_BENCHMARK_MODE?: string
   MEMORIX_ENABLED?: string
   MEMORIX_PYTHON_EXECUTABLE?: string
   MEMORIX_RUNTIME_ROOT?: string

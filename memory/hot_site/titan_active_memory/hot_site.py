@@ -239,8 +239,14 @@ class HotSiteTitanMemory:
         *,
         role: str | None = None,
         top_k: int | None = None,
+        project_id: str | None = None,
+        user_id: str | None = None,
     ) -> RetrievalResult:
-        """Retrieve active memories from Titan only."""
+        """Retrieve active memories from Titan only.
+
+        Scope filters are exact metadata constraints applied before ranking.
+        Omitting both filters preserves the historical global retrieval path.
+        """
 
         if not isinstance(query, str) or not query.strip():
             raise HotSiteInputError(
@@ -252,10 +258,31 @@ class HotSiteTitanMemory:
                 "top_k must be positive."
             )
 
+        normalized_project_id = (
+            project_id.strip()
+            if project_id is not None
+            else None
+        )
+        normalized_user_id = (
+            user_id.strip()
+            if user_id is not None
+            else None
+        )
+        if project_id is not None and not normalized_project_id:
+            raise HotSiteInputError(
+                "project_id must not be empty when provided."
+            )
+        if user_id is not None and not normalized_user_id:
+            raise HotSiteInputError(
+                "user_id must not be empty when provided."
+            )
+
         backend_results = self._backend.retrieve(
             query=query,
             role=role,
             top_k=top_k,
+            project_id=normalized_project_id,
+            user_id=normalized_user_id,
         )
 
         matches: list[RetrievedMemory] = []

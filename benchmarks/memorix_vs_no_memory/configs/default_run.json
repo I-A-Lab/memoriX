@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "memorix_vs_no_memory",
+  "mode": "no_memory",
+  "suite": "agent",
+  "size": "tiny",
+  "seed": 1001,
+  "task_id": "example_task",
+  "dataset_id": "example_dataset_v1",
+  "prompt_version": "sdlc_v1",
+  "model_id": "local_model_placeholder",
+  "model_parameters": {
+    "temperature": 0,
+    "top_p": 1
+  },
+  "tool_budget": 20,
+  "turn_budget": 12,
+  "timeout_seconds": 300,
+  "evaluator_version": "deterministic_v1",
+  "paired_run_group_id": "example_pair_1001"
+}

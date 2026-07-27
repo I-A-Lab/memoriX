@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param(
     [switch]$AllowDirty,
     [switch]$KeepRuntime,
@@ -156,9 +156,58 @@ try {
     }
 
     Invoke-VerificationStep "TypeScript memoriX tests" {
-        Invoke-NativeCommand "OpenCode memoriX tests" {
-            bun test --cwd "packages\opencode" --timeout ($TypeScriptTimeoutSeconds * 1000) "test/memorix"
+        $MemoriXTestFiles = @(
+            Get-ChildItem `
+                "packages\opencode\test\memorix" `
+                -Filter "*.test.ts" `
+                -File |
+            Sort-Object FullName
+        )
+
+        if ($MemoriXTestFiles.Count -eq 0) {
+            throw "No TypeScript memoriX test file was found."
         }
+
+        $PassedMemoriXTestFiles = 0
+
+        foreach ($MemoriXTestFile in $MemoriXTestFiles) {
+            $RelativeTestPath = $MemoriXTestFile.FullName.Substring(
+                (Resolve-Path "packages\opencode").Path.Length + 1
+            )
+
+            Write-Host ("Running isolated test file: " + $RelativeTestPath)
+
+            Invoke-NativeCommand ("OpenCode memoriX test " + $RelativeTestPath) {
+                $PreviousSkipRuntimeDispose = $env:MEMORIX_SKIP_TEST_RUNTIME_DISPOSE
+                $env:MEMORIX_SKIP_TEST_RUNTIME_DISPOSE = "true"
+
+                try {
+                    bun test `
+                        --cwd "packages\opencode" `
+                        --timeout 30000 `
+                        $RelativeTestPath
+                }
+                finally {
+                    if ($null -eq $PreviousSkipRuntimeDispose) {
+                        Remove-Item `
+                            Env:\MEMORIX_SKIP_TEST_RUNTIME_DISPOSE `
+                            -ErrorAction SilentlyContinue
+                    }
+
+                    if ($null -ne $PreviousSkipRuntimeDispose) {
+                        $env:MEMORIX_SKIP_TEST_RUNTIME_DISPOSE = `
+                            $PreviousSkipRuntimeDispose
+                    }
+                }
+            }
+
+            $PassedMemoriXTestFiles += 1
+        }
+
+        Write-Host (
+            [string]$PassedMemoriXTestFiles +
+            " isolated TypeScript memoriX test file(s) passed."
+        )
     }
 
     Invoke-VerificationStep "Launcher validation" {

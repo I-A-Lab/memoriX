@@ -130,3 +130,5 @@ export type { PolicyLifecycleFacadeResult, PolicyLifecycleFacadeService } from "
 export * from "./consolidation-facade"
 
 export * from "./observability-facade"
+
+export * from "./benchmark-mode"

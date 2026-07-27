@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "memorix_vs_no_memory",
+  "dataset_id": "memorix-dataset-tiny-v1",
+  "size": "tiny",
+  "seed": 32001,
+  "profile_count": 3,
+  "project_count": 3,
+  "include_queries": true
+}

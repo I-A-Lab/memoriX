@@ -346,17 +346,22 @@ class MemoriXGateway:
         *,
         role: str | None = None,
         top_k: int | None = None,
+        project_id: str | None = None,
+        user_id: str | None = None,
     ) -> RetrievalResult:
         """Retrieve active validated memory from Titan only.
 
-        This method never reads the cold archive and never performs automatic
-        rehydration.
+        Optional project and user identifiers are strict metadata filters
+        applied before neural ranking. This method never reads the cold archive
+        and never performs automatic rehydration.
         """
 
         return self._hot_site.retrieve(
             query,
             role=role,
             top_k=top_k,
+            project_id=project_id,
+            user_id=user_id,
         )
 
     def search_cold_site_history(
@@ -846,6 +851,8 @@ def retrieve_memory(
     *,
     role: str | None = None,
     top_k: int | None = None,
+    project_id: str | None = None,
+    user_id: str | None = None,
 ) -> RetrievalResult:
     """Retrieve active memory from the default Titan hot site only."""
 
@@ -853,6 +860,8 @@ def retrieve_memory(
         query,
         role=role,
         top_k=top_k,
+        project_id=project_id,
+        user_id=user_id,
     )
 
 

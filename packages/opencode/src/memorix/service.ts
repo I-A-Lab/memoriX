@@ -2,6 +2,7 @@ import path from "node:path"
 import os from "node:os"
 
 import { MemoriXClient } from "./client"
+import { strictNoMemoryMode } from "./benchmark-mode"
 import {
   MemoriXClientError,
   MemoriXConfigurationError,
@@ -214,6 +215,7 @@ export function resolveDefaultMemoriXRuntimeRoot(
 
 export function memoriXServiceOptionsFromEnvironment(
   environment: MemoriXServiceEnvironment = {
+    MEMORIX_BENCHMARK_MODE: process.env.MEMORIX_BENCHMARK_MODE,
     MEMORIX_ENABLED: process.env.MEMORIX_ENABLED,
     MEMORIX_PYTHON_EXECUTABLE:
       process.env.MEMORIX_PYTHON_EXECUTABLE,
@@ -247,9 +249,9 @@ export function memoriXServiceOptionsFromEnvironment(
     "../../../..",
   )
 
-  const enabled =
-    overrides.enabled ??
-    parseBoolean(environment.MEMORIX_ENABLED, false)
+  const enabled = strictNoMemoryMode(environment as Record<string, string | undefined>)
+    ? false
+    : overrides.enabled ?? parseBoolean(environment.MEMORIX_ENABLED, false)
 
   const pythonExecutable =
     overrides.pythonExecutable ??
