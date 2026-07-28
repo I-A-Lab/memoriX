@@ -3,6 +3,7 @@ import os from "node:os"
 
 import { MemoriXClient } from "./client"
 import { strictNoMemoryMode } from "./benchmark-mode"
+import { normalizeMemoriXScopeIdentifier } from "./scope"
 import {
   MemoriXClientError,
   MemoriXConfigurationError,
@@ -10,6 +11,7 @@ import {
 } from "./errors"
 import type {
   MemoriXCandidate,
+  MemoriXContextOptions,
   MemoriXProposeCandidateInput,
   MemoriXProjectArchiveEntry,
   MemoriXProjectArchiveEntryType,
@@ -217,6 +219,7 @@ export function memoriXServiceOptionsFromEnvironment(
   environment: MemoriXServiceEnvironment = {
     MEMORIX_BENCHMARK_MODE: process.env.MEMORIX_BENCHMARK_MODE,
     MEMORIX_ENABLED: process.env.MEMORIX_ENABLED,
+    MEMORIX_USER_ID: process.env.MEMORIX_USER_ID,
     MEMORIX_PYTHON_EXECUTABLE:
       process.env.MEMORIX_PYTHON_EXECUTABLE,
     MEMORIX_RUNTIME_ROOT:
@@ -262,8 +265,13 @@ export function memoriXServiceOptionsFromEnvironment(
     overrides.runtimeRoot ??
     resolveDefaultMemoriXRuntimeRoot(environment)
 
+  const userID = normalizeMemoriXScopeIdentifier(
+    overrides.userID ?? environment.MEMORIX_USER_ID,
+  )
+
   return {
     enabled,
+    ...(userID ? { userID } : {}),
     pythonExecutable,
     projectRoot:
       overrides.projectRoot ?? repositoryRoot,
@@ -323,8 +331,13 @@ export class MemoriXService {
     options: MemoriXServiceOptions,
     dependencies: MemoriXServiceDependencies = {},
   ) {
+    const userID = normalizeMemoriXScopeIdentifier(
+      options.userID,
+    )
+
     this.options = {
       ...options,
+      userID,
       projectRoot: path.resolve(options.projectRoot),
       runtimeRoot: path.resolve(options.runtimeRoot),
       pythonExecutable: options.pythonExecutable
@@ -343,6 +356,10 @@ export class MemoriXService {
 
   get connected(): boolean {
     return this.client?.connected ?? false
+  }
+
+  get userID(): string | undefined {
+    return this.options.userID
   }
 
   async connect(): Promise<MemoriXServiceResult<void>> {
@@ -374,10 +391,7 @@ export class MemoriXService {
 
   async context(
     query: string,
-    options?: {
-      role?: string
-      topK?: number
-    },
+    options?: MemoriXContextOptions,
   ): Promise<MemoriXServiceResult<MemoriXRetrievalResult>> {
     return this.runSafely(
       (client) => client.context(query, options),

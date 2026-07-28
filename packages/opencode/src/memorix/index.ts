@@ -1,3 +1,13 @@
+export {
+  normalizeMemoriXScopeIdentifier,
+  resolveTrustedMemoriXScope,
+} from "./scope"
+
+export type {
+  MemoriXTrustedScope,
+  MemoriXTrustedScopeInput,
+} from "./scope"
+
 export { runTopicBlocks } from "./topic-blocks-facade"
 export type { TopicBlocksFacadeResult, TopicBlocksFacadeService } from "./topic-blocks-facade"
 export { getPolicySearch } from "./policy-search-facade"
@@ -99,6 +109,7 @@ export type {
   MemoriXCandidate,
   MemoriXCandidateStatus,
   MemoriXClientOptions,
+  MemoriXContextOptions,
   MemoriXProposeCandidateInput,
   MemoriXProjectArchiveEntry,
   MemoriXProjectArchiveEntryType,

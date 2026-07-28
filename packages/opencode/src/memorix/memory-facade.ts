@@ -17,6 +17,8 @@ export type MemoryFacadeContext = {
   sessionID: string
   messageID: string
   agent: string
+  projectID?: string | null
+  userID?: string | null
 }
 
 export type MemoryStoreFacadeInput = {
@@ -28,6 +30,8 @@ export type MemoryStoreFacadeInput = {
 export type MemoryRetrieveFacadeInput = {
   query: string
   tags?: readonly string[]
+  projectID?: string | null
+  userID?: string | null
 }
 
 export type MemoryStoreStatus =
@@ -226,6 +230,7 @@ export async function storeMemoryThroughMemoriX(
     content: canonicalContent,
     event_type: "opencode_memory_fact",
     source: "opencode.memory_store",
+    project_id: context.projectID,
     session_id: context.sessionID,
     importance: 0.9,
     confidence: 1,
@@ -238,6 +243,12 @@ export async function storeMemoryThroughMemoriX(
       opencode_agent: context.agent,
       opencode_message_id: context.messageID,
       opencode_session_id: context.sessionID,
+      ...(context.projectID !== undefined
+        ? { project_id: context.projectID }
+        : {}),
+      ...(context.userID !== undefined
+        ? { user_id: context.userID }
+        : {}),
     },
   })
 
@@ -293,6 +304,12 @@ export async function storeMemoryThroughMemoriX(
           context.messageID,
         opencode_session_id:
           context.sessionID,
+        ...(context.projectID !== undefined
+          ? { project_id: context.projectID }
+          : {}),
+        ...(context.userID !== undefined
+          ? { user_id: context.userID }
+          : {}),
       },
     })
 
@@ -368,6 +385,8 @@ export async function retrieveMemoryThroughMemoriX(
       topK: requestedTags.length > 0
         ? 20
         : 10,
+      projectID: input.projectID,
+      userID: input.userID,
     },
   )
 

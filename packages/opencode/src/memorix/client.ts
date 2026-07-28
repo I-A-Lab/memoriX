@@ -15,6 +15,7 @@ import type {
   JSONValue,
   MemoriXCandidate,
   MemoriXClientOptions,
+  MemoriXContextOptions,
   MemoriXProposeCandidateInput,
   MemoriXProjectArchiveEntry,
   MemoriXProjectArchiveEntryType,
@@ -256,10 +257,7 @@ export class MemoriXClient {
 
   async context(
     query: string,
-    options?: {
-      role?: string
-      topK?: number
-    },
+    options?: MemoriXContextOptions,
   ): Promise<MemoriXRetrievalResult> {
     if (!query.trim()) {
       throw new MemoriXClientError("memoriX context query must not be empty.")
@@ -269,6 +267,12 @@ export class MemoriXClient {
       query,
       ...(options?.role ? { role: options.role } : {}),
       ...(options?.topK !== undefined ? { top_k: options.topK } : {}),
+      ...(options?.projectID !== undefined
+        ? { project_id: options.projectID }
+        : {}),
+      ...(options?.userID !== undefined
+        ? { user_id: options.userID }
+        : {}),
     })
 
     return asRecord(value) as unknown as MemoriXRetrievalResult

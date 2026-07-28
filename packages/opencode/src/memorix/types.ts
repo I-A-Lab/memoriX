@@ -87,6 +87,13 @@ export type MemoriXRetrievalResult = {
   matches: MemoriXRetrievalMatch[]
 }
 
+export type MemoriXContextOptions = {
+  role?: string
+  topK?: number
+  projectID?: string | null
+  userID?: string | null
+}
+
 export type MemoriXRecordEventInput = {
   content: string
   event_type: string
@@ -149,6 +156,7 @@ export type MemoriXServiceResult<T> =
 
 export type MemoriXServiceOptions = {
   enabled: boolean
+  userID?: string
   pythonExecutable?: string
   projectRoot: string
   runtimeRoot: string
@@ -164,6 +172,7 @@ export type MemoriXServiceOptions = {
 export type MemoriXServiceEnvironment = {
   MEMORIX_BENCHMARK_MODE?: string
   MEMORIX_ENABLED?: string
+  MEMORIX_USER_ID?: string
   MEMORIX_PYTHON_EXECUTABLE?: string
   MEMORIX_RUNTIME_ROOT?: string
   LOCALAPPDATA?: string
