@@ -1,39 +1,54 @@
-# Test Plan - Todo List
+# Test Plan: Guess Game (Python CLI)
 
-## Tests fonctionnels (manuels)
+## Objective
+Validate correctness of game logic, score management, and UI formatting with lightweight unit tests.
 
-### Test : Ajout d'une tache
-1. Saisir "Acheter du pain" dans l'input
-2. Cliquer "Ajouter" ou Enter
-3. Verifier que la tache apparait dans la liste
-4. Verifier que le compteur indique "1 tache restante"
+---
 
-### Test : Completion d'une tache
-1. Cocher la checkbox d'une tache
-2. Verifier le style barre / opacite reduite
-3. Verifier que le compteur decremente
+## Test Strategy
+- **Framework:** `unittest` (standard library).
+- **Mocking:** Use `unittest.mock` to patch `random.randint`, `builtins.input`, and file I/O.
+- **Coverage Target:** >90% on `score.py` and `game.py` core logic.
 
-### Test : Suppression d'une tache
-1. Cliquer l'icone poubelle sur une tache
-2. Verifier qu'elle disparait (animation)
+---
 
-### Test : Filtres
-1. Ajouter 3 taches, en completer 1
-2. Cliquer "Actives" -> voir 2 taches
-3. Cliquer "Terminees" -> voir 1 tache
-4. Cliquer "Toutes" -> voir 3 taches
+## Test Cases
 
-### Test : Effacer terminees
-1. Avoir au moins 1 tache terminee
-2. Cliquer "Effacer terminees"
-3. Verifier que les terminees disparaissent
+### Module: `tests/test_score.py`
 
-### Test : Persistance localStorage
-1. Ajouter une tache, actualiser la page
-2. Verifier que la tache est toujours presente
-3. Verifier l'etat completed persiste
+| ID | Test Name | Description |
+|----|-----------|-------------|
+| S1 | `test_load_scores_missing_file` | `load_scores()` returns `[]` when file does not exist. |
+| S2 | `test_load_scores_corrupt_file` | `load_scores()` returns `[]` when JSON is invalid. |
+| S3 | `test_load_scores_valid_file` | `load_scores()` returns sorted list from valid JSON. |
+| S4 | `test_save_scores_creates_file` | `save_scores()` writes correct JSON to disk. |
+| S5 | `test_save_scores_limits_top_5` | `save_scores()` keeps only top 5 entries. |
+| S6 | `test_is_high_score_qualifies` | Returns `True` when attempts < 5th score. |
+| S7 | `test_is_high_score_not_qualifies` | Returns `False` when attempts >= 5th score. |
+| S8 | `test_add_score_inserts_correctly` | Inserts score in correct position and trims to 5. |
 
-## Tests d'integrite
-- Input vide : desactiver le bouton ou empecher l'ajout
-- Input " " (espaces) : trim avant ajout
-- localStorage corrompu : fallback a un tableau vide
+### Module: `tests/test_game.py`
+
+| ID | Test Name | Description |
+|----|-----------|-------------|
+| G1 | `test_generate_number_in_range` | `_generate_number()` returns int in [1, 100]. |
+| G2 | `test_get_guess_valid_input` | `_get_guess()` returns parsed int on valid input. |
+| G3 | `test_get_guess_retries_on_invalid` | `_get_guess()` re-prompts on non-numeric input. |
+| G4 | `test_get_guess_retries_on_out_of_range` | `_get_guess()` re-prompts on number outside 1-100. |
+| G5 | `test_play_round_correct_guess` | `_play_round()` returns 1 attempt on first correct guess. |
+| G6 | `test_play_round_multiple_guesses` | `_play_round()` returns correct count after multiple guesses. |
+| G7 | `test_play_round_hint_too_low` | Displays "Too low!" when guess < target. |
+| G8 | `test_play_round_hint_too_high` | Displays "Too high!" when guess > target. |
+
+---
+
+## Execution
+- Run: `python -m pytest tests/ -v` or `python -m unittest discover -s tests -v`.
+- All tests must pass before proceeding to Step 5 validation gate.
+
+---
+
+## Out of Scope
+- UI/visual tests (manual smoke test only).
+- Performance/load tests.
+- Integration tests with actual file system (mocked in unit tests).

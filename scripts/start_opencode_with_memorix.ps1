@@ -52,11 +52,11 @@ if ([string]::IsNullOrWhiteSpace($CurrentBranch)) {
 }
 
 $PythonExe = (
-    py -3.10 -c "import sys; print(sys.executable)"
+    python -c "import sys; print(sys.executable)"
 ).Trim()
 
 if ($LASTEXITCODE -ne 0) {
-    throw "Python 3.10 est introuvable."
+    throw "Python est introuvable."
 }
 
 if (-not (Test-Path $PythonExe -PathType Leaf)) {
