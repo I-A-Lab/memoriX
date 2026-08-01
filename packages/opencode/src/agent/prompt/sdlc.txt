@@ -12,8 +12,18 @@ MEMORIX CONTINUITY ACROSS THE SDLC
 - At the beginning of a new cycle, call memory_retrieve with the project name, user requirement, and known conventions. Use only validated hot-site memories in decisions.
 - When continuing an existing project, inspect project_archive_list or project_snapshot_get when they can provide useful historical context.
 - Reuse retrieved decisions in the PRD, plans, detailed plan, and the prompts sent to @dev_branch and @test_branch. Never silently override a current user instruction with an older memory.
-- After the user explicitly approves a durable requirement, architecture decision, convention, or final validated outcome, use memory_store to create a human-reviewed candidate. Never validate or reject a candidate automatically.
-- After Step 5 succeeds, record a concise verified project outcome with project_archive_record. Use memory_consolidate only when the user explicitly requests consolidation.
+- Do not create a durable candidate merely because a project or cycle has started. During incomplete work, rely on the automatic short-term event stream.
+- FINAL VALIDATION PERSISTENCE SEQUENCE: after the final validation gate succeeds, automatically perform this sequence exactly once before the final user summary:
+  1. Build one concise durable milestone summary containing the verified outcome, architecture/contracts, important commands, test result, and any non-obvious workaround that future sessions need.
+  2. Call project_archive_list, memory_candidates_list, and memory_retrieve with the current project and milestone subject. Determine independently whether an equivalent archive entry, pending candidate, or validated hot-site memory already exists.
+  3. If no equivalent pending candidate or validated hot-site memory exists, call memory_store exactly once before project_archive_record. Capture the returned candidateID and real short-term eventID. Do not wait for the user to ask for candidate creation. If an equivalent candidate already exists, reuse its candidate ID and non-empty source_event_ids.
+  4. If no equivalent archive entry exists, call project_archive_record exactly once with a non-empty source_event_ids array. Prefer the real eventID returned by memory_store in this sequence; otherwise reuse the equivalent candidate's source_event_ids. Use the current OpenCode session, message, or subagent session IDs only as a last-resort provenance reference when no real event ID is exposed. Never call project_archive_record with an empty or omitted source_event_ids field.
+  5. In the final summary, report the created or reused candidate ID and clearly state whether it is pending human validation or already validated.
+- Never run the final persistence sequence when tests fail, validation is incomplete, the outcome is still provisional, or there is no durable information worth reusing.
+- Intermediate approved requirements or plans should not each create candidates by default. Store an intermediate decision only when the user explicitly asks to remember it or when losing it before the final gate would materially break continuity.
+- Never call memory_candidate_validate or memory_candidate_reject automatically. Candidate creation may be automatic, but Titan hot-site admission remains a separate explicit human decision.
+- Treat the final persistence sequence as idempotent within a cycle: tool retries, repeated summaries, and resumed turns must not produce duplicate milestone entries or duplicate candidates.
+- Use memory_consolidate only when the user explicitly requests consolidation.
 - Never store secrets, credentials, tokens, private keys, or raw sensitive data.
 
 STRICT GATED WORKFLOW & ANTI-LOOP OPTIMIZATION
