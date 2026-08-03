@@ -131,13 +131,10 @@ try {
     }
 
     Invoke-VerificationStep "Python compilation" {
-        $PythonFiles = @(git ls-files "memory/*.py" "memory/**/*.py" "scripts/memorix_*.py" "tests/memory/*.py" "tests/memory/**/*.py") |
-            Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
-            Sort-Object -Unique
-        if ($LASTEXITCODE -ne 0) { throw "Unable to enumerate Python files." }
-        if ($PythonFiles.Count -eq 0) { throw "No Python file was found for compilation." }
-        Invoke-NativeCommand "Python compilation" { py -3.10 -m py_compile $PythonFiles }
-        Write-Host ([string]$PythonFiles.Count + " Python files compiled.")
+        Invoke-NativeCommand "Python compilation" {
+            py -3.10 -m compileall -q -f "memory" "scripts" "tests\memory"
+        }
+        Write-Host "All memoriX Python source files compiled."
     }
 
     Invoke-VerificationStep "Python tests" {

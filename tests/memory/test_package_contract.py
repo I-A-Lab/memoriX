@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import importlib
 import unittest
@@ -8,23 +8,28 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 
-class PythonMemorySkeletonTests(unittest.TestCase):
-    """Validate the initial Python package structure."""
+class PythonMemoryPackageContractTests(unittest.TestCase):
+    """Validate the current memoriX package and architecture contract."""
 
-    def test_memory_packages_are_importable(self) -> None:
+    def test_operational_packages_are_importable(self) -> None:
         modules = (
             "memory",
-            "memory.gateway",
-            "memory.hot_site",
-            "memory.hot_site.short_term_memory",
-            "memory.hot_site.titan_active_memory",
+            "memory.adaptive",
+            "memory.benchmark",
             "memory.cold_site",
             "memory.cold_site.long_term_store",
             "memory.cold_site.project_archive",
             "memory.consolidation",
-            "memory.sync",
             "memory.data",
-            "memory.observability",
+            "memory.diagnostics",
+            "memory.gateway",
+            "memory.hot_site",
+            "memory.hot_site.short_term_memory",
+            "memory.hot_site.titan_active_memory",
+            "memory.integrations",
+            "memory.integrations.mcp",
+            "memory.release",
+            "memory.sync",
         )
 
         for module_name in modules:
@@ -32,12 +37,18 @@ class PythonMemorySkeletonTests(unittest.TestCase):
                 imported_module = importlib.import_module(module_name)
                 self.assertIsNotNone(imported_module)
 
-    def test_antoine_titan_prototype_is_preserved(self) -> None:
-        titan_model = PROJECT_ROOT / "memory" / "titan_model.py"
-        self.assertTrue(
-            titan_model.is_file(),
-            "Antoine's memory/titan_model.py must remain present.",
+    def test_titan_has_one_canonical_implementation(self) -> None:
+        canonical = (
+            PROJECT_ROOT
+            / "memory"
+            / "hot_site"
+            / "titan_active_memory"
+            / "titan_model.py"
         )
+        obsolete_root_copy = PROJECT_ROOT / "memory" / "titan_model.py"
+
+        self.assertTrue(canonical.is_file())
+        self.assertFalse(obsolete_root_copy.exists())
 
     def test_architecture_contract_is_documented(self) -> None:
         architecture = PROJECT_ROOT / "memory" / "ARCHITECTURE.md"
@@ -51,6 +62,7 @@ class PythonMemorySkeletonTests(unittest.TestCase):
             "active retrieval uses the hot site only",
             "there is no automatic cold-site fallback",
             "there is no automatic cold-to-hot rehydration",
+            "Observability reports, snapshots, alerts and drift analysis",
         )
 
         for phrase in required_phrases:

@@ -20,7 +20,7 @@
 | Contrat hot-only | PASS |
 | Recherche cold explicite uniquement | PASS |
 | Isolation du runtime de test | PASS |
-| Protection du prototype Titan d'Antoine | PASS |
+| Implémentation Titan canonique unique | PASS |
 | Project Archive append-only et snapshots versionnés | PASS |
 | Outils MCP Project Archive | PASS |
 | Client, service et outils OpenCode Project Archive | PASS |
