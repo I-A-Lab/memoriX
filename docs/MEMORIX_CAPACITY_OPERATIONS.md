@@ -36,7 +36,7 @@ The MCP equivalents are `memorix_capacity_status`,
 A synthetic status can model large populations without allocating them:
 
 ```powershell
-py -3.10 ".\scripts\memorix_capacity_status.py" `
+py -3.10 ".\tools\memorix\diagnostics\memorix_capacity_status.py" `
     --runtime-root "$env:LOCALAPPDATA\memoriX\runtime" `
     --capacity 50000 `
     --simulate-active-items 6000000 `

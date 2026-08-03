@@ -15,7 +15,7 @@ REQUIRED_PROJECT_PATHS = (
     "packages/opencode/src/tool/registry.ts",
     ".opencode/plugins/memorix.ts",
     "scripts/start_opencode_with_memorix.ps1",
-    "scripts/verify_memorix.ps1",
+    "tools/memorix/validation/verify_memorix.ps1",
 )
 
 

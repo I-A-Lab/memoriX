@@ -174,7 +174,7 @@ The lock must be absent after every terminal outcome. If `nightly.lock` remains 
 Run the complete repository verification:
 
 ```powershell
-& ".\scripts\verify_memorix.ps1"
+& ".\tools\memorix\validation\verify_memorix.ps1"
 ```
 
 Then verify the task and latest memoriX result:

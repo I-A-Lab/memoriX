@@ -10,7 +10,9 @@ import unittest
 
 SCRIPT = (
     Path(__file__).resolve().parents[2]
-    / "scripts"
+    / "tools"
+    / "memorix"
+    / "diagnostics"
     / "memorix_capacity_status.py"
 )
 

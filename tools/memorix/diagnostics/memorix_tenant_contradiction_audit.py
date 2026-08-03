@@ -5,9 +5,18 @@ import json
 import sys
 from pathlib import Path
 
-REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
-if str(REPOSITORY_ROOT) not in sys.path:
-    sys.path.insert(0, str(REPOSITORY_ROOT))
+MEMORIX_TOOLS_ROOT = Path(__file__).resolve().parents[1]
+if str(MEMORIX_TOOLS_ROOT) not in sys.path:
+    sys.path.insert(0, str(MEMORIX_TOOLS_ROOT))
+
+from _repository import find_repository_root
+
+PROJECT_ROOT = find_repository_root(Path(__file__))
+
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+REPOSITORY_ROOT = PROJECT_ROOT
 
 from memory.benchmark.tenant_contradiction_audit import (
     PROFILE_SPECS,

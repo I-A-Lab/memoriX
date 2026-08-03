@@ -9,8 +9,8 @@ The score combines age, low usage, low importance, low momentum, low surprise, i
 ## Runtime commands
 
 ```powershell
-py -3.10 .\scripts\memorix_memory_pressure.py --runtime-root $env:MEMORIX_RUNTIME_ROOT --pretty
-py -3.10 .\scripts\memorix_memory_pressure.py --simulate-count 6000000 --assessment-limit 1 --pretty
+py -3.10 .\tools\memorix\diagnostics\memorix_memory_pressure.py --runtime-root $env:MEMORIX_RUNTIME_ROOT --pretty
+py -3.10 .\tools\memorix\diagnostics\memorix_memory_pressure.py --simulate-count 6000000 --assessment-limit 1 --pretty
 ```
 
 ## OpenCode tools

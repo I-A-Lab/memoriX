@@ -1,9 +1,11 @@
 # memoriX tools
 
-This directory contains memoriX-specific command-line tools, separated from
-the upstream OpenCode maintenance scripts in the repository-level `script/`
-directory.
+Command-line entry points are grouped by operational responsibility:
 
-- `research/`: benchmark, campaign, dataset, and report entry points.
-- Runtime, operations, diagnostics, and validation tools remain temporarily in
-  `scripts/` until their dedicated migration phases are validated.
+- `research/`: reproducible benchmarks, campaigns, datasets, and reports.
+- `diagnostics/`: read-only diagnostics and isolated dry-run observations.
+- `validation/`: release, probe, smoke, integration, and full verification tools.
+
+Runtime and operator entry points remain in `scripts/` until phase 2A3 because
+they are referenced by OpenCode, the Windows Task Scheduler, or PowerShell
+profiles.

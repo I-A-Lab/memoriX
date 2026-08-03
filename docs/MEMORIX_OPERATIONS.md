@@ -111,7 +111,7 @@ Le benchmark utilise des scénarios synthétiques et n'applique aucune action.
 
 ```powershell
 & $PythonExe `
-    "scripts\memorix_live_probe.py" `
+    "tools\memorix\validation\memorix_live_probe.py" `
     $RuntimeRoot
 ```
 
@@ -226,11 +226,11 @@ Use `memorix_memory_pressure.py` for local diagnosis, or the read-only MCP/OpenC
 
 ## Retention-ranking operations
 
-Use `scripts/memorix_retention_ranking.py` for local diagnostics and the MCP/OpenCode retention-ranking tools for integrated inspection. All operations are read-only. The synthetic benchmark is `tools/memorix/research/memorix_retention_ranking_benchmark.py`.
+Use `tools/memorix/diagnostics/memorix_retention_ranking.py` for local diagnostics and the MCP/OpenCode retention-ranking tools for integrated inspection. All operations are read-only. The synthetic benchmark is `tools/memorix/research/memorix_retention_ranking_benchmark.py`.
 
 ## Adaptive-routing operations
 
-Use `scripts/memorix_adaptive_routing.py`, MCP `memorix_adaptive_routing_plan`, or OpenCode `adaptive_routing_plan` for read-only diagnostics.
+Use `tools/memorix/diagnostics/memorix_adaptive_routing.py`, MCP `memorix_adaptive_routing_plan`, or OpenCode `adaptive_routing_plan` for read-only diagnostics.
 
 ## Policy-search operations
 

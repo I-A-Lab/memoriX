@@ -56,7 +56,7 @@ bun test `
 ```
 
 ```powershell
-& ".\scripts\verify_memorix.ps1" -AllowDirty
+& ".\tools\memorix\validation\verify_memorix.ps1" -AllowDirty
 ```
 
 Timing values are observations, not pass/fail thresholds. Safety contracts and

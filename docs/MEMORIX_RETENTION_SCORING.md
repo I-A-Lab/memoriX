@@ -16,7 +16,7 @@ The public dry-run operations are:
 The CLI is:
 
 ```powershell
-py -3.10 .\scripts\memorix_retention_ranking.py --pretty
+py -3.10 .\tools\memorix\diagnostics\memorix_retention_ranking.py --pretty
 ```
 
 Bounded simulation is available through `--simulate-count`; it does not allocate the simulated population.

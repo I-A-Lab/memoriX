@@ -9,7 +9,27 @@ $ErrorActionPreference = "Stop"
 Set-StrictMode -Version 2.0
 
 $ScriptDirectory = Split-Path -Parent $MyInvocation.MyCommand.Path
-$ProjectRoot = [System.IO.Path]::GetFullPath((Join-Path $ScriptDirectory ".."))
+$ProjectRoot = $null
+$CandidateDirectory = [System.IO.DirectoryInfo]$ScriptDirectory
+
+while ($null -ne $CandidateDirectory) {
+    $CandidatePath = $CandidateDirectory.FullName
+    $HasPackageJson = Test-Path (Join-Path $CandidatePath "package.json") -PathType Leaf
+    $HasMemory = Test-Path (Join-Path $CandidatePath "memory") -PathType Container
+    $HasOpenCode = Test-Path (Join-Path $CandidatePath "packages\opencode") -PathType Container
+
+    if ($HasPackageJson -and $HasMemory -and $HasOpenCode) {
+        $ProjectRoot = $CandidatePath
+        break
+    }
+
+    $CandidateDirectory = $CandidateDirectory.Parent
+}
+
+if ([string]::IsNullOrWhiteSpace($ProjectRoot)) {
+    throw "Unable to locate the memoriX repository root."
+}
+
 Set-Location $ProjectRoot
 
 $Results = New-Object System.Collections.Generic.List[object]
@@ -87,7 +107,7 @@ try {
         foreach ($RequiredPath in @(
             "memory",
             "packages\opencode",
-            "scripts\memorix_live_probe.py",
+            "tools\memorix\validation\memorix_live_probe.py",
             "scripts\start_opencode_with_memorix.ps1"
         )) {
             if (-not (Test-Path $RequiredPath)) {
@@ -215,7 +235,7 @@ try {
     }
 
     Invoke-VerificationStep "Release readiness" {
-        $ReadinessOutput = & py -3.10 "scripts\memorix_release_readiness.py" --project-root $ProjectRoot --runtime-root $RuntimeRoot
+        $ReadinessOutput = & py -3.10 "tools\memorix\validation\memorix_release_readiness.py" --project-root $ProjectRoot --runtime-root $RuntimeRoot
         if ($LASTEXITCODE -ne 0) {
             Write-Host $ReadinessOutput
             throw "The final release-readiness inspection failed."
@@ -228,7 +248,7 @@ try {
     }
 
     Invoke-VerificationStep "Live Probe" {
-        $ProbeOutput = & py -3.10 "scripts\memorix_live_probe.py" $RuntimeRoot --compact
+        $ProbeOutput = & py -3.10 "tools\memorix\validation\memorix_live_probe.py" $RuntimeRoot --compact
         $ProbeExitCode = $LASTEXITCODE
         if ($ProbeExitCode -ne 0) {
             Write-Host $ProbeOutput
