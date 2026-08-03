@@ -132,7 +132,7 @@ try {
 
     Invoke-VerificationStep "Python compilation" {
         Invoke-NativeCommand "Python compilation" {
-            py -3.10 -m compileall -q -f "memory" "scripts" "tests\memory"
+            py -3.10 -m compileall -q -f "memory" "scripts" "tools\memorix" "tests\memory"
         }
         Write-Host "All memoriX Python source files compiled."
     }

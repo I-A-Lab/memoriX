@@ -27,7 +27,7 @@ Paired executions must use the same commit, task, dataset, prompt version, model
 Validate them with:
 
 ```powershell
-py -3.10 ".\scripts\memorix_benchmark_contracts.py"
+py -3.10 ".\tools\memorix\research\memorix_benchmark_contracts.py"
 ```
 
 ## Run manifests

@@ -5,14 +5,20 @@ import json
 import sys
 from pathlib import Path
 
-REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
+MEMORIX_TOOLS_ROOT = Path(__file__).resolve().parents[1]
+if str(MEMORIX_TOOLS_ROOT) not in sys.path:
+    sys.path.insert(0, str(MEMORIX_TOOLS_ROOT))
+
+from _repository import find_repository_root
+
+REPOSITORY_ROOT = find_repository_root(Path(__file__))
 
 if str(REPOSITORY_ROOT) not in sys.path:
     sys.path.insert(0, str(REPOSITORY_ROOT))
 
-from memory.benchmark.multiseed_orchestrator import (
-    run_multiseed_orchestrator,
-    validate_multiseed_report,
+from memory.benchmark.ablation_benchmark import (
+    run_ablation_benchmark,
+    validate_ablation_report,
 )
 
 
@@ -26,23 +32,8 @@ def main() -> int:
     run_parser = subparsers.add_parser("run")
     run_parser.add_argument("--output", required=True)
     run_parser.add_argument(
-        "--seeds",
-        nargs="+",
-        type=int,
-        required=True,
-    )
-    run_parser.add_argument(
-        "--modes",
-        nargs="+",
-        default=["no_memory", "memorix_core"],
-    )
-    run_parser.add_argument(
-        "--suite",
-        default="sdlc",
-    )
-    run_parser.add_argument(
-        "--resume",
-        action="store_true",
+        "--configurations",
+        nargs="*",
     )
 
     validate_parser = subparsers.add_parser(
@@ -56,14 +47,11 @@ def main() -> int:
     args = parser.parse_args()
 
     if args.command == "run":
-        report = run_multiseed_orchestrator(
+        report = run_ablation_benchmark(
             output_root=Path(args.output),
-            seeds=args.seeds,
-            modes=args.modes,
-            suite=args.suite,
-            resume=args.resume,
+            configurations=args.configurations,
         )
-        print("MEMORIX_MULTISEED_ORCHESTRATOR_OK")
+        print("MEMORIX_ABLATION_BENCHMARK_OK")
         print(
             json.dumps(
                 report,
@@ -73,10 +61,10 @@ def main() -> int:
         )
         return 0
 
-    report = validate_multiseed_report(
+    report = validate_ablation_report(
         Path(args.report)
     )
-    print("MEMORIX_MULTISEED_REPORT_VALID")
+    print("MEMORIX_ABLATION_REPORT_VALID")
     print(
         json.dumps(
             report,

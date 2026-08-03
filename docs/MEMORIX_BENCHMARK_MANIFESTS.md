@@ -20,7 +20,7 @@ Bun versions, hardware fingerprint, runtime path and configuration fingerprint.
 Create a manifest from a request:
 
 ```powershell
-py -3.10 .\scripts\memorix_benchmark_manifest.py capture `
+py -3.10 .\tools\memorix\research\memorix_benchmark_manifest.py capture `
     --request .\benchmarks\memorix_vs_no_memory\configs\default_run.json `
     --output "$env:TEMP\memorix-run-manifest.json"
 ```
@@ -28,7 +28,7 @@ py -3.10 .\scripts\memorix_benchmark_manifest.py capture `
 Validate an existing manifest:
 
 ```powershell
-py -3.10 .\scripts\memorix_benchmark_manifest.py validate `
+py -3.10 .\tools\memorix\research\memorix_benchmark_manifest.py validate `
     --manifest "$env:TEMP\memorix-run-manifest.json"
 ```
 

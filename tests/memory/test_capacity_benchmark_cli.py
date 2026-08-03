@@ -9,7 +9,7 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-SCRIPT = PROJECT_ROOT / "scripts" / "memorix_capacity_benchmark.py"
+SCRIPT = PROJECT_ROOT / "tools" / "memorix" / "research" / "memorix_capacity_benchmark.py"
 
 
 class CapacityBenchmarkCliTests(unittest.TestCase):

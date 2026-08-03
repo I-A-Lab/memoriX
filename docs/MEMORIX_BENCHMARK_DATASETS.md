@@ -27,7 +27,7 @@ A generated dataset directory contains:
 ## Reproduction
 
 ```powershell
-py -3.10 .\scripts\memorix_generate_datasets.py generate `
+py -3.10 .\tools\memorix\research\memorix_generate_datasets.py generate `
     --request .\benchmarks\memorix_vs_no_memory\configs\default_dataset.json `
     --output <OUTSIDE_REPOSITORY_PATH>
 ```
@@ -35,6 +35,6 @@ py -3.10 .\scripts\memorix_generate_datasets.py generate `
 Validation:
 
 ```powershell
-py -3.10 .\scripts\memorix_generate_datasets.py validate `
+py -3.10 .\tools\memorix\research\memorix_generate_datasets.py validate `
     --dataset <DATASET_PATH>
 ```

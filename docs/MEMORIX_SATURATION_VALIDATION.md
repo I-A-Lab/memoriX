@@ -14,7 +14,7 @@ The bounded benchmark covers:
 Run it with:
 
 ```powershell
-py -3.10 ".\scripts\memorix_capacity_benchmark.py" `
+py -3.10 ".\tools\memorix\research\memorix_capacity_benchmark.py" `
     --runtime-root "$env:TEMP\memorix-capacity-benchmark-runtime" `
     --capacity 50000 `
     --repetitions 3 `

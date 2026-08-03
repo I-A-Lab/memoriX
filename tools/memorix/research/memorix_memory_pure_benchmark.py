@@ -1,7 +1,13 @@
 from __future__ import annotations
 import argparse, json, sys, tempfile
 from pathlib import Path
-ROOT=Path(__file__).resolve().parents[1]
+MEMORIX_TOOLS_ROOT = Path(__file__).resolve().parents[1]
+if str(MEMORIX_TOOLS_ROOT) not in sys.path:
+    sys.path.insert(0, str(MEMORIX_TOOLS_ROOT))
+
+from _repository import find_repository_root
+
+ROOT=find_repository_root(Path(__file__))
 if str(ROOT) not in sys.path: sys.path.insert(0,str(ROOT))
 from memory.benchmark.dataset_generator import validate_dataset_directory
 from memory.benchmark.memory_pure_benchmark import DeterministicLexicalEngine, MemoriXGatewayEngine, run_pure_memory_benchmark, write_results

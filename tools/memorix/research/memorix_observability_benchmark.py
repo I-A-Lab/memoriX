@@ -1,6 +1,12 @@
 from pathlib import Path
 import argparse,json,sys
-ROOT=Path(__file__).resolve().parents[1]
+MEMORIX_TOOLS_ROOT = Path(__file__).resolve().parents[1]
+if str(MEMORIX_TOOLS_ROOT) not in sys.path:
+    sys.path.insert(0, str(MEMORIX_TOOLS_ROOT))
+
+from _repository import find_repository_root
+
+ROOT=find_repository_root(Path(__file__))
 if str(ROOT) not in sys.path: sys.path.insert(0,str(ROOT))
 from memory.benchmark.observability import run_observability_benchmark
 p=argparse.ArgumentParser(); p.add_argument('--output'); p.add_argument('--pretty',action='store_true'); args=p.parse_args()
