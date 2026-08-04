@@ -57,7 +57,7 @@ PROTECTED_PATHS = (
     Path("memory/consolidation"),
     Path("memory/sync"),
     Path("memory/data"),
-    Path("scripts/memorix_mcp_server.py"),
+    Path("tools/memorix/runtime/memorix_mcp_server.py"),
     Path("packages/opencode/src/memorix"),
     Path("packages/opencode/src/tool"),
     Path(".opencode/plugins/memorix.ts"),

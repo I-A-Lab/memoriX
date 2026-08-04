@@ -7,8 +7,27 @@ param(
 $ErrorActionPreference = "Stop"
 
 $ScriptDirectory = Split-Path -Parent $MyInvocation.MyCommand.Path
-$ProjectRoot = [System.IO.Path]::GetFullPath((Join-Path $ScriptDirectory ".."))
-$Launcher = Join-Path $ProjectRoot "scripts\start_opencode_with_memorix.ps1"
+$ProjectRoot = $null
+$CandidateDirectory = [System.IO.DirectoryInfo]$ScriptDirectory
+
+while ($null -ne $CandidateDirectory) {
+    $CandidatePath = $CandidateDirectory.FullName
+    $HasPackageJson = Test-Path (Join-Path $CandidatePath "package.json") -PathType Leaf
+    $HasMemory = Test-Path (Join-Path $CandidatePath "memory") -PathType Container
+    $HasOpenCode = Test-Path (Join-Path $CandidatePath "packages\opencode") -PathType Container
+
+    if ($HasPackageJson -and $HasMemory -and $HasOpenCode) {
+        $ProjectRoot = $CandidatePath
+        break
+    }
+
+    $CandidateDirectory = $CandidateDirectory.Parent
+}
+
+if ([string]::IsNullOrWhiteSpace($ProjectRoot)) {
+    throw "Impossible de localiser la racine du dépôt memoriX."
+}
+$Launcher = Join-Path $ProjectRoot "tools\memorix\runtime\start_opencode_with_memorix.ps1"
 $StartMarker = "# BEGIN MEMORIX OPENCODE COMMAND"
 $EndMarker = "# END MEMORIX OPENCODE COMMAND"
 $LegacyStartMarker = "# BEGIN LOCAL MEMORIX OPENCODE"

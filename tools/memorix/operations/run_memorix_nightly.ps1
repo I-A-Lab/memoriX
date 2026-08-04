@@ -10,7 +10,26 @@ param(
 
 $ErrorActionPreference = "Stop"
 $ScriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
-$ProjectRoot = Split-Path -Parent $ScriptRoot
+$ProjectRoot = $null
+$CandidateDirectory = [System.IO.DirectoryInfo]$ScriptRoot
+
+while ($null -ne $CandidateDirectory) {
+    $CandidatePath = $CandidateDirectory.FullName
+    $HasPackageJson = Test-Path (Join-Path $CandidatePath "package.json") -PathType Leaf
+    $HasMemory = Test-Path (Join-Path $CandidatePath "memory") -PathType Container
+    $HasOpenCode = Test-Path (Join-Path $CandidatePath "packages\opencode") -PathType Container
+
+    if ($HasPackageJson -and $HasMemory -and $HasOpenCode) {
+        $ProjectRoot = $CandidatePath
+        break
+    }
+
+    $CandidateDirectory = $CandidateDirectory.Parent
+}
+
+if ([string]::IsNullOrWhiteSpace($ProjectRoot)) {
+    throw "Impossible de localiser la racine du dépôt memoriX."
+}
 
 if ([string]::IsNullOrWhiteSpace($RuntimeRoot)) {
     $RuntimeRoot = Join-Path $env:LOCALAPPDATA "memoriX\runtime"

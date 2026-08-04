@@ -14,7 +14,7 @@ REQUIRED_PROJECT_PATHS = (
     "packages/opencode/src/memorix/service.ts",
     "packages/opencode/src/tool/registry.ts",
     ".opencode/plugins/memorix.ts",
-    "scripts/start_opencode_with_memorix.ps1",
+    "tools/memorix/runtime/start_opencode_with_memorix.ps1",
     "tools/memorix/validation/verify_memorix.ps1",
 )
 
@@ -84,7 +84,7 @@ def inspect_release_readiness(
     runtime_outside_repository = not _is_within(runtime, project)
     repository_runtime_absent = not forbidden_runtime.exists()
     plugin_source = _read_optional(project / ".opencode/plugins/memorix.ts")
-    launcher_source = _read_optional(project / "scripts/start_opencode_with_memorix.ps1")
+    launcher_source = _read_optional(project / "tools/memorix/runtime/start_opencode_with_memorix.ps1")
 
     checks = (
         ReleaseCheck(

@@ -5,7 +5,7 @@ import sys
 import tempfile
 import unittest
 
-SCRIPT = Path(__file__).resolve().parents[2] / 'scripts' / 'memorix_nightly.py'
+SCRIPT = Path(__file__).resolve().parents[2] / 'tools' / 'memorix' / 'operations' / 'memorix_nightly.py'
 
 class NightlyCliTests(unittest.TestCase):
     def test_help(self):

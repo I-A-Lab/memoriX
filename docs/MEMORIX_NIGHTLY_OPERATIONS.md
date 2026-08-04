@@ -17,8 +17,8 @@ The same protected Python runner is used by every entry point:
 
 ```text
 Windows Task Scheduler
-    -> scripts/run_memorix_nightly.ps1
-    -> scripts/memorix_nightly.py
+    -> tools/memorix/operations/run_memorix_nightly.ps1
+    -> tools/memorix/operations/memorix_nightly.py
     -> memory.sync.nightly_runner.NightlyRunner
 
 OpenCode memory_nightly_run
@@ -55,7 +55,7 @@ Keep short-term events after a successful test run:
 ```powershell
 $RuntimeRoot = Join-Path $env:LOCALAPPDATA "memoriX\runtime"
 
-& ".\scripts\run_memorix_nightly.ps1" `
+& ".\tools\memorix\operations\run_memorix_nightly.ps1" `
     -RuntimeRoot $RuntimeRoot `
     -KeepShortTerm `
     -Trigger "manual"
@@ -64,7 +64,7 @@ $RuntimeRoot = Join-Path $env:LOCALAPPDATA "memoriX\runtime"
 Use normal cleanup behavior:
 
 ```powershell
-& ".\scripts\run_memorix_nightly.ps1" `
+& ".\tools\memorix\operations\run_memorix_nightly.ps1" `
     -RuntimeRoot $RuntimeRoot `
     -Trigger "manual"
 ```
@@ -72,7 +72,7 @@ Use normal cleanup behavior:
 Read the latest status without creating a runtime:
 
 ```powershell
-py -3.10 ".\scripts\memorix_nightly.py" `
+py -3.10 ".\tools\memorix\operations\memorix_nightly.py" `
     --runtime-root $RuntimeRoot `
     --status-only `
     --pretty
@@ -83,7 +83,7 @@ py -3.10 ".\scripts\memorix_nightly.py" `
 Validate the task definition without modifying Windows:
 
 ```powershell
-& ".\scripts\install_memorix_nightly_task.ps1" `
+& ".\tools\memorix\operations\install_memorix_nightly_task.ps1" `
     -TaskName "memoriX Nightly Consolidation" `
     -RuntimeRoot $RuntimeRoot `
     -DailyAt "02:00" `
@@ -93,7 +93,7 @@ Validate the task definition without modifying Windows:
 Install or replace the daily task:
 
 ```powershell
-& ".\scripts\install_memorix_nightly_task.ps1" `
+& ".\tools\memorix\operations\install_memorix_nightly_task.ps1" `
     -TaskName "memoriX Nightly Consolidation" `
     -RuntimeRoot $RuntimeRoot `
     -DailyAt "02:00"
@@ -119,7 +119,7 @@ Start-ScheduledTask `
 Remove it:
 
 ```powershell
-& ".\scripts\remove_memorix_nightly_task.ps1" `
+& ".\tools\memorix\operations\remove_memorix_nightly_task.ps1" `
     -TaskName "memoriX Nightly Consolidation"
 ```
 
@@ -203,7 +203,7 @@ Install Python 3.10 and ensure the Windows Python launcher is available.
 
 ### Non-zero `LastTaskResult`
 
-Run `scripts\run_memorix_nightly.ps1` manually with the same runtime and inspect its JSON output.
+Run `tools\memorix\operations\run_memorix_nightly.ps1` manually with the same runtime and inspect its JSON output.
 
 ### Task remains `Running`
 

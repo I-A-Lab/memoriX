@@ -72,7 +72,7 @@ PROTECTED_PATHS = (
     "memory/cold_site",
     "memory/consolidation",
     "memory/adaptive",
-    "scripts/memorix_mcp_server.py",
+    "tools/memorix/runtime/memorix_mcp_server.py",
     "packages/opencode/src/memorix",
     "packages/opencode/src/tool",
     ".opencode/plugins/memorix.ts",

@@ -13,7 +13,7 @@ The report is read-only. It verifies the repository layout, runtime isolation, O
 ## One-command OpenCode launcher
 
 ```powershell
-.\scripts\install_memorix_opencode_command.ps1 -Force
+.\tools\memorix\operations\install_memorix_opencode_command.ps1 -Force
 . $PROFILE
 opencode
 ```

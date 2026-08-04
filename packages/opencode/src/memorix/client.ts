@@ -127,7 +127,7 @@ export class MemoriXClient {
     const pythonExecutable = path.resolve(this.options.pythonExecutable)
     const projectRoot = path.resolve(this.options.projectRoot)
     const runtimeRoot = path.resolve(this.options.runtimeRoot)
-    const launcher = path.join(projectRoot, "scripts", "memorix_mcp_server.py")
+    const launcher = path.join(projectRoot, "tools", "memorix", "runtime", "memorix_mcp_server.py")
 
     await access(pythonExecutable).catch((cause) => {
       throw new MemoriXClientError(

@@ -25,7 +25,7 @@ Le dossier `memory/runtime` ne doit pas être créé par les tests.
 ## Prévalidation du lanceur OpenCode
 
 ```powershell
-& "scripts\start_opencode_with_memorix.ps1" `
+& "tools\memorix\runtime\start_opencode_with_memorix.ps1" `
     -RuntimeRoot $RuntimeRoot `
     -ValidateOnly
 ```
@@ -33,7 +33,7 @@ Le dossier `memory/runtime` ne doit pas être créé par les tests.
 ## Lancement OpenCode avec memoriX
 
 ```powershell
-& "scripts\start_opencode_with_memorix.ps1" `
+& "tools\memorix\runtime\start_opencode_with_memorix.ps1" `
     -RuntimeRoot $RuntimeRoot `
     -ResetRuntime
 ```
@@ -93,7 +93,7 @@ Sous Windows PowerShell 5.1, `unittest` peut écrire son affichage normal sur st
 ## Serveur MCP
 
 ```powershell
-& $PythonExe "scripts\memorix_mcp_server.py"
+& $PythonExe "tools\memorix\runtime\memorix_mcp_server.py"
 ```
 
 Le serveur attend des requêtes JSON-RPC sur stdin et répond sur stdout.
@@ -197,12 +197,12 @@ Commandes principales :
 ```powershell
 $RuntimeRoot = Join-Path $env:LOCALAPPDATA "memoriX\runtime"
 
-& ".\scripts\run_memorix_nightly.ps1" `
+& ".\tools\memorix\operations\run_memorix_nightly.ps1" `
     -RuntimeRoot $RuntimeRoot `
     -KeepShortTerm `
     -Trigger "manual"
 
-& ".\scripts\install_memorix_nightly_task.ps1" `
+& ".\tools\memorix\operations\install_memorix_nightly_task.ps1" `
     -TaskName "memoriX Nightly Consolidation" `
     -RuntimeRoot $RuntimeRoot `
     -DailyAt "02:00"

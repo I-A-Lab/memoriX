@@ -108,7 +108,7 @@ try {
             "memory",
             "packages\opencode",
             "tools\memorix\validation\memorix_live_probe.py",
-            "scripts\start_opencode_with_memorix.ps1"
+            "tools\memorix\runtime\start_opencode_with_memorix.ps1"
         )) {
             if (-not (Test-Path $RequiredPath)) {
                 throw ("Required path not found: " + $RequiredPath)
@@ -152,7 +152,7 @@ try {
 
     Invoke-VerificationStep "Python compilation" {
         Invoke-NativeCommand "Python compilation" {
-            py -3.10 -m compileall -q -f "memory" "scripts" "tools\memorix" "tests\memory"
+            py -3.10 -m compileall -q -f "memory" "tools\memorix" "tests\memory"
         }
         Write-Host "All memoriX Python source files compiled."
     }
@@ -228,7 +228,7 @@ try {
     }
 
     Invoke-VerificationStep "Launcher validation" {
-        & "scripts\start_opencode_with_memorix.ps1" -RuntimeRoot $RuntimeRoot -ValidateOnly
+        & "tools\memorix\runtime\start_opencode_with_memorix.ps1" -RuntimeRoot $RuntimeRoot -ValidateOnly
         if ($LASTEXITCODE -ne 0) {
             throw ("The memoriX launcher validation failed with exit code " + $LASTEXITCODE + ".")
         }

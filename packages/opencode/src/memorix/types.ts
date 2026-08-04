@@ -115,7 +115,7 @@ export type MemoriXClientOptions = {
   pythonExecutable: string
 
   /**
-   * Absolute repository root containing scripts/memorix_mcp_server.py.
+   * Absolute repository root containing tools/memorix/runtime/memorix_mcp_server.py.
    */
   projectRoot: string
 
