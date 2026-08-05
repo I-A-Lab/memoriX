@@ -497,6 +497,7 @@ export class MemoriXService {
     validatedBy: string
     validationReason: string
     finalContent?: string | null
+    supersedesMemoryID?: string | null
   }): Promise<MemoriXServiceResult<JSONObject>> {
     return this.runSafely(
       (client) =>
@@ -508,6 +509,9 @@ export class MemoriXService {
             validation_reason: input.validationReason,
             ...(input.finalContent !== undefined
               ? { final_content: input.finalContent }
+              : {}),
+            ...(input.supersedesMemoryID !== undefined
+              ? { supersedes_memory_id: input.supersedesMemoryID }
               : {}),
           },
         ),
@@ -527,6 +531,24 @@ export class MemoriXService {
             candidate_id: input.candidateID,
             rejected_by: input.rejectedBy,
             rejection_reason: input.rejectionReason,
+          },
+        ),
+    )
+  }
+
+  async forgetMemory(input: {
+    memoryId: string
+    validatedBy: string
+    reason: string
+  }): Promise<MemoriXServiceResult<JSONObject>> {
+    return this.runSafely(
+      (client) =>
+        client.callTool<JSONObject>(
+          "memorix_forget_memory",
+          {
+            memory_id: input.memoryId,
+            validated_by: input.validatedBy,
+            reason: input.reason,
           },
         ),
     )

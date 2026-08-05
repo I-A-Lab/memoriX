@@ -420,14 +420,21 @@ class MemoriXGateway:
         validated_by: str,
         validation_reason: str,
         final_content: str | None = None,
+        supersedes_memory_id: str | None = None,
     ) -> ValidatedMemory:
-        """Human-validate a candidate into the Titan hot site only."""
+        """Human-validate a candidate into the Titan hot site only.
+
+        The optional supersedes_memory_id is authoritative when
+        provided: it selects the exact active hot-site memory that
+        the validated replacement supersedes.
+        """
 
         return self._validation_service.validate(
             candidate_id,
             validated_by=validated_by,
             validation_reason=validation_reason,
             final_content=final_content,
+            supersedes_memory_id=supersedes_memory_id,
         )
 
     def reject_memory_candidate(

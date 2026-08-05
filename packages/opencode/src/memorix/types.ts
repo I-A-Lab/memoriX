@@ -249,6 +249,20 @@ export type MemoriXProposeCandidateInput = {
   target_memory_id?: string | null
   metadata?: JSONObject
 }
+
+export type MemoriXValidateCandidateInput = {
+  candidate_id: string
+  validated_by: string
+  validation_reason: string
+  final_content?: string | null
+  supersedes_memory_id?: string | null
+}
+
+export type MemoriXForget = {
+  memory_id: string
+  validated_by: string
+  reason: string
+}
 export type MemoriXHookOptions = {
   captureUserMessages: boolean
   captureToolResults: boolean

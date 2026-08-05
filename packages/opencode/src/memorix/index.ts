@@ -34,6 +34,7 @@ export type {
 } from "./project-archive-facade"
 
 export {
+  forgetMemoryThroughMemoriX,
   getMemoriXStatus,
   listCandidatesThroughMemoriX,
   rejectCandidateThroughMemoriX,
@@ -110,6 +111,7 @@ export type {
   MemoriXCandidateStatus,
   MemoriXClientOptions,
   MemoriXContextOptions,
+  MemoriXForget,
   MemoriXProposeCandidateInput,
   MemoriXProjectArchiveEntry,
   MemoriXProjectArchiveEntryType,
@@ -133,6 +135,7 @@ export type {
   MemoriXToolCallResult,
   MemoriXToolDefinition,
   MemoriXToolName,
+  MemoriXValidateCandidateInput,
 } from "./types"
 
 export { runPolicyLifecycle } from "./policy-lifecycle-facade"

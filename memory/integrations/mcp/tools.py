@@ -208,6 +208,9 @@ TOOL_DEFINITIONS: tuple[McpToolDefinition, ...] = (
                 "final_content": {
                     "type": ["string", "null"]
                 },
+                "supersedes_memory_id": {
+                    "type": ["string", "null"]
+                },
             },
             required=(
                 "candidate_id",
@@ -769,6 +772,10 @@ class MemoriXMcpTools:
             final_content=_optional_text(
                 arguments,
                 "final_content",
+            ),
+            supersedes_memory_id=_optional_text(
+                arguments,
+                "supersedes_memory_id",
             ),
         )
 

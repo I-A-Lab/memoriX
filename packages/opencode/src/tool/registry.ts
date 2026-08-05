@@ -32,6 +32,7 @@ import {
   MemoryCandidateValidateTool,
   MemoryCandidatesListTool,
   MemoryConsolidateTool,
+  MemoryForgetTool,
   MemoryNightlyRunTool,
   MemoryStatusTool,
 } from "./memory-candidates"
@@ -139,6 +140,8 @@ const layer = Layer.effect(
       yield* MemoryCandidateRejectTool
     const memoryconsolidate =
       yield* MemoryConsolidateTool
+    const memoryforget =
+      yield* MemoryForgetTool
     const memorynightlyrun =
       yield* MemoryNightlyRunTool
     const memorycapacitystatus =
@@ -288,6 +291,9 @@ const layer = Layer.effect(
           memory_candidate_reject: Tool.init(
             memorycandidatereject,
           ),
+          memory_forget: Tool.init(
+            memoryforget,
+          ),
           memory_consolidate: Tool.init(
             memoryconsolidate,
           ),
@@ -337,6 +343,7 @@ const layer = Layer.effect(
                   tool.memory_candidates_list,
                   tool.memory_candidate_validate,
                   tool.memory_candidate_reject,
+                  tool.memory_forget,
                   tool.memory_consolidate,
                   tool.memory_nightly_run,
                   tool.memory_capacity_status,

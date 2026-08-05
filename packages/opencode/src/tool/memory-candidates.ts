@@ -1,5 +1,6 @@
 import { Effect, Schema } from "effect"
 import {
+  forgetMemoryThroughMemoriX,
   getDefaultMemoriXService,
   getMemoriXStatus,
   listCandidatesThroughMemoriX,
@@ -43,6 +44,12 @@ export const CandidateValidateParameters = Schema.Struct({
     Schema.String.annotate({
       description:
         "Optional reviewed content replacing the proposed candidate content.",
+    }),
+  ),
+  supersedes_memory_id: Schema.optional(
+    Schema.String.annotate({
+      description:
+        "Optional exact memory ID this validation supersedes. When provided, that memory is soft-deactivated after the replacement is stored.",
     }),
   ),
 })
@@ -129,7 +136,12 @@ export const MemoryCandidateValidateTool = Tool.define<
       Effect.gen(function* () {
         yield* ctx.ask({
           permission: "memory_candidate_validate",
-          patterns: [params.candidate_id],
+          patterns: [
+            params.candidate_id,
+            ...(params.supersedes_memory_id !== undefined
+              ? [params.supersedes_memory_id]
+              : []),
+          ],
           always: [],
           metadata: {
             operation: "validate_candidate",
@@ -137,6 +149,12 @@ export const MemoryCandidateValidateTool = Tool.define<
             validated_by: params.validated_by,
             validation_reason: params.validation_reason,
             final_content: params.final_content,
+            ...(params.supersedes_memory_id !== undefined
+              ? {
+                  supersedes_memory_id:
+                    params.supersedes_memory_id,
+                }
+              : {}),
           },
         })
 
@@ -149,6 +167,12 @@ export const MemoryCandidateValidateTool = Tool.define<
               validationReason:
                 params.validation_reason,
               finalContent: params.final_content,
+              ...(params.supersedes_memory_id !== undefined
+                ? {
+                    supersedesMemoryID:
+                      params.supersedes_memory_id,
+                  }
+                : {}),
             },
           ),
         )
@@ -202,6 +226,67 @@ export const MemoryCandidateRejectTool = Tool.define<
       }),
   } satisfies Tool.DefWithoutID<
     typeof CandidateRejectParameters,
+    CandidateFacadeMetadata
+  >),
+)
+
+export const MemoryForgetParameters = Schema.Struct({
+  memory_id: Schema.String.annotate({
+    description:
+      "The exact identifier of the validated memoriX memory to soft-forget.",
+  }),
+  validated_by: Schema.String.annotate({
+    description:
+      "The human operator requesting the soft-forget.",
+  }),
+  reason: Schema.String.annotate({
+    description:
+      "The explicit reason for soft-forgetting this memory.",
+  }),
+})
+
+export const MemoryForgetTool = Tool.define<
+  typeof MemoryForgetParameters,
+  CandidateFacadeMetadata,
+  never
+>(
+  "memory_forget",
+  Effect.succeed({
+    description:
+      "Soft-forget one validated memoriX memory by exact identifier. The memory is deactivated in the Titan hot site only and remains available in audit history.",
+    parameters: MemoryForgetParameters,
+    execute: (
+      params: Schema.Schema.Type<
+        typeof MemoryForgetParameters
+      >,
+      ctx: Tool.Context<CandidateFacadeMetadata>,
+    ) =>
+      Effect.gen(function* () {
+        yield* ctx.ask({
+          permission: "memory_forget",
+          patterns: [params.memory_id],
+          always: [],
+          metadata: {
+            operation: "forget_memory",
+            memory_id: params.memory_id,
+            validated_by: params.validated_by,
+            reason: params.reason,
+          },
+        })
+
+        return yield* Effect.promise(() =>
+          forgetMemoryThroughMemoriX(
+            getDefaultMemoriXService(),
+            {
+              memoryId: params.memory_id,
+              validatedBy: params.validated_by,
+              reason: params.reason,
+            },
+          ),
+        )
+      }),
+  } satisfies Tool.DefWithoutID<
+    typeof MemoryForgetParameters,
     CandidateFacadeMetadata
   >),
 )

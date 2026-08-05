@@ -10,6 +10,7 @@ export type CandidateFacadeService = Pick<
   MemoriXService,
   | "listCandidates"
   | "validateCandidate"
+  | "forgetMemory"
   | "rejectCandidate"
   | "runConsolidation"
   | "runNightly"
@@ -25,6 +26,7 @@ export type CandidateFacadeMetadata = {
   operation:
     | "list_candidates"
     | "validate_candidate"
+    | "forget_memory"
     | "reject_candidate"
     | "run_consolidation"
     | "run_nightly"
@@ -117,9 +119,15 @@ export async function validateCandidateThroughMemoriX(
     validatedBy: string
     validationReason: string
     finalContent?: string
+    supersedesMemoryID?: string | null
   },
 ): Promise<CandidateFacadeResult> {
-  const result = await service.validateCandidate(input)
+  const result = await service.validateCandidate({
+    ...input,
+    ...(input.supersedesMemoryID !== undefined
+      ? { supersedesMemoryID: input.supersedesMemoryID }
+      : {}),
+  })
 
   if (!result.ok) {
     return failureResult(
@@ -165,6 +173,33 @@ export async function rejectCandidateThroughMemoriX(
       operation: "reject_candidate",
       ok: true,
       candidate: result.value,
+    },
+  }
+}
+
+export async function forgetMemoryThroughMemoriX(
+  service: CandidateFacadeService,
+  input: {
+    memoryId: string
+    validatedBy: string
+    reason: string
+  },
+): Promise<CandidateFacadeResult> {
+  const result = await service.forgetMemory(input)
+  if (!result.ok) {
+    return failureResult(
+      "forget_memory",
+      "memoriX memory soft-forget failed",
+      result,
+    )
+  }
+  return {
+    title: "memoriX memory soft-forgotten",
+    output: JSON.stringify(result.value, null, 2),
+    metadata: {
+      operation: "forget_memory",
+      ok: true,
+      report: result.value,
     },
   }
 }
