@@ -47,3 +47,9 @@ memory/runtime/
 
 # Legacy OpenCode memory data
 .opencode/memory/
+
+# Generated SDLC working contracts
+.opencode/specs/prd.md
+.opencode/plans/dev_plan.md
+.opencode/plans/test_plan.md
+.opencode/plans/detailed_plan.md

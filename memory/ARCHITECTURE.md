@@ -20,8 +20,6 @@ The current implementation includes:
 - protected nightly consolidation with locking and operational journals;
 - native OpenCode nightly execution and Windows Task Scheduler integration.
 
-Antoine's existing `memory/titan_model.py` prototype remains preserved.
-
 ## Core memory contract
 
 ```text
@@ -101,9 +99,13 @@ Contains protected nightly consolidation and active hot-site replay logic.
 
 Provides pressure observations, dynamic Topic Blocks, capacity recommendations, pruning plans and controller decisions. Actions remain observation-only or dry-run.
 
-### `observability`
+### `diagnostics`
 
-Provides diagnostics, benchmark reporting and the read-only Live Probe.
+Provides bounded runtime-file inspection and the read-only Live Probe.
+
+Observability reports, snapshots, alerts and drift analysis live under
+`adaptive/observability.py` and `adaptive/observability_history.py`. Benchmark
+reporting remains isolated under `benchmark`.
 
 ### `integrations/mcp`
 

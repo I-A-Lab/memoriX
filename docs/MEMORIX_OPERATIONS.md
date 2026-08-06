@@ -25,7 +25,7 @@ Le dossier `memory/runtime` ne doit pas être créé par les tests.
 ## Prévalidation du lanceur OpenCode
 
 ```powershell
-& "scripts\start_opencode_with_memorix.ps1" `
+& "tools\memorix\runtime\start_opencode_with_memorix.ps1" `
     -RuntimeRoot $RuntimeRoot `
     -ValidateOnly
 ```
@@ -33,7 +33,7 @@ Le dossier `memory/runtime` ne doit pas être créé par les tests.
 ## Lancement OpenCode avec memoriX
 
 ```powershell
-& "scripts\start_opencode_with_memorix.ps1" `
+& "tools\memorix\runtime\start_opencode_with_memorix.ps1" `
     -RuntimeRoot $RuntimeRoot `
     -ResetRuntime
 ```
@@ -93,7 +93,7 @@ Sous Windows PowerShell 5.1, `unittest` peut écrire son affichage normal sur st
 ## Serveur MCP
 
 ```powershell
-& $PythonExe "scripts\memorix_mcp_server.py"
+& $PythonExe "tools\memorix\runtime\memorix_mcp_server.py"
 ```
 
 Le serveur attend des requêtes JSON-RPC sur stdin et répond sur stdout.
@@ -102,7 +102,7 @@ Le serveur attend des requêtes JSON-RPC sur stdin et répond sur stdout.
 
 ```powershell
 & $PythonExe `
-    "scripts\memorix_adaptive_design_benchmark.py"
+    "tools\memorix\research\memorix_adaptive_design_benchmark.py"
 ```
 
 Le benchmark utilise des scénarios synthétiques et n'applique aucune action.
@@ -111,7 +111,7 @@ Le benchmark utilise des scénarios synthétiques et n'applique aucune action.
 
 ```powershell
 & $PythonExe `
-    "scripts\memorix_live_probe.py" `
+    "tools\memorix\validation\memorix_live_probe.py" `
     $RuntimeRoot
 ```
 
@@ -197,12 +197,12 @@ Commandes principales :
 ```powershell
 $RuntimeRoot = Join-Path $env:LOCALAPPDATA "memoriX\runtime"
 
-& ".\scripts\run_memorix_nightly.ps1" `
+& ".\tools\memorix\operations\run_memorix_nightly.ps1" `
     -RuntimeRoot $RuntimeRoot `
     -KeepShortTerm `
     -Trigger "manual"
 
-& ".\scripts\install_memorix_nightly_task.ps1" `
+& ".\tools\memorix\operations\install_memorix_nightly_task.ps1" `
     -TaskName "memoriX Nightly Consolidation" `
     -RuntimeRoot $RuntimeRoot `
     -DailyAt "02:00"
@@ -226,11 +226,11 @@ Use `memorix_memory_pressure.py` for local diagnosis, or the read-only MCP/OpenC
 
 ## Retention-ranking operations
 
-Use `scripts/memorix_retention_ranking.py` for local diagnostics and the MCP/OpenCode retention-ranking tools for integrated inspection. All operations are read-only. The synthetic benchmark is `scripts/memorix_retention_ranking_benchmark.py`.
+Use `tools/memorix/diagnostics/memorix_retention_ranking.py` for local diagnostics and the MCP/OpenCode retention-ranking tools for integrated inspection. All operations are read-only. The synthetic benchmark is `tools/memorix/research/memorix_retention_ranking_benchmark.py`.
 
 ## Adaptive-routing operations
 
-Use `scripts/memorix_adaptive_routing.py`, MCP `memorix_adaptive_routing_plan`, or OpenCode `adaptive_routing_plan` for read-only diagnostics.
+Use `tools/memorix/diagnostics/memorix_adaptive_routing.py`, MCP `memorix_adaptive_routing_plan`, or OpenCode `adaptive_routing_plan` for read-only diagnostics.
 
 ## Policy-search operations
 

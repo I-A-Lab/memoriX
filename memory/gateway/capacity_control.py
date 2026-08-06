@@ -8,6 +8,7 @@ recommendations into logical hot-site soft-forget operations.
 
 from __future__ import annotations
 
+from contextlib import nullcontext
 from dataclasses import asdict, dataclass
 from typing import Any
 
@@ -16,6 +17,7 @@ from memory.adaptive import (
     SoftPruningPlan,
 )
 from memory.data import ForgetAction
+from memory.gateway.capacity_operations import CapacityOperations
 from memory.hot_site.titan_active_memory import HotSiteTitanMemory
 
 
@@ -69,15 +71,16 @@ def evaluate_capacity_admission(
     hot_site: HotSiteTitanMemory,
     *,
     configured_capacity: int,
+    required_slots: int = 1,
 ) -> CapacityAdmissionDecision:
-    """Inspect active logical memories without performing any mutation."""
+    """Inspect active logical memories without performing any mutation. Admission reserves ``required_slots`` slots for one validated store, so a multi-unit validated memory only enters when every unit fits."""
 
     if configured_capacity <= 0:
         raise ValueError("configured_capacity must be positive.")
 
     active_items = len(hot_site.list_memories(active_only=True))
     available_slots = max(0, configured_capacity - active_items)
-    allowed = active_items < configured_capacity
+    allowed = available_slots >= required_slots
 
     reason = (
         "Hot-site capacity is available."
@@ -110,6 +113,153 @@ def require_capacity_admission(
         raise CapacityAdmissionError(decision.reason)
 
     return decision
+
+
+def effective_capacity(
+    hot_site: HotSiteTitanMemory,
+    *,
+    configured_capacity: int,
+) -> int:
+    """Return the live usable capacity of the elastic hot site.
+
+    The elastic hot site may currently hold more than the configured baseline
+    after an expansion. The effective capacity is the larger of the configured
+    capacity and the persisted current capacity.
+    """
+
+    if configured_capacity <= 0:
+        raise ValueError("configured_capacity must be positive.")
+
+    live = int(
+        hot_site.capacity_status()["current_capacity"]
+    )
+
+    return max(configured_capacity, live)
+
+
+def evaluate_effective_capacity_admission(
+    hot_site: HotSiteTitanMemory,
+    *,
+    configured_capacity: int,
+) -> CapacityAdmissionDecision:
+    """Evaluate admission against the live elastic capacity.
+
+    The decision reports the effective capacity as the capacity the admission
+    was evaluated against.
+    """
+
+    capacity = effective_capacity(
+        hot_site,
+        configured_capacity=configured_capacity,
+    )
+
+    active_items = len(
+        hot_site.list_memories(active_only=True)
+    )
+    available_slots = max(0, capacity - active_items)
+    allowed = active_items < capacity
+
+    reason = (
+        "Hot-site capacity is available."
+        if allowed
+        else "Hot-site capacity is exhausted; the candidate remains pending."
+    )
+
+    return CapacityAdmissionDecision(
+        allowed=allowed,
+        active_items=active_items,
+        configured_capacity=capacity,
+        available_slots=available_slots,
+        reason=reason,
+    )
+
+
+def ensure_expanded_capacity(
+    hot_site: HotSiteTitanMemory,
+    *,
+    configured_capacity: int,
+    required_slots: int = 1,
+    capacity_operations: CapacityOperations | None = None,
+    applied_by: str | None = None,
+    reason: str | None = None,
+    lock_held: bool = False,
+) -> CapacityAdmissionDecision:
+    """Admit a validated store, expanding the hot site only when needed.
+
+    The configured capacity is the admission baseline. When the baseline is
+    full and no ``capacity_operations`` journal is available, a
+    ``CapacityAdmissionError`` is raised and the candidate remains pending
+    with no hot-site mutation. When a journal is available, the store is
+    expanded (never evicting) under the capacity mutation lock and admission
+    is re-evaluated against the live elastic capacity. When ``lock_held`` is
+    True, the caller already holds the capacity mutation lock, so the
+    expansion runs under that lock instead of acquiring it again (the file
+    lock is not reentrant).
+    """
+
+    decision = evaluate_capacity_admission(
+        hot_site,
+        configured_capacity=configured_capacity,
+        required_slots=required_slots,
+    )
+
+    if decision.allowed:
+        return decision
+
+    if capacity_operations is None:
+        raise CapacityAdmissionError(decision.reason)
+
+    reviewer = (applied_by or "").strip()
+    explanation = (reason or "").strip()
+
+    if not reviewer:
+        raise ValueError(
+            "applied_by must not be empty when expanding."
+        )
+    if not explanation:
+        raise ValueError(
+            "reason must not be empty when expanding."
+        )
+
+    lock_context = (
+        nullcontext()
+        if lock_held
+        else capacity_operations.mutation_lock(
+            "capacity_expansion"
+        )
+    )
+
+    with lock_context:
+        before = int(
+            hot_site.capacity_status()["current_capacity"]
+        )
+        expanded = hot_site.ensure_capacity_for(
+            required_slots
+        )
+        capacity_operations.record(
+            "capacity_expanded",
+            {
+                "configured_capacity": configured_capacity,
+                "required_slots": required_slots,
+                "capacity_before": before,
+                "capacity_after": expanded,
+                "applied_by": reviewer,
+                "reason": explanation,
+            },
+        )
+
+        effective = evaluate_effective_capacity_admission(
+            hot_site,
+            configured_capacity=configured_capacity,
+        )
+
+    if not effective.allowed:
+        raise CapacityAdmissionError(
+            "Hot-site capacity is still exhausted after "
+            "expansion; the candidate remains pending."
+        )
+
+    return effective
 
 
 def apply_soft_pruning_plan(

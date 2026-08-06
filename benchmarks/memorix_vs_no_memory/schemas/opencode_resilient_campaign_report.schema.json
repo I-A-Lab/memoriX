@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "memoriX resilient real OpenCode A/B campaign",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "campaign_version",
+    "campaign_type",
+    "completed",
+    "technical_failure_count",
+    "aggregates",
+    "protected_core_unchanged"
+  ]
+}

@@ -5,7 +5,7 @@ Part 28 closes the implementation with operator-facing release controls. It does
 ## Final readiness report
 
 ```powershell
-py -3.10 .\scripts\memorix_release_readiness.py --pretty
+py -3.10 .\tools\memorix\validation\memorix_release_readiness.py --pretty
 ```
 
 The report is read-only. It verifies the repository layout, runtime isolation, OpenCode hooks, and launcher configuration without creating a runtime or loading Titan.
@@ -13,7 +13,7 @@ The report is read-only. It verifies the repository layout, runtime isolation, O
 ## One-command OpenCode launcher
 
 ```powershell
-.\scripts\install_memorix_opencode_command.ps1 -Force
+.\tools\memorix\operations\install_memorix_opencode_command.ps1 -Force
 . $PROFILE
 opencode
 ```
@@ -23,7 +23,7 @@ The installed command calls the repository launcher with message and tool-result
 ## Final smoke test
 
 ```powershell
-py -3.10 .\scripts\memorix_demo_smoke.py --pretty
+py -3.10 .\tools\memorix\validation\memorix_demo_smoke.py --pretty
 ```
 
 The isolated QuickTemp scenario checks short-term event storage, direct cold archival, candidate creation, explicit validation, Titan hot-site retrieval, and Project Archive recording.

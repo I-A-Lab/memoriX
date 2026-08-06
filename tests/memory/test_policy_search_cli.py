@@ -11,7 +11,7 @@ from pathlib import Path
 class PolicySearchCliTests(unittest.TestCase):
     def test_cli_runs_from_repository_root(self) -> None:
         project_root = Path(__file__).resolve().parents[2]
-        script = project_root / "scripts" / "memorix_policy_search.py"
+        script = project_root / "tools" / "memorix" / "diagnostics" / "memorix_policy_search.py"
         with tempfile.TemporaryDirectory() as parent:
             runtime = Path(parent) / "missing-runtime"
             completed = subprocess.run(

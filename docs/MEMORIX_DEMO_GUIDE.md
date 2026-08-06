@@ -3,8 +3,8 @@
 ## Preflight
 
 ```powershell
-py -3.10 .\scripts\memorix_release_readiness.py --pretty
-py -3.10 .\scripts\memorix_demo_smoke.py --pretty
+py -3.10 .\tools\memorix\validation\memorix_release_readiness.py --pretty
+py -3.10 .\tools\memorix\validation\memorix_demo_smoke.py --pretty
 opencode
 ```
 

@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "memorix_vs_no_memory",
+  "suite": "sdlc",
+  "benchmark_version": "36.1",
+  "modes": [
+    "no_memory",
+    "memorix_core"
+  ],
+  "backend": "deterministic",
+  "episodes": [
+    "initial_creation",
+    "new_session_requirement_change"
+  ],
+  "timeout_seconds": 30,
+  "metrics": [
+    "task_completion_rate",
+    "test_pass_rate",
+    "decision_reuse_accuracy",
+    "regression_count",
+    "session_resume_success_rate",
+    "total_duration_ms"
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "memorix_vs_no_memory",
+  "modes": [
+    {
+      "mode": "no_memory",
+      "persistent_memory": false,
+      "memory_tools_exposed": false,
+      "memorix_plugin_loaded": false,
+      "memorix_prompts_enabled": false,
+      "mcp_server_allowed": false,
+      "runtime_creation_allowed": false,
+      "titan_enabled": false,
+      "cold_site_enabled": false,
+      "candidates_enabled": false,
+      "consolidation_enabled": false,
+      "adaptive_routing_enabled": false,
+      "active_policy_enabled": false,
+      "project_archive_enabled": false
+    },
+    {
+      "mode": "memorix_core",
+      "persistent_memory": true,
+      "memory_tools_exposed": true,
+      "memorix_plugin_loaded": false,
+      "memorix_prompts_enabled": true,
+      "mcp_server_allowed": true,
+      "runtime_creation_allowed": true,
+      "titan_enabled": true,
+      "cold_site_enabled": true,
+      "candidates_enabled": true,
+      "consolidation_enabled": false,
+      "adaptive_routing_enabled": false,
+      "active_policy_enabled": false,
+      "project_archive_enabled": true
+    },
+    {
+      "mode": "memorix_full",
+      "persistent_memory": true,
+      "memory_tools_exposed": true,
+      "memorix_plugin_loaded": true,
+      "memorix_prompts_enabled": true,
+      "mcp_server_allowed": true,
+      "runtime_creation_allowed": true,
+      "titan_enabled": true,
+      "cold_site_enabled": true,
+      "candidates_enabled": true,
+      "consolidation_enabled": true,
+      "adaptive_routing_enabled": true,
+      "active_policy_enabled": true,
+      "project_archive_enabled": true
+    }
+  ],
+  "fairness": {
+    "paired_fields": [
+      "git_commit",
+      "task_id",
+      "dataset_id",
+      "prompt_version",
+      "model_id",
+      "model_parameters",
+      "tool_budget",
+      "turn_budget",
+      "timeout_seconds",
+      "hardware_id",
+      "seed",
+      "evaluator_version"
+    ],
+    "alternating_order": true,
+    "isolated_runtime_per_run": true,
+    "fixed_seeds": true,
+    "raw_results_immutable": true,
+    "failed_runs_retained": true
+  }
+}

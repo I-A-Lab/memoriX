@@ -1,9 +1,0 @@
-from pathlib import Path
-import argparse,json,sys
-ROOT=Path(__file__).resolve().parents[1]
-if str(ROOT) not in sys.path: sys.path.insert(0,str(ROOT))
-from memory.benchmark.observability import run_observability_benchmark
-p=argparse.ArgumentParser(); p.add_argument('--output'); p.add_argument('--pretty',action='store_true'); args=p.parse_args()
-payload=run_observability_benchmark(); text=json.dumps(payload,indent=2 if args.pretty else None)
-if args.output: Path(args.output).write_text(text+'\n',encoding='utf-8')
-print(text)

@@ -300,5 +300,118 @@ class McpStructuredContentTests(unittest.TestCase):
         )
 
 
+class McpTargetedSupersessionTests(McpToolsTestCase):
+    def test_validate_candidate_schema_declares_supersedes_id(
+        self,
+    ) -> None:
+        definition = next(
+            tool
+            for tool in self.tools.list_tools()
+            if tool["name"]
+            == "memorix_validate_candidate"
+        )
+
+        properties = definition["inputSchema"][
+            "properties"
+        ]
+
+        self.assertEqual(
+            properties["supersedes_memory_id"],
+            {"type": ["string", "null"]},
+        )
+        self.assertNotIn(
+            "supersedes_memory_id",
+            definition["inputSchema"]["required"],
+        )
+
+    def test_validate_candidate_supersedes_exact_memory_through_mcp(
+        self,
+    ) -> None:
+        original = self.tools.call(
+            "memorix_propose_candidate",
+            {
+                "content": (
+                    "The MCP primary color is blue."
+                ),
+                "reason": "MCP supersession test.",
+                "source_event_ids": [
+                    "event_mcp_supersede_001"
+                ],
+            },
+        )
+
+        original_memory = self.tools.call(
+            "memorix_validate_candidate",
+            {
+                "candidate_id": (
+                    original.candidate_id
+                ),
+                "validated_by": "human_reviewer",
+                "validation_reason": "Approved.",
+            },
+        )
+
+        update = self.tools.call(
+            "memorix_propose_candidate",
+            {
+                "content": (
+                    "The MCP primary color is violet."
+                ),
+                "reason": "MCP supersession test.",
+                "source_event_ids": [
+                    "event_mcp_supersede_002"
+                ],
+            },
+        )
+
+        updated_memory = self.tools.call(
+            "memorix_validate_candidate",
+            {
+                "candidate_id": update.candidate_id,
+                "validated_by": "human_reviewer",
+                "validation_reason": (
+                    "Approved correction."
+                ),
+                "supersedes_memory_id": (
+                    original_memory.memory_id
+                ),
+            },
+        )
+
+        self.assertEqual(
+            updated_memory.supersedes_memory_id,
+            original_memory.memory_id,
+        )
+        self.assertEqual(updated_memory.version, 2)
+
+        all_memories = {
+            memory.memory_id: memory
+            for memory in self.gateway._hot_site.list_memories()
+        }
+
+        self.assertFalse(
+            all_memories[original_memory.memory_id].active
+        )
+        self.assertTrue(
+            all_memories[updated_memory.memory_id].active
+        )
+
+        hot = self.tools.call(
+            "memorix_context",
+            {"query": "MCP primary color"},
+        )
+
+        self.assertNotIn(
+            original_memory.memory_id,
+            [
+                match.memory_id
+                for match in hot.matches
+            ],
+        )
+        self.assertFalse(
+            self.paths.cold_archive_events.exists()
+        )
+
+
 if __name__ == "__main__":
     unittest.main()

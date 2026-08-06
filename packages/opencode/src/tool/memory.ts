@@ -2,15 +2,27 @@ import { Effect, Schema } from "effect"
 
 import {
   getDefaultMemoriXService,
+  resolveTrustedMemoriXScope,
   retrieveMemoryThroughMemoriX,
   storeMemoryThroughMemoriX,
   type MemoryFact,
   type MemoryRetrieveFacadeMetadata,
   type MemoryStoreFacadeMetadata,
+  type MemoriXTrustedScope,
 } from "../memorix"
 import * as Tool from "./tool"
 
 export type { MemoryFact }
+
+export function trustedMemoryScopeFromContext(
+  ctx: Pick<Tool.Context, "extra">,
+  configuredUserID?: string,
+): MemoriXTrustedScope {
+  return resolveTrustedMemoriXScope({
+    projectID: ctx.extra?.projectID,
+    userID: configuredUserID,
+  })
+}
 
 export const StoreParameters = Schema.Struct({
   subject: Schema.String.annotate({
@@ -37,9 +49,10 @@ export const MemoryStoreTool = Tool.define<
   Effect.gen(function* () {
     return {
       description:
-        "Archive an important architectural fact in memoriX and " +
-        "create a pending candidate for human validation. " +
-        "This tool never validates or writes directly to the Titan hot site.",
+        "Archive an important architectural fact in memoriX for " +
+        "the current trusted OpenCode project and create a pending " +
+        "candidate for human validation. This tool never validates " +
+        "or writes directly to the Titan hot site.",
       parameters: StoreParameters,
       execute: (
         params: Schema.Schema.Type<
@@ -50,6 +63,12 @@ export const MemoryStoreTool = Tool.define<
         >,
       ) =>
         Effect.gen(function* () {
+          const service = getDefaultMemoriXService()
+          const scope = trustedMemoryScopeFromContext(
+            ctx,
+            service.userID,
+          )
+
           yield* ctx.ask({
             permission: "memory_store",
             patterns: [params.subject],
@@ -59,12 +78,18 @@ export const MemoryStoreTool = Tool.define<
               subject: params.subject,
               content: params.content,
               tags: params.tags,
+              ...(scope.projectID
+                ? { projectID: scope.projectID }
+                : {}),
+              ...(scope.userID
+                ? { userID: scope.userID }
+                : {}),
             },
           })
 
           return yield* Effect.promise(() =>
             storeMemoryThroughMemoriX(
-              getDefaultMemoriXService(),
+              service,
               {
                 subject: params.subject,
                 content: params.content,
@@ -74,6 +99,8 @@ export const MemoryStoreTool = Tool.define<
                 sessionID: String(ctx.sessionID),
                 messageID: String(ctx.messageID),
                 agent: ctx.agent,
+                projectID: scope.projectID,
+                userID: scope.userID,
               },
             ),
           )
@@ -109,26 +136,36 @@ export const MemoryRetrieveTool = Tool.define<
     return {
       description:
         "Retrieve active, human-validated architectural facts from " +
-        "the memoriX Titan hot site only. This tool never searches " +
-        "or falls back to cold history.",
+        "the memoriX Titan hot site for the current trusted OpenCode " +
+        "project only. This tool never searches or falls back to " +
+        "cold history.",
       parameters: RetrieveParameters,
       execute: (
         params: Schema.Schema.Type<
           typeof RetrieveParameters
         >,
-        _ctx: Tool.Context<
+        ctx: Tool.Context<
           MemoryRetrieveFacadeMetadata
         >,
-      ) =>
-        Effect.promise(() =>
+      ) => {
+        const service = getDefaultMemoriXService()
+        const scope = trustedMemoryScopeFromContext(
+          ctx,
+          service.userID,
+        )
+
+        return Effect.promise(() =>
           retrieveMemoryThroughMemoriX(
-            getDefaultMemoriXService(),
+            service,
             {
               query: params.query,
               tags: params.tags,
+              projectID: scope.projectID,
+              userID: scope.userID,
             },
           ),
-        ),
+        )
+      },
     } satisfies Tool.DefWithoutID<
       typeof RetrieveParameters,
       MemoryRetrieveFacadeMetadata

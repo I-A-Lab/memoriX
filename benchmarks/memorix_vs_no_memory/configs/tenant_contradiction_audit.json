@@ -1,0 +1,38 @@
+{
+  "campaign_type": "real_tenant_contradiction_audit",
+  "campaign_version": "42.1.0",
+  "diagnostic_campaign": true,
+  "profiles": {
+    "quick": {
+      "distractor_count": 50,
+      "expected_checks": 30,
+      "project_count": 3,
+      "seeds": [
+        101,
+        202
+      ],
+      "titan_dim": 32,
+      "top_k": 5,
+      "user_count": 4
+    },
+    "standard": {
+      "distractor_count": 250,
+      "expected_checks": 45,
+      "project_count": 4,
+      "seeds": [
+        101,
+        202,
+        303
+      ],
+      "titan_dim": 48,
+      "top_k": 10,
+      "user_count": 8
+    }
+  },
+  "protected_source_hash_guard": true,
+  "schema_version": 1,
+  "scoped_retrieval_required": true,
+  "uses_llm": false,
+  "uses_remote_provider": false,
+  "zip_created_even_when_isolation_warnings_exist": true
+}

@@ -5,7 +5,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
-SCRIPT=Path(__file__).resolve().parents[2]/"scripts"/"memorix_memory_pressure.py"
+SCRIPT=Path(__file__).resolve().parents[2]/"tools"/"memorix"/"diagnostics"/"memorix_memory_pressure.py"
 class MemoryPressureCliTests(unittest.TestCase):
     def run_cli(self,*args): return subprocess.run([sys.executable,str(SCRIPT),*args],capture_output=True,text=True,check=False)
     def test_help(self):

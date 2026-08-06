@@ -10,7 +10,7 @@ reads from or writes to the cold site.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from memory.data import (
     ForgetAction,
@@ -21,9 +21,17 @@ from memory.data import (
     ValidatedMemory,
 )
 from memory.data.paths import DEFAULT_STORAGE_PATHS
+from memory.hot_site.titan_active_memory.elastic_capacity import (
+    DEFAULT_BASELINE_HEADROOM_RATIO,
+)
 from memory.hot_site.titan_active_memory.neural_backend import (
     NeuralTitanBackend,
 )
+
+if TYPE_CHECKING:
+    from memory.hot_site.titan_active_memory.elastic_capacity import (
+        CapacityConsistencyGateResult,
+    )
 
 
 def _deduplicate_retrieved_matches(
@@ -121,6 +129,7 @@ class HotSiteTitanMemory:
         *,
         validated_by: str,
         validation_reason: str = "",
+        units: list[str] | None = None,
     ) -> ValidatedMemory:
         """Store one already validated memory in the active hot site."""
 
@@ -167,7 +176,7 @@ class HotSiteTitanMemory:
             "metadata": metadata,
         }
 
-        self._backend.store_validated_memory(payload)
+        self._backend.store_validated_memory(payload, units=units)
 
         return memory
 
@@ -239,8 +248,14 @@ class HotSiteTitanMemory:
         *,
         role: str | None = None,
         top_k: int | None = None,
+        project_id: str | None = None,
+        user_id: str | None = None,
     ) -> RetrievalResult:
-        """Retrieve active memories from Titan only."""
+        """Retrieve active memories from Titan only.
+
+        Scope filters are exact metadata constraints applied before ranking.
+        Omitting both filters preserves the historical global retrieval path.
+        """
 
         if not isinstance(query, str) or not query.strip():
             raise HotSiteInputError(
@@ -252,10 +267,31 @@ class HotSiteTitanMemory:
                 "top_k must be positive."
             )
 
+        normalized_project_id = (
+            project_id.strip()
+            if project_id is not None
+            else None
+        )
+        normalized_user_id = (
+            user_id.strip()
+            if user_id is not None
+            else None
+        )
+        if project_id is not None and not normalized_project_id:
+            raise HotSiteInputError(
+                "project_id must not be empty when provided."
+            )
+        if user_id is not None and not normalized_user_id:
+            raise HotSiteInputError(
+                "user_id must not be empty when provided."
+            )
+
         backend_results = self._backend.retrieve(
             query=query,
             role=role,
             top_k=top_k,
+            project_id=normalized_project_id,
+            user_id=normalized_user_id,
         )
 
         matches: list[RetrievedMemory] = []
@@ -467,3 +503,67 @@ class HotSiteTitanMemory:
         """Return statistics from the underlying Titan backend."""
 
         return dict(self._backend.stats())
+
+    def capacity_status(self) -> dict[str, Any]:
+        """Return a live elastic capacity snapshot of the hot site."""
+
+        return dict(self._backend.capacity_status())
+
+    def ensure_capacity_for(self, required_slots: int = 1) -> int:
+        """Expand the elastic capacity so validated memories can enter.
+
+        Returns the current capacity after expansion. This never evicts a
+        memory and never touches the cold site.
+        """
+
+        if required_slots < 0:
+            raise ValueError(
+                "required_slots must be non-negative."
+            )
+
+        return int(
+            self._backend.ensure_capacity_for(
+                required_slots
+            )
+        )
+
+    def consistency_gate(self) -> "CapacityConsistencyGateResult":
+        """Verify every active metadata record has a live Titan item."""
+
+        return self._backend.consistency_gate()
+
+    def compact_inactive(self) -> int:
+        """Remove inactive Titan items and rebuild the LTM from active items."""
+
+        return int(self._backend.compact_inactive())
+
+    def shrink_to_baseline(
+        self,
+        *,
+        active_count: int,
+        headroom_ratio: float = (
+            DEFAULT_BASELINE_HEADROOM_RATIO
+        ),
+    ) -> int:
+        """Restore the baseline capacity without evicting any item.
+
+        The baseline is restored only when the active population satisfies
+        the headroom rule and the hot site is internally consistent.
+        """
+
+        if active_count < 0:
+            raise ValueError(
+                "active_count must be non-negative."
+            )
+
+        if not 0.0 < headroom_ratio <= 1.0:
+            raise ValueError(
+                "headroom_ratio must be inside (0, 1]."
+            )
+
+        return int(
+            self._backend.shrink_to_baseline(
+                active_count,
+                headroom_ratio,
+            )
+        )

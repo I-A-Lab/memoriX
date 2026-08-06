@@ -41,6 +41,9 @@ class RuntimeCapacitySnapshot:
     observation_only: bool = True
     applies_changes: bool = False
     schema_version: int = 1
+    baseline_capacity: int = 0
+    current_capacity: int = 0
+    expansion_active: bool = False
 
     def to_dict(self) -> dict[str, Any]:
         payload = asdict(self)
@@ -230,4 +233,7 @@ def inspect_runtime_capacity(
         admission_allowed=(active_memories < configured_capacity),
         simulated=simulated,
         file_sizes_bytes=file_sizes,
+        baseline_capacity=configured_capacity,
+        current_capacity=configured_capacity,
+        expansion_active=False,
     )

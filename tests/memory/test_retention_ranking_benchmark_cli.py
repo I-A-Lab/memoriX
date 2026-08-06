@@ -13,7 +13,7 @@ class RetentionRankingBenchmarkCliTests(unittest.TestCase):
             process = subprocess.run(
                 [
                     sys.executable,
-                    "scripts/memorix_retention_ranking_benchmark.py",
+                    "tools/memorix/research/memorix_retention_ranking_benchmark.py",
                     "--runtime-root",
                     str(Path(directory) / "runtime"),
                     "--repetitions",

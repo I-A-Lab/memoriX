@@ -17,6 +17,7 @@ import PROMPT_TITLE from "./prompt/title.txt"
 import PROMPT_SDLC from "./prompt/sdlc.txt"
 import PROMPT_DEV_BRANCH from "./prompt/dev-branch.txt"
 import PROMPT_TEST_BRANCH from "./prompt/test-branch.txt"
+import { promptForMemoriXMode } from "@/memorix/benchmark-mode"
 import { Permission } from "@/permission"
 import { mergeDeep, pipe, sortBy, values } from "remeda"
 import { Global } from "@opencode-ai/core/global"
@@ -288,7 +289,7 @@ const layer = Layer.effect(
             ),
             mode: "primary",
             native: true,
-            prompt: PROMPT_SDLC,
+            prompt: promptForMemoriXMode(PROMPT_SDLC),
           },
           dev_branch: {
             name: "dev_branch",
@@ -311,7 +312,7 @@ const layer = Layer.effect(
             ),
             mode: "subagent",
             native: true,
-            prompt: PROMPT_DEV_BRANCH,
+            prompt: promptForMemoriXMode(PROMPT_DEV_BRANCH),
           },
           test_branch: {
             name: "test_branch",
@@ -334,7 +335,7 @@ const layer = Layer.effect(
             ),
             mode: "subagent",
             native: true,
-            prompt: PROMPT_TEST_BRANCH,
+            prompt: promptForMemoriXMode(PROMPT_TEST_BRANCH),
           },
         }
 
