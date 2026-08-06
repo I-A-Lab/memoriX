@@ -1652,9 +1652,6 @@ export function Prompt(props: PromptProps) {
                       )}
                     </Match>
                     <Match when={true}>
-                      <text fg={theme.text}>
-                        {agentShortcut()} <span style={{ fg: theme.textMuted }}>agents</span>
-                      </text>
                     </Match>
                   </Switch>
                   <text fg={theme.text}>

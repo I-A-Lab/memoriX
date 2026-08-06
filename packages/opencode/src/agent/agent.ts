@@ -155,6 +155,7 @@ const layer = Layer.effect(
             ),
             mode: "primary",
             native: true,
+            hidden: true,
           },
           plan: {
             name: "plan",
@@ -181,6 +182,7 @@ const layer = Layer.effect(
             ),
             mode: "primary",
             native: true,
+            hidden: true,
           },
           general: {
             name: "general",
@@ -195,6 +197,7 @@ const layer = Layer.effect(
             options: {},
             mode: "subagent",
             native: true,
+            hidden: true,
           },
           explore: {
             name: "explore",
@@ -218,6 +221,7 @@ const layer = Layer.effect(
             options: {},
             mode: "subagent",
             native: true,
+            hidden: true,
           },
           compaction: {
             name: "compaction",
@@ -393,7 +397,7 @@ const layer = Layer.effect(
             agents,
             values(),
             sortBy(
-              [(x) => (cfg.default_agent ? x.name === cfg.default_agent : x.name === "build"), "desc"],
+              [(x) => (cfg.default_agent ? x.name === cfg.default_agent : x.name === "sdlc"), "desc"],
               [(x) => x.name, "asc"],
             ),
           )

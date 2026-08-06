@@ -264,7 +264,7 @@ export const { use: useLocal, provider: LocalProvider } = createSimpleContext({
           const provider = sync.data.provider.find((item) => item.id === value.providerID)
           const info = provider?.models[value.modelID]
           return {
-            provider: provider?.name ?? value.providerID,
+            provider: (provider?.name ?? value.providerID).replace(/OpenCode/ig, "memoriX"),
             model: info?.name ?? value.modelID,
             reasoning: info?.capabilities?.reasoning ?? false,
           }

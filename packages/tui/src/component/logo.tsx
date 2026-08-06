@@ -10,34 +10,6 @@ export function Logo() {
     const shadow = tint(theme.background, fg, 0.25)
     const attrs = bold ? TextAttributes.BOLD : undefined
     return Array.from(line).map((char) => {
-      if (char === "_") {
-        return (
-          <text fg={fg} bg={shadow} attributes={attrs} selectable={false}>
-            {" "}
-          </text>
-        )
-      }
-      if (char === "^") {
-        return (
-          <text fg={fg} bg={shadow} attributes={attrs} selectable={false}>
-            ▀
-          </text>
-        )
-      }
-      if (char === "~") {
-        return (
-          <text fg={shadow} attributes={attrs} selectable={false}>
-            ▀
-          </text>
-        )
-      }
-      if (char === ",") {
-        return (
-          <text fg={shadow} attributes={attrs} selectable={false}>
-            ▄
-          </text>
-        )
-      }
       return (
         <text fg={fg} attributes={attrs} selectable={false}>
           {char}

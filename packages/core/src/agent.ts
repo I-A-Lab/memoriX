@@ -7,7 +7,7 @@ import { State } from "./state"
 
 export const ID = Agent.ID
 export type ID = typeof ID.Type
-export const defaultID = ID.make("build")
+export const defaultID = ID.make("sdlc")
 
 export const Color = Agent.Color
 
@@ -70,8 +70,8 @@ export const layer = Layer.effect(
       const data = state.get()
       const configured = data.default ? selectable(data.agents.get(data.default)) : undefined
       if (configured) return configured
-      const build = selectable(data.agents.get(ID.make("build")))
-      if (build) return build
+      const sdlc = selectable(data.agents.get(ID.make("sdlc")))
+      if (sdlc) return sdlc
       for (const agent of data.agents.values()) {
         const fallback = selectable(agent)
         if (fallback) return fallback
