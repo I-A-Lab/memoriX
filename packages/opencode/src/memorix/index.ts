@@ -1,3 +1,13 @@
+export {
+  normalizeMemoriXScopeIdentifier,
+  resolveTrustedMemoriXScope,
+} from "./scope"
+
+export type {
+  MemoriXTrustedScope,
+  MemoriXTrustedScopeInput,
+} from "./scope"
+
 export { runTopicBlocks } from "./topic-blocks-facade"
 export type { TopicBlocksFacadeResult, TopicBlocksFacadeService } from "./topic-blocks-facade"
 export { getPolicySearch } from "./policy-search-facade"
@@ -24,6 +34,7 @@ export type {
 } from "./project-archive-facade"
 
 export {
+  forgetMemoryThroughMemoriX,
   getMemoriXStatus,
   listCandidatesThroughMemoriX,
   rejectCandidateThroughMemoriX,
@@ -99,6 +110,8 @@ export type {
   MemoriXCandidate,
   MemoriXCandidateStatus,
   MemoriXClientOptions,
+  MemoriXContextOptions,
+  MemoriXForget,
   MemoriXProposeCandidateInput,
   MemoriXProjectArchiveEntry,
   MemoriXProjectArchiveEntryType,
@@ -122,6 +135,7 @@ export type {
   MemoriXToolCallResult,
   MemoriXToolDefinition,
   MemoriXToolName,
+  MemoriXValidateCandidateInput,
 } from "./types"
 
 export { runPolicyLifecycle } from "./policy-lifecycle-facade"
@@ -130,3 +144,5 @@ export type { PolicyLifecycleFacadeResult, PolicyLifecycleFacadeService } from "
 export * from "./consolidation-facade"
 
 export * from "./observability-facade"
+
+export * from "./benchmark-mode"

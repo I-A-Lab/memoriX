@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "memorix_vs_no_memory",
+  "suite": "agent_multisession",
+  "benchmark_version": "35.1",
+  "modes": [
+    "no_memory",
+    "memorix_core"
+  ],
+  "backends": [
+    "lexical",
+    "memorix"
+  ],
+  "default_backend": "lexical",
+  "top_k": 5,
+  "sessions": 2,
+  "metrics": [
+    "task_success_rate",
+    "prior_information_reuse_rate",
+    "forbidden_information_use_rate",
+    "session_resume_success_rate",
+    "exact_value_rate",
+    "turn_count",
+    "tool_call_count",
+    "mean_response_ms",
+    "p95_response_ms"
+  ]
+}

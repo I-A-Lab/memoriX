@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "memoriX ablation benchmark report",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "benchmark_version",
+    "suite",
+    "configuration_count",
+    "reference_configuration",
+    "effects",
+    "results_sha256"
+  ]
+}

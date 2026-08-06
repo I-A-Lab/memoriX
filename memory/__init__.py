@@ -1,5 +1,6 @@
 ﻿"""memoriX external-memory package.
 
-The Python memory system is currently being integrated progressively.
-No OpenCode or MCP integration is enabled at this stage.
+The package provides the Python gateway, MCP integration, controlled candidate
+lifecycle, Titan-backed validated hot memory, durable cold archives, adaptive
+operations, diagnostics, nightly synchronization, and release tooling.
 """

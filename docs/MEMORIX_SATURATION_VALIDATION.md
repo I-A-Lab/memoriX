@@ -14,7 +14,7 @@ The bounded benchmark covers:
 Run it with:
 
 ```powershell
-py -3.10 ".\scripts\memorix_capacity_benchmark.py" `
+py -3.10 ".\tools\memorix\research\memorix_capacity_benchmark.py" `
     --runtime-root "$env:TEMP\memorix-capacity-benchmark-runtime" `
     --capacity 50000 `
     --repetitions 3 `
@@ -39,6 +39,36 @@ The test suite verifies:
 - pruning asks before the facade call;
 - disabled TypeScript services remain non-blocking.
 
+## Elastic capacity validation
+
+The elastic capacity contract is verified by:
+
+```powershell
+py -3.10 -m unittest `
+    "tests.memory.test_elastic_capacity" `
+    "tests.memory.test_nightly_capacity_maintenance" `
+    "tests.memory.benchmark.test_elastic_capacity_benchmark"
+```
+
+Verified behavior with exact numbers:
+
+- expansion from baseline 50 to 63 (`max(50 + 10, ceil(50 * 1.25), 51)`);
+- restoration to baseline 50 only when active <= floor(50 * 0.8) == 40;
+- active 51 (> 40) stays expanded;
+- benchmark scenario A (capacity 79, active 71) soft-forgets low-retention
+  seeds but never shrinks;
+- benchmark scenario B (capacity 63, active 51) forgets 20 seeds then
+  shrinks back to baseline 50;
+- `NightlyCapacityMaintenanceResult.to_dict()` exposes exactly the enforced
+  12 keys in order;
+- the cold archive stays byte-identical (sha256) through maintenance;
+- the nightly runner keeps `status: completed` and includes both
+  `consolidation` and `capacity_maintenance` in the latest status;
+- a failing consistency gate blocks compaction and shrinking;
+- default-policy pruning is reachable at >= 70% usage and respects pinned /
+  protected memories;
+- `max_automatic_deactivations=1` caps the nightly soft-prune to one forget.
+
 ## Required validation commands
 
 ```powershell
@@ -56,7 +86,7 @@ bun test `
 ```
 
 ```powershell
-& ".\scripts\verify_memorix.ps1" -AllowDirty
+& ".\tools\memorix\validation\verify_memorix.ps1" -AllowDirty
 ```
 
 Timing values are observations, not pass/fail thresholds. Safety contracts and

@@ -14,7 +14,7 @@ This is not the full Google Titans architecture trained end-to-end.
 
 from __future__ import annotations
 
-import argparse, hashlib, re, shutil, time
+import argparse, hashlib, os, re, shutil, tempfile, time
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Tuple, Literal
@@ -22,6 +22,10 @@ from typing import Dict, Iterable, List, Optional, Tuple, Literal
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+
+from memory.hot_site.titan_active_memory.elastic_capacity import (
+    compute_expanded_capacity,
+)
 
 # ---------------------------------------------------------------------------
 # Embedded Titans-style Long-Term Memory
@@ -850,7 +854,7 @@ class TitanExternalMemory:
                  weight_decay: float=0.001, replay_items: int=8, use_aedelon_ltm: bool=True,
                  ltm_momentum: float=0.90) -> None:
         self.memory_path=memory_path; self.d_model=d_model; self.hidden_dim=hidden_dim
-        self.max_items=max_items; self.device=device; self.learning_rate=learning_rate
+        self.max_items=max_items; self.baseline_capacity=int(max_items); self.device=device; self.learning_rate=learning_rate
         self.weight_decay=weight_decay; self.replay_items=replay_items
         self.use_aedelon_ltm=use_aedelon_ltm; self.ltm_momentum=ltm_momentum
         info(f"Loading Titan neural memory on {device}.")
@@ -947,11 +951,18 @@ class TitanExternalMemory:
                     deactivated.append(item)
         self._train_association(key, value, surprise)
         item=MemoryItem(self._next_id, text, key, value, subject=subject, property=prop, surprise=surprise)
-        self._next_id+=1; self._items.append(item); self._enforce_capacity()
+        self._next_id+=1; self._items.append(item); self._ensure_capacity_for(0)
         return "stored", item, deactivated
 
-    def store_text(self, text: str) -> List[Tuple[str, MemoryItem, List[MemoryItem]]]:
-        return [self.store(unit) for unit in split_memory_units(text)]
+    def store_text(
+        self,
+        text: str,
+        units: Optional[List[str]] = None,
+    ) -> List[Tuple[str, MemoryItem, List[MemoryItem]]]:
+        resolved_units = (
+            units if units is not None else split_memory_units(text)
+        )
+        return [self.store(unit) for unit in resolved_units]
 
     def atomize_existing_memories(self) -> Tuple[int,int]:
         changed=created=0
@@ -1035,9 +1046,19 @@ class TitanExternalMemory:
             "message": f"Consolidated {len(selected)} memory item(s) into Titans LTM.",
         }
 
-    def retrieve(self, query: str, k: int=5, min_score: float=0.12) -> List[Tuple[float,Dict[str,float],MemoryItem]]:
-        active=self.active_items
-        if not active: return []
+    def retrieve(
+        self,
+        query: str,
+        k: int = 5,
+        min_score: float = 0.12,
+        allowed_item_ids: Iterable[int] | None = None,
+    ) -> List[Tuple[float, Dict[str, float], MemoryItem]]:
+        active = self.active_items
+        if allowed_item_ids is not None:
+            allowed = {int(item_id) for item_id in allowed_item_ids}
+            active = [item for item in active if int(item.id) in allowed]
+        if not active:
+            return []
         if is_broad_memory_question(query):
             return [(1.0, {"neural":1.0,"key":0.0,"lexical":0.0,"entity":0.0,"property":0.0,"recency":0.0}, i) for i in sorted(active, key=lambda i: i.updated_at, reverse=True)[:max(k,8)]]
         qkey,_=self._make_key_value(query); qents=extract_entities(query); qprop=property_key(query)
@@ -1104,13 +1125,27 @@ class TitanExternalMemory:
         self.ltm_state=self.ltm.init_state(self.device)
 
     def stats(self) -> Dict[str,object]:
-        return {"active_items":len(self.active_items),"inactive_items":len(self.inactive_items),"total_items":len(self.items),"d_model":self.d_model,"hidden_dim":self.hidden_dim,"device":self.device,"memory_path":str(self.memory_path) if self.memory_path else None,"ltm_enabled":self.use_aedelon_ltm,"ltm_parameters":self.ltm.count_parameters() if self.use_aedelon_ltm else 0,"last_consolidated_at":fmt_time(self.last_consolidated_at) if self.last_consolidated_at else None}
+        return {"active_items":len(self.active_items),"inactive_items":len(self.inactive_items),"total_items":len(self.items),"d_model":self.d_model,"hidden_dim":self.hidden_dim,"device":self.device,"memory_path":str(self.memory_path) if self.memory_path else None,"ltm_enabled":self.use_aedelon_ltm,"ltm_parameters":self.ltm.count_parameters() if self.use_aedelon_ltm else 0,"last_consolidated_at":fmt_time(self.last_consolidated_at) if self.last_consolidated_at else None,"baseline_capacity":int(self.baseline_capacity),"current_capacity":int(self.max_items),"expanded":bool(int(self.max_items) > int(self.baseline_capacity))}
 
     def save(self, path: Optional[Path]=None) -> None:
         target=path or self.memory_path
         if target is None: raise ValueError("No memory path configured.")
         target.parent.mkdir(parents=True, exist_ok=True)
-        torch.save({"version":2,"next_id":self._next_id,"d_model":self.d_model,"hidden_dim":self.hidden_dim,"items":[i.to_serializable() for i in self._items],"network_state":self.network.state_dict(),"optimizer_state":self.optimizer.state_dict(),"ltm_enabled":self.use_aedelon_ltm,"ltm_config":self.ltm_config.__dict__,"last_consolidated_at":self.last_consolidated_at,"ltm_state":{"weights":[w.detach().cpu() for w in self.ltm_state.weights],"momentum":[m.detach().cpu() for m in self.ltm_state.momentum]}}, target)
+        payload={"version":3,"next_id":self._next_id,"d_model":self.d_model,"hidden_dim":self.hidden_dim,"baseline_capacity":int(self.baseline_capacity),"current_capacity":int(self.max_items),"max_items":int(self.max_items),"items":[i.to_serializable() for i in self._items],"network_state":self.network.state_dict(),"optimizer_state":self.optimizer.state_dict(),"ltm_enabled":self.use_aedelon_ltm,"ltm_config":self.ltm_config.__dict__,"last_consolidated_at":self.last_consolidated_at,"ltm_state":{"weights":[w.detach().cpu() for w in self.ltm_state.weights],"momentum":[m.detach().cpu() for m in self.ltm_state.momentum]}}
+        # Atomic persistence: write to a temp file in the same directory and
+        # replace, so a crash never leaves a truncated Titan state file.
+        fd, temp_name = tempfile.mkstemp(prefix=target.name + ".", suffix=".tmp", dir=target.parent)
+        try:
+            with os.fdopen(fd, "wb") as handle:
+                torch.save(payload, handle)
+                handle.flush()
+                os.fsync(handle.fileno())
+            os.replace(temp_name, target)
+        finally:
+            try:
+                os.unlink(temp_name)
+            except FileNotFoundError:
+                pass
 
     def load(self, path: Optional[Path]=None) -> None:
         target=path or self.memory_path
@@ -1118,6 +1153,16 @@ class TitanExternalMemory:
         payload=torch.load(target, map_location="cpu")
         self._items=[MemoryItem.from_serializable(x) for x in payload.get("items", [])]
         self._next_id=int(payload.get("next_id", len(self._items)+1))
+        loaded_capacity=int(payload.get("current_capacity", payload.get("max_items", self.max_items)))
+        if loaded_capacity > 0:
+            self.max_items=loaded_capacity
+        loaded_baseline=int(payload.get("baseline_capacity", self.baseline_capacity))
+        if loaded_baseline > 0:
+            self.baseline_capacity=loaded_baseline
+        # The elastic capacity must never be smaller than the persisted active
+        # population, even when an older file exceeds the constructor default.
+        if self.max_items < len(self._items):
+            self.max_items=len(self._items)
         self.last_consolidated_at=payload.get("last_consolidated_at")
         if payload.get("network_state"):
             self.network.load_state_dict(payload["network_state"]); self.network.to(self.device)
@@ -1143,14 +1188,56 @@ class TitanExternalMemory:
         first=subject.split()[0]; matches=[s for s in subjects if s and s.split()[0]==first]
         return matches[0] if len(matches)==1 else subject
 
-    def _enforce_capacity(self) -> None:
-        if len(self._items)<=self.max_items: return
-        inactive=sorted(self.inactive_items, key=lambda i:i.updated_at)
-        remove={i.id for i in inactive[:max(0,len(self._items)-self.max_items)]}
-        self._items=[i for i in self._items if i.id not in remove]
-        if len(self._items)>self.max_items:
-            self._items.sort(key=lambda i:(i.active,i.updated_at), reverse=True)
-            self._items=self._items[:self.max_items]
+    def _ensure_capacity_for(self, required_slots: int=0) -> int:
+        """Expand the elastic current capacity so items always fit.
+
+        This is the non-evicting replacement for the legacy ``_enforce_capacity``
+        which deleted memories. Expansion only grows ``max_items`` (the current
+        capacity) and never removes an item.
+        """
+        if required_slots < 0:
+            raise ValueError("required_slots must be non-negative.")
+        needed=len(self._items)+int(required_slots)
+        if needed <= self.max_items:
+            return self.max_items
+        expanded=compute_expanded_capacity(
+            self.max_items,
+            active_count=len(self._items),
+            required_slots=int(required_slots),
+        )
+        self.max_items=max(expanded, needed)
+        return self.max_items
+
+    def remove_inactive_items(self) -> int:
+        """Physically drop inactive items from the in-memory list.
+
+        Returns the number of removed items. The neural long-term state is not
+        touched here; callers use ``rebuild_ltm_from_active`` after compaction.
+        """
+        inactive=self.inactive_items
+        if not inactive:
+            return 0
+        removed={i.id for i in inactive}
+        self._items=[i for i in self._items if i.id not in removed]
+        return len(removed)
+
+    def rebuild_ltm_from_active(self) -> int:
+        """Rebuild the neural long-term memory from active items only.
+
+        Returns the number of replayed active items. When no active item
+        remains, the LTM state is reset to a fresh state.
+        """
+        active=self.active_items
+        if not active:
+            self.ltm_state=self.ltm.init_state(self.device)
+            return 0
+        self.consolidate(
+            max_items=None,
+            steps=3,
+            reset_ltm=True,
+            include_inactive=False,
+        )
+        return len(active)
 
 
 def ollama_chat(model: str, system: str, user: str) -> str:

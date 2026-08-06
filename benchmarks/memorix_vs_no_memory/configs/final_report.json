@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "memorix_vs_no_memory",
+  "report_version": "40.1",
+  "source": "multiseed_report.json",
+  "artifacts": [
+    "final_report.json",
+    "aggregate_metrics.csv",
+    "comparisons.csv",
+    "chart_data.json",
+    "benchmark_report.md"
+  ]
+}

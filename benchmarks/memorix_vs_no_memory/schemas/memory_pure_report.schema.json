@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "memoriX pure-memory report",
+  "type": "object",
+  "required": ["schema_version", "benchmark_version", "engine", "dataset_id", "metrics", "query_results_sha256"]
+}

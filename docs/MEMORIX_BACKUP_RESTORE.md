@@ -5,7 +5,7 @@ Runtime data is deliberately outside the source repository. Backups are ZIP arch
 ## Backup
 
 ```powershell
-py -3.10 .\scripts\memorix_runtime_backup.py `
+py -3.10 .\tools\memorix\operations\memorix_runtime_backup.py `
     "$env:LOCALAPPDATA\memoriX\runtime" `
     "$env:USERPROFILE\Documents\memorix-runtime.zip" `
     --pretty
@@ -16,7 +16,7 @@ py -3.10 .\scripts\memorix_runtime_backup.py `
 OpenCode must be closed before restore.
 
 ```powershell
-py -3.10 .\scripts\memorix_runtime_restore.py `
+py -3.10 .\tools\memorix\operations\memorix_runtime_restore.py `
     "$env:USERPROFILE\Documents\memorix-runtime.zip" `
     "$env:LOCALAPPDATA\memoriX\runtime-restored" `
     --pretty

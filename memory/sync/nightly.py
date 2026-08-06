@@ -15,6 +15,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import hashlib
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from memory.consolidation import (
     ConsolidationRunReport,
@@ -28,6 +29,15 @@ from memory.hot_site.short_term_memory import (
 from memory.hot_site.titan_active_memory import (
     HotSiteTitanMemory,
 )
+from memory.hot_site.titan_active_memory.elastic_capacity import (
+    NightlyCapacityMaintenanceResult,
+    run_nightly_capacity_maintenance,
+)
+
+if TYPE_CHECKING:
+    from memory.gateway.capacity_operations import (
+        CapacityOperations,
+    )
 
 
 NIGHTLY_SCOPE = "short_term_to_hot_site_only"
@@ -73,6 +83,9 @@ class NightlyConsolidationReport:
     short_term_events_cleared: int
     cold_before: ColdSiteSnapshot
     cold_after: ColdSiteSnapshot
+    capacity_maintenance: (
+        NightlyCapacityMaintenanceResult | None
+    ) = None
 
     def to_dict(self) -> dict[str, JSONValue]:
         """Serialize the nightly report."""
@@ -102,6 +115,11 @@ class NightlyConsolidationReport:
             ),
             "cold_before": self.cold_before.to_dict(),
             "cold_after": self.cold_after.to_dict(),
+            "capacity_maintenance": (
+                self.capacity_maintenance.to_dict()
+                if self.capacity_maintenance is not None
+                else None
+            ),
         }
 
 
@@ -139,6 +157,9 @@ class NightlyConsolidationService:
         hot_site: HotSiteTitanMemory,
         cold_archive_path: str | Path,
         log_path: str | Path,
+        capacity_operations: (
+            CapacityOperations | None
+        ) = None,
     ) -> None:
         self._consolidation_service = (
             consolidation_service
@@ -149,6 +170,7 @@ class NightlyConsolidationService:
             cold_archive_path
         )
         self._log_path = Path(log_path)
+        self._capacity_operations = capacity_operations
 
     def run(
         self,
@@ -187,6 +209,23 @@ class NightlyConsolidationService:
             )
         )
 
+        capacity_maintenance = None
+
+        if self._capacity_operations is not None:
+            capacity_maintenance = (
+                run_nightly_capacity_maintenance(
+                    self._hot_site,
+                    capacity_operations=(
+                        self._capacity_operations
+                    ),
+                    run_reference=started_at,
+                    cold_archive_path=(
+                        self._cold_archive_path
+                    ),
+                    log_path=self._log_path,
+                )
+            )
+
         cold_after_processing = snapshot_file(
             self._cold_archive_path
         )
@@ -224,6 +263,7 @@ class NightlyConsolidationService:
             short_term_events_cleared=cleared,
             cold_before=cold_before,
             cold_after=cold_after,
+            capacity_maintenance=capacity_maintenance,
         )
 
         append_json_line(

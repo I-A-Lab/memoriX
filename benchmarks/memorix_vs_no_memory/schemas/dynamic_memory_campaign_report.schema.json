@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "campaign_type": {
+      "const": "real_dynamic_memory_lifecycle"
+    },
+    "campaign_version": {
+      "const": "41.0.0"
+    },
+    "completed": {
+      "type": "boolean"
+    },
+    "protected_core_unchanged": {
+      "type": "boolean"
+    },
+    "schema_version": {
+      "const": 1
+    }
+  },
+  "required": [
+    "schema_version",
+    "campaign_version",
+    "campaign_type",
+    "completed",
+    "request",
+    "aggregates",
+    "protected_core_unchanged"
+  ],
+  "title": "memoriX real dynamic memory lifecycle campaign",
+  "type": "object"
+}

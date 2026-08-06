@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "memoriX real OpenCode A/B campaign report",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "campaign_version",
+    "campaign_type",
+    "request",
+    "task_count",
+    "run_count",
+    "aggregates",
+    "direct_memory_probe",
+    "protected_core_unchanged",
+    "artifacts"
+  ]
+}

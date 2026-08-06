@@ -17,6 +17,7 @@ import { WriteTool } from "./write"
 import { InvalidTool } from "./invalid"
 import { SkillTool } from "./skill"
 import { MemoryStoreTool, MemoryRetrieveTool } from "./memory"
+import { memoriXToolsEnabled } from "@/memorix/benchmark-mode"
 import { MemoryCapacityPlanTool, MemoryCapacityPruneTool, MemoryCapacityStatusTool } from "./memory-capacity"
 import { MemoryPressureInspectTool, MemoryPressureStatusTool } from "./memory-pressure"
 import { RetentionRankingInspectTool, RetentionRankingStatusTool } from "./retention-ranking"
@@ -31,6 +32,7 @@ import {
   MemoryCandidateValidateTool,
   MemoryCandidatesListTool,
   MemoryConsolidateTool,
+  MemoryForgetTool,
   MemoryNightlyRunTool,
   MemoryStatusTool,
 } from "./memory-candidates"
@@ -138,6 +140,8 @@ const layer = Layer.effect(
       yield* MemoryCandidateRejectTool
     const memoryconsolidate =
       yield* MemoryConsolidateTool
+    const memoryforget =
+      yield* MemoryForgetTool
     const memorynightlyrun =
       yield* MemoryNightlyRunTool
     const memorycapacitystatus =
@@ -287,6 +291,9 @@ const layer = Layer.effect(
           memory_candidate_reject: Tool.init(
             memorycandidatereject,
           ),
+          memory_forget: Tool.init(
+            memoryforget,
+          ),
           memory_consolidate: Tool.init(
             memoryconsolidate,
           ),
@@ -329,21 +336,26 @@ const layer = Layer.effect(
             tool.search,
             tool.skill,
             tool.patch,
-            tool.memory_store,
-            tool.memory_retrieve,
-            tool.memory_candidates_list,
-            tool.memory_candidate_validate,
-            tool.memory_candidate_reject,
-            tool.memory_consolidate,
-            tool.memory_nightly_run,
-            tool.memory_capacity_status,
-            tool.memory_capacity_plan,
-            tool.memory_capacity_prune,
-            tool.memory_status,
-            tool.project_archive_record,
-            tool.project_archive_list,
-            tool.project_snapshot_rebuild,
-            tool.project_snapshot_get,
+            ...(memoriXToolsEnabled()
+              ? [
+                  tool.memory_store,
+                  tool.memory_retrieve,
+                  tool.memory_candidates_list,
+                  tool.memory_candidate_validate,
+                  tool.memory_candidate_reject,
+                  tool.memory_forget,
+                  tool.memory_consolidate,
+                  tool.memory_nightly_run,
+                  tool.memory_capacity_status,
+                  tool.memory_capacity_plan,
+                  tool.memory_capacity_prune,
+                  tool.memory_status,
+                  tool.project_archive_record,
+                  tool.project_archive_list,
+                  tool.project_snapshot_rebuild,
+                  tool.project_snapshot_get,
+                ]
+              : []),
             ...(flags.experimentalLspTool ? [tool.lsp] : []),
             ...(flags.experimentalPlanMode && flags.client === "cli" ? [tool.plan] : []),
           ],

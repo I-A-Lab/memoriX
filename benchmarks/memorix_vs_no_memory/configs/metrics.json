@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "memorix_vs_no_memory",
+  "primary_metrics": {
+    "memory": [
+      "recall_at_1",
+      "recall_at_5",
+      "mean_reciprocal_rank",
+      "false_memory_rate",
+      "stale_memory_rate",
+      "update_success_rate",
+      "forget_success_rate",
+      "cross_user_contamination_rate",
+      "cross_project_contamination_rate"
+    ],
+    "agent": [
+      "task_success_rate",
+      "constraint_compliance_rate",
+      "prior_information_reuse_rate",
+      "forbidden_information_use_rate",
+      "turn_count",
+      "tool_call_count",
+      "input_tokens",
+      "output_tokens",
+      "total_duration_ms"
+    ],
+    "sdlc": [
+      "task_completion_rate",
+      "test_pass_rate",
+      "decision_reuse_accuracy",
+      "regression_count",
+      "correction_count",
+      "session_resume_success_rate",
+      "turn_count",
+      "tool_call_count",
+      "total_duration_ms"
+    ],
+    "system": [
+      "startup_duration_ms",
+      "store_duration_ms",
+      "retrieve_duration_ms",
+      "candidate_validation_duration_ms",
+      "consolidation_duration_ms",
+      "peak_rss_bytes",
+      "mean_cpu_percent",
+      "runtime_size_bytes",
+      "hot_site_size_bytes",
+      "cold_site_size_bytes"
+    ],
+    "robustness": [
+      "successful_run_rate",
+      "timeout_rate",
+      "malformed_record_recovery_rate",
+      "restart_recovery_rate",
+      "archive_restore_success_rate",
+      "mcp_failure_containment_rate",
+      "capacity_rejection_accuracy"
+    ]
+  }
+}

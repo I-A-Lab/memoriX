@@ -107,7 +107,30 @@ describe("memoriX native mutation permissions", () => {
       'operation: "validate_candidate"',
     )
     expect(block).toContain(
-      "patterns: [params.candidate_id]",
+      "params.candidate_id,",
+    )
+    expect(block).toContain(
+      "params.supersedes_memory_id",
+    )
+  })
+
+  test("memory_forget asks before forgetting", () => {
+    const block = extractToolBlock(
+      candidateSource,
+      "memory_forget",
+      "memory_consolidate",
+    )
+
+    expectProtectedMutation(
+      block,
+      "memory_forget",
+      "forgetMemoryThroughMemoriX(",
+    )
+    expect(block).toContain(
+      'operation: "forget_memory"',
+    )
+    expect(block).toContain(
+      "patterns: [params.memory_id]",
     )
   })
 

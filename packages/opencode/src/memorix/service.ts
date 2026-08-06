@@ -2,6 +2,8 @@ import path from "node:path"
 import os from "node:os"
 
 import { MemoriXClient } from "./client"
+import { strictNoMemoryMode } from "./benchmark-mode"
+import { normalizeMemoriXScopeIdentifier } from "./scope"
 import {
   MemoriXClientError,
   MemoriXConfigurationError,
@@ -9,6 +11,7 @@ import {
 } from "./errors"
 import type {
   MemoriXCandidate,
+  MemoriXContextOptions,
   MemoriXProposeCandidateInput,
   MemoriXProjectArchiveEntry,
   MemoriXProjectArchiveEntryType,
@@ -214,7 +217,9 @@ export function resolveDefaultMemoriXRuntimeRoot(
 
 export function memoriXServiceOptionsFromEnvironment(
   environment: MemoriXServiceEnvironment = {
+    MEMORIX_BENCHMARK_MODE: process.env.MEMORIX_BENCHMARK_MODE,
     MEMORIX_ENABLED: process.env.MEMORIX_ENABLED,
+    MEMORIX_USER_ID: process.env.MEMORIX_USER_ID,
     MEMORIX_PYTHON_EXECUTABLE:
       process.env.MEMORIX_PYTHON_EXECUTABLE,
     MEMORIX_RUNTIME_ROOT:
@@ -247,9 +252,9 @@ export function memoriXServiceOptionsFromEnvironment(
     "../../../..",
   )
 
-  const enabled =
-    overrides.enabled ??
-    parseBoolean(environment.MEMORIX_ENABLED, false)
+  const enabled = strictNoMemoryMode(environment as Record<string, string | undefined>)
+    ? false
+    : overrides.enabled ?? parseBoolean(environment.MEMORIX_ENABLED, false)
 
   const pythonExecutable =
     overrides.pythonExecutable ??
@@ -260,8 +265,13 @@ export function memoriXServiceOptionsFromEnvironment(
     overrides.runtimeRoot ??
     resolveDefaultMemoriXRuntimeRoot(environment)
 
+  const userID = normalizeMemoriXScopeIdentifier(
+    overrides.userID ?? environment.MEMORIX_USER_ID,
+  )
+
   return {
     enabled,
+    ...(userID ? { userID } : {}),
     pythonExecutable,
     projectRoot:
       overrides.projectRoot ?? repositoryRoot,
@@ -321,8 +331,13 @@ export class MemoriXService {
     options: MemoriXServiceOptions,
     dependencies: MemoriXServiceDependencies = {},
   ) {
+    const userID = normalizeMemoriXScopeIdentifier(
+      options.userID,
+    )
+
     this.options = {
       ...options,
+      userID,
       projectRoot: path.resolve(options.projectRoot),
       runtimeRoot: path.resolve(options.runtimeRoot),
       pythonExecutable: options.pythonExecutable
@@ -341,6 +356,10 @@ export class MemoriXService {
 
   get connected(): boolean {
     return this.client?.connected ?? false
+  }
+
+  get userID(): string | undefined {
+    return this.options.userID
   }
 
   async connect(): Promise<MemoriXServiceResult<void>> {
@@ -372,10 +391,7 @@ export class MemoriXService {
 
   async context(
     query: string,
-    options?: {
-      role?: string
-      topK?: number
-    },
+    options?: MemoriXContextOptions,
   ): Promise<MemoriXServiceResult<MemoriXRetrievalResult>> {
     return this.runSafely(
       (client) => client.context(query, options),
@@ -481,6 +497,7 @@ export class MemoriXService {
     validatedBy: string
     validationReason: string
     finalContent?: string | null
+    supersedesMemoryID?: string | null
   }): Promise<MemoriXServiceResult<JSONObject>> {
     return this.runSafely(
       (client) =>
@@ -492,6 +509,9 @@ export class MemoriXService {
             validation_reason: input.validationReason,
             ...(input.finalContent !== undefined
               ? { final_content: input.finalContent }
+              : {}),
+            ...(input.supersedesMemoryID !== undefined
+              ? { supersedes_memory_id: input.supersedesMemoryID }
               : {}),
           },
         ),
@@ -511,6 +531,24 @@ export class MemoriXService {
             candidate_id: input.candidateID,
             rejected_by: input.rejectedBy,
             rejection_reason: input.rejectionReason,
+          },
+        ),
+    )
+  }
+
+  async forgetMemory(input: {
+    memoryId: string
+    validatedBy: string
+    reason: string
+  }): Promise<MemoriXServiceResult<JSONObject>> {
+    return this.runSafely(
+      (client) =>
+        client.callTool<JSONObject>(
+          "memorix_forget_memory",
+          {
+            memory_id: input.memoryId,
+            validated_by: input.validatedBy,
+            reason: input.reason,
           },
         ),
     )

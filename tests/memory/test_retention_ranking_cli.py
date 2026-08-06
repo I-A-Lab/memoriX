@@ -12,7 +12,7 @@ class RetentionRankingCliTests(unittest.TestCase):
             process = subprocess.run(
                 [
                     sys.executable,
-                    "scripts/memorix_retention_ranking.py",
+                    "tools/memorix/diagnostics/memorix_retention_ranking.py",
                     "--runtime-root",
                     str(Path(directory) / "runtime"),
                     "--simulate-count",

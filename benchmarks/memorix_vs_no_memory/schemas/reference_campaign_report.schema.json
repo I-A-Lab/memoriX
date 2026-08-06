@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "memoriX real reference campaign",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "campaign_version",
+    "campaign_type",
+    "request",
+    "run_count",
+    "real_memorix_run_count",
+    "aggregates",
+    "comparisons",
+    "artifacts"
+  ]
+}

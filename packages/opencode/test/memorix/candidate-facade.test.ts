@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test"
 
 import {
+  forgetMemoryThroughMemoriX,
   getMemoriXStatus,
   listCandidatesThroughMemoriX,
   rejectCandidateThroughMemoriX,
@@ -57,6 +58,14 @@ function successfulService(): CandidateFacadeService {
     rejectCandidate: async () => ({
       ok: true,
       value: rejectedCandidate,
+    }),
+
+    forgetMemory: async () => ({
+      ok: true,
+      value: {
+        memory_id: "memory_test",
+        action: "deactivated",
+      },
     }),
 
     runConsolidation: async () => ({
@@ -161,6 +170,23 @@ describe("candidate memoriX facade", () => {
     expect(result.output).toContain(
       "memorix_hot_cold",
     )
+  })
+
+  test("forgets one memory", async () => {
+    const result = await forgetMemoryThroughMemoriX(
+      successfulService(),
+      {
+        memoryId: "memory_test",
+        validatedBy: "Elwen",
+        reason: "Stale fact.",
+      },
+    )
+
+    expect(result.metadata.ok).toBe(true)
+    expect(result.metadata.operation).toBe(
+      "forget_memory",
+    )
+    expect(result.output).toContain("deactivated")
   })
 
   test("converts a service failure safely", async () => {

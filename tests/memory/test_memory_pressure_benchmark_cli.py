@@ -2,7 +2,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 import subprocess,sys,tempfile,unittest
-SCRIPT=Path(__file__).resolve().parents[2]/"scripts"/"memorix_memory_pressure_benchmark.py"
+SCRIPT=Path(__file__).resolve().parents[2]/"tools"/"memorix"/"research"/"memorix_memory_pressure_benchmark.py"
 class MemoryPressureBenchmarkCliTests(unittest.TestCase):
  def test_cli_report(self):
   with tempfile.TemporaryDirectory() as directory:

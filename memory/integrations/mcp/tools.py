@@ -120,6 +120,12 @@ TOOL_DEFINITIONS: tuple[McpToolDefinition, ...] = (
                     "type": ["string", "null"]
                 },
                 "top_k": POSITIVE_INTEGER,
+                "project_id": {
+                    "type": ["string", "null"]
+                },
+                "user_id": {
+                    "type": ["string", "null"]
+                },
             },
             required=("query",),
         ),
@@ -200,6 +206,9 @@ TOOL_DEFINITIONS: tuple[McpToolDefinition, ...] = (
                 "validated_by": STRING,
                 "validation_reason": STRING,
                 "final_content": {
+                    "type": ["string", "null"]
+                },
+                "supersedes_memory_id": {
                     "type": ["string", "null"]
                 },
             },
@@ -664,6 +673,14 @@ class MemoriXMcpTools:
                 if top_k is not None
                 else None
             ),
+            project_id=_optional_text(
+                arguments,
+                "project_id",
+            ),
+            user_id=_optional_text(
+                arguments,
+                "user_id",
+            ),
         )
 
     def _search_cold_history(
@@ -755,6 +772,10 @@ class MemoriXMcpTools:
             final_content=_optional_text(
                 arguments,
                 "final_content",
+            ),
+            supersedes_memory_id=_optional_text(
+                arguments,
+                "supersedes_memory_id",
             ),
         )
 

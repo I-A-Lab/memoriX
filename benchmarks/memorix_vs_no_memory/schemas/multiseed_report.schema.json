@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "memoriX multi-seed report",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "orchestrator_version",
+    "suite",
+    "seeds",
+    "modes",
+    "run_count",
+    "aggregates",
+    "comparisons"
+  ]
+}

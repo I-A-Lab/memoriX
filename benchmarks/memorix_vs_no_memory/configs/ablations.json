@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "memorix_vs_no_memory",
+  "suite": "ablation",
+  "benchmark_version": "37.1",
+  "configurations": [
+    "no_memory",
+    "memorix_core",
+    "memorix_no_consolidation",
+    "memorix_no_routing",
+    "memorix_no_project_archive",
+    "memorix_single_agent",
+    "memorix_multi_agent"
+  ],
+  "effects": [
+    "persistent_memory_effect",
+    "consolidation_effect",
+    "routing_effect",
+    "project_archive_effect",
+    "multi_agent_effect"
+  ]
+}

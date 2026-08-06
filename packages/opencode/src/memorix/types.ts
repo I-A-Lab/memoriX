@@ -87,6 +87,13 @@ export type MemoriXRetrievalResult = {
   matches: MemoriXRetrievalMatch[]
 }
 
+export type MemoriXContextOptions = {
+  role?: string
+  topK?: number
+  projectID?: string | null
+  userID?: string | null
+}
+
 export type MemoriXRecordEventInput = {
   content: string
   event_type: string
@@ -108,7 +115,7 @@ export type MemoriXClientOptions = {
   pythonExecutable: string
 
   /**
-   * Absolute repository root containing scripts/memorix_mcp_server.py.
+   * Absolute repository root containing tools/memorix/runtime/memorix_mcp_server.py.
    */
   projectRoot: string
 
@@ -149,6 +156,7 @@ export type MemoriXServiceResult<T> =
 
 export type MemoriXServiceOptions = {
   enabled: boolean
+  userID?: string
   pythonExecutable?: string
   projectRoot: string
   runtimeRoot: string
@@ -162,7 +170,9 @@ export type MemoriXServiceOptions = {
 }
 
 export type MemoriXServiceEnvironment = {
+  MEMORIX_BENCHMARK_MODE?: string
   MEMORIX_ENABLED?: string
+  MEMORIX_USER_ID?: string
   MEMORIX_PYTHON_EXECUTABLE?: string
   MEMORIX_RUNTIME_ROOT?: string
   LOCALAPPDATA?: string
@@ -238,6 +248,20 @@ export type MemoriXProposeCandidateInput = {
   surprise?: number
   target_memory_id?: string | null
   metadata?: JSONObject
+}
+
+export type MemoriXValidateCandidateInput = {
+  candidate_id: string
+  validated_by: string
+  validation_reason: string
+  final_content?: string | null
+  supersedes_memory_id?: string | null
+}
+
+export type MemoriXForget = {
+  memory_id: string
+  validated_by: string
+  reason: string
 }
 export type MemoriXHookOptions = {
   captureUserMessages: boolean

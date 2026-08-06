@@ -147,11 +147,20 @@ class MemoriXGateway:
             self._cold_archive,
         )
 
+        self._capacity_operations = CapacityOperations(
+            lock_path=self._paths.capacity_lock,
+            events_path=self._paths.capacity_events,
+            latest_path=self._paths.capacity_latest,
+        )
+
         self._validation_service = (
             MemoryValidationService(
                 self._candidate_store,
                 self._hot_site,
                 configured_capacity=titan_max_items,
+                capacity_operations=(
+                    self._capacity_operations
+                ),
             )
         )
 
@@ -163,12 +172,6 @@ class MemoriXGateway:
                 self._hot_site,
                 policy=consolidation_policy,
             )
-        )
-
-        self._capacity_operations = CapacityOperations(
-            lock_path=self._paths.capacity_lock,
-            events_path=self._paths.capacity_events,
-            latest_path=self._paths.capacity_latest,
         )
 
         self._nightly_service = (
@@ -184,6 +187,9 @@ class MemoriXGateway:
                     self._paths.cold_archive_events
                 ),
                 log_path=self._paths.nightly_logs,
+                capacity_operations=(
+                    self._capacity_operations
+                ),
             )
         )
 
@@ -346,17 +352,22 @@ class MemoriXGateway:
         *,
         role: str | None = None,
         top_k: int | None = None,
+        project_id: str | None = None,
+        user_id: str | None = None,
     ) -> RetrievalResult:
         """Retrieve active validated memory from Titan only.
 
-        This method never reads the cold archive and never performs automatic
-        rehydration.
+        Optional project and user identifiers are strict metadata filters
+        applied before neural ranking. This method never reads the cold archive
+        and never performs automatic rehydration.
         """
 
         return self._hot_site.retrieve(
             query,
             role=role,
             top_k=top_k,
+            project_id=project_id,
+            user_id=user_id,
         )
 
     def search_cold_site_history(
@@ -415,14 +426,21 @@ class MemoriXGateway:
         validated_by: str,
         validation_reason: str,
         final_content: str | None = None,
+        supersedes_memory_id: str | None = None,
     ) -> ValidatedMemory:
-        """Human-validate a candidate into the Titan hot site only."""
+        """Human-validate a candidate into the Titan hot site only.
+
+        The optional supersedes_memory_id is authoritative when
+        provided: it selects the exact active hot-site memory that
+        the validated replacement supersedes.
+        """
 
         return self._validation_service.validate(
             candidate_id,
             validated_by=validated_by,
             validation_reason=validation_reason,
             final_content=final_content,
+            supersedes_memory_id=supersedes_memory_id,
         )
 
     def reject_memory_candidate(
@@ -488,6 +506,10 @@ class MemoriXGateway:
         )
         payload = snapshot.to_dict()
         if simulate_active_items is None:
+            live = self._hot_site.capacity_status()
+            payload["current_capacity"] = int(live["current_capacity"])
+            payload["baseline_capacity"] = int(live["baseline_capacity"])
+            payload["expansion_active"] = bool(live["expansion_active"])
             self._capacity_operations.record("capacity_checked", payload)
         return payload
 
@@ -846,6 +868,8 @@ def retrieve_memory(
     *,
     role: str | None = None,
     top_k: int | None = None,
+    project_id: str | None = None,
+    user_id: str | None = None,
 ) -> RetrievalResult:
     """Retrieve active memory from the default Titan hot site only."""
 
@@ -853,6 +877,8 @@ def retrieve_memory(
         query,
         role=role,
         top_k=top_k,
+        project_id=project_id,
+        user_id=user_id,
     )
 
 
