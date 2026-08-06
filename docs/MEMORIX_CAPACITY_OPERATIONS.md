@@ -58,6 +58,37 @@ Only eligible `DEACTIVATE` recommendations are translated into Titan
 `soft_forget` operations. Physical deletion is forbidden. Pinned or protected
 memories remain active. The cold archive remains untouched.
 
+## Nightly automatic maintenance
+
+While the hot site is expanded, the nightly runner executes capacity
+maintenance under a single `mutation_lock("nightly_capacity_maintenance")`:
+
+```text
+cold fingerprint -> usage-only pressure -> plan_soft_pruning ->
+apply_soft_pruning_plan -> consistency gate -> compact_inactive ->
+shrink_to_baseline -> cold fingerprint verify -> record capacity_maintained
+```
+
+Automatic soft-forgets use the fixed reviewer `memorix_nightly_capacity` and
+are capped by `ElasticCapacityPolicy.max_automatic_deactivations` (200).
+Compaction and shrinking are skipped when the consistency gate fails.
+Restoration to the baseline happens only at or below
+`floor(baseline * 0.80)` active items. The cold archive is fingerprinted
+before and after; any change raises `RuntimeError`.
+
+Every maintained run records a `capacity_maintained` event whose payload is
+the fixed 12-key report:
+
+```text
+capacity_before, capacity_after, active_before, active_after,
+automatic_soft_forgets, compaction_attempted, compaction_applied,
+shrink_attempted, shrink_applied, shrink_skipped_reason, consistency_ok,
+cold_site_modified
+```
+
+When the hot site is not expanded the maintenance step is a no-op: no lock,
+no event, every counter 0, `capacity_after == capacity_before`.
+
 ## Failure handling
 
 A full hot site rejects candidate admission before any Titan write. The

@@ -147,11 +147,20 @@ class MemoriXGateway:
             self._cold_archive,
         )
 
+        self._capacity_operations = CapacityOperations(
+            lock_path=self._paths.capacity_lock,
+            events_path=self._paths.capacity_events,
+            latest_path=self._paths.capacity_latest,
+        )
+
         self._validation_service = (
             MemoryValidationService(
                 self._candidate_store,
                 self._hot_site,
                 configured_capacity=titan_max_items,
+                capacity_operations=(
+                    self._capacity_operations
+                ),
             )
         )
 
@@ -163,12 +172,6 @@ class MemoriXGateway:
                 self._hot_site,
                 policy=consolidation_policy,
             )
-        )
-
-        self._capacity_operations = CapacityOperations(
-            lock_path=self._paths.capacity_lock,
-            events_path=self._paths.capacity_events,
-            latest_path=self._paths.capacity_latest,
         )
 
         self._nightly_service = (
@@ -184,6 +187,9 @@ class MemoriXGateway:
                     self._paths.cold_archive_events
                 ),
                 log_path=self._paths.nightly_logs,
+                capacity_operations=(
+                    self._capacity_operations
+                ),
             )
         )
 
@@ -500,6 +506,10 @@ class MemoriXGateway:
         )
         payload = snapshot.to_dict()
         if simulate_active_items is None:
+            live = self._hot_site.capacity_status()
+            payload["current_capacity"] = int(live["current_capacity"])
+            payload["baseline_capacity"] = int(live["baseline_capacity"])
+            payload["expansion_active"] = bool(live["expansion_active"])
             self._capacity_operations.record("capacity_checked", payload)
         return payload
 

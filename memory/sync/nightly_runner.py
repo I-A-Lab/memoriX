@@ -179,16 +179,23 @@ class NightlyRunner:
             report = MemoriXGateway(storage_paths=self.paths).run_nightly_consolidation(clear_short_term_after_success=clear_short_term_after_success)
             report_dict = report.to_dict()
             consolidation = report_dict.get('consolidation', {})
+            capacity_maintenance = report_dict.get('capacity_maintenance')
+            if capacity_maintenance is None:
+                maintenance = getattr(report, 'capacity_maintenance', None)
+                if maintenance is not None:
+                    capacity_maintenance = maintenance.to_dict()
             payload = {
                 **started,
                 'status': 'completed',
                 'completed_at': _utc_now(),
                 'duration_seconds': round(time.monotonic() - started_monotonic, 6),
                 'candidates_created': consolidation.get('candidates_created', 0),
-                'active_memories_replayed': report.active_memories_replayed,
-                'short_term_events_cleared': report.short_term_events_cleared,
-                'cold_site_modified': report.cold_site_modified,
-                'automatic_candidate_validation': report.automatic_candidate_validation,
+                'consolidation': consolidation,
+                'active_memories_replayed': report_dict.get('active_memories_replayed', getattr(report, 'active_memories_replayed', 0)),
+                'short_term_events_cleared': report_dict.get('short_term_events_cleared', getattr(report, 'short_term_events_cleared', 0)),
+                'cold_site_modified': report_dict.get('cold_site_modified', getattr(report, 'cold_site_modified', False)),
+                'automatic_candidate_validation': report_dict.get('automatic_candidate_validation', getattr(report, 'automatic_candidate_validation', False)),
+                'capacity_maintenance': capacity_maintenance,
             }
             append_json_line(self.paths.nightly_runs, payload)
             _atomic_write_json(self.paths.nightly_latest, payload)

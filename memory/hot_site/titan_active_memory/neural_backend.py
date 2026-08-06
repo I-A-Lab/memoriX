@@ -19,6 +19,12 @@ from typing import Any, Dict, List, Optional
 import json
 import os
 
+from memory.hot_site.titan_active_memory.elastic_capacity import (
+    DEFAULT_BASELINE_HEADROOM_RATIO,
+    CapacityConsistencyGateResult,
+    should_restore_baseline,
+)
+
 
 DEFAULT_TITAN_NEURAL_PATH = (
     Path("memory") / "hot_site" / "titan_active_memory" / "data" / "titan_memory.pt"
@@ -121,9 +127,13 @@ class NeuralTitanBackend:
     def store_validated_memory(
         self,
         memory: Dict[str, Any],
+        units: Optional[List[str]] = None,
     ) -> Dict[str, Any]:
         """
         Store an already validated memory into the real TitanExternalMemory.
+
+        ``units`` optionally pre-splits the content into atomic Titan units
+        so the splitter runs exactly once.
         """
 
         if not memory.get("id"):
@@ -137,7 +147,7 @@ class NeuralTitanBackend:
 
         content = str(memory["content"])
 
-        results = self.memory.store_text(content)
+        results = self.memory.store_text(content, units=units)
 
         titan_item_ids: List[int] = []
 
@@ -403,4 +413,154 @@ class NeuralTitanBackend:
             "reason": reason,
             "titan_item_ids": titan_item_ids,
             "changed_items": [int(item.id) for item in changed_items],
+        }
+
+    @property
+    def baseline_capacity(self) -> int:
+        """Return the persisted baseline capacity of the Titan store."""
+
+        return int(self.memory.baseline_capacity)
+
+    @property
+    def current_capacity(self) -> int:
+        """Return the live elastic current capacity of the Titan store."""
+
+        return int(self.memory.max_items)
+
+    def ensure_capacity_for(self, required_slots: int = 1) -> int:
+        """Expand the elastic capacity so more validated memories can enter.
+
+        Returns the current capacity after the expansion. The Titan state is
+        persisted only when the capacity actually changed. This never evicts
+        any memory.
+        """
+
+        if required_slots < 0:
+            raise ValueError("required_slots must be non-negative.")
+
+        before = int(self.memory.max_items)
+        expanded = self.memory._ensure_capacity_for(required_slots)
+
+        if expanded != before:
+            self.memory.save(self.memory_path)
+
+        return expanded
+
+    def consistency_gate(self) -> CapacityConsistencyGateResult:
+        """Verify that every active metadata record has a live Titan item."""
+
+        records = _read_jsonl(self.metadata_path)
+        active_records = [
+            record
+            for record in records
+            if record.get("active", True) is not False
+        ]
+        active_item_ids = {
+            int(item.id)
+            for item in self.memory.active_items
+        }
+
+        discrepancies: List[str] = []
+
+        for record in active_records:
+            titan_ids: List[int] = []
+
+            for raw_id in record.get("titan_item_ids", []) or []:
+                try:
+                    titan_ids.append(int(raw_id))
+                except (TypeError, ValueError):
+                    continue
+
+            if not any(
+                titan_id in active_item_ids
+                for titan_id in titan_ids
+            ):
+                discrepancies.append(
+                    "active metadata record "
+                    f"{record.get('memory_id')} has no active "
+                    "Titan item"
+                )
+
+        return CapacityConsistencyGateResult(
+            passed=not discrepancies,
+            active_metadata_records=len(active_records),
+            active_titan_items=len(active_item_ids),
+            metadata_records=len(records),
+            discrepancies=tuple(discrepancies),
+        )
+
+    def compact_inactive(self) -> int:
+        """Remove inactive Titan items and rebuild the LTM from active items.
+
+        Returns the number of removed inactive items. The cold site is never
+        touched.
+        """
+
+        removed = self.memory.remove_inactive_items()
+
+        if removed:
+            self.memory.rebuild_ltm_from_active()
+            self.memory.save(self.memory_path)
+
+        return removed
+
+    def shrink_to_baseline(
+        self,
+        active_count: int,
+        headroom_ratio: float = DEFAULT_BASELINE_HEADROOM_RATIO,
+    ) -> int:
+        """Restore the baseline capacity without evicting any item.
+
+        Returns the current capacity after shrinking. The baseline is restored
+        only when the active population satisfies the headroom rule
+        (``should_restore_baseline``), the persisted item population still
+        fits the baseline, and the hot site is internally consistent. Any
+        other condition leaves the capacity unchanged.
+        """
+
+        if active_count < 0:
+            raise ValueError("active_count must be non-negative.")
+
+        baseline = int(self.memory.baseline_capacity)
+        current = int(self.memory.max_items)
+
+        if current <= baseline:
+            return current
+
+        if not should_restore_baseline(
+            active_count,
+            baseline_capacity=baseline,
+            headroom_ratio=headroom_ratio,
+        ):
+            return current
+
+        if len(self.memory.items) > baseline:
+            return current
+
+        if not self.consistency_gate().passed:
+            return current
+
+        self.memory.max_items = baseline
+        self.memory.save(self.memory_path)
+
+        return baseline
+
+    def capacity_status(self) -> Dict[str, Any]:
+        """Return a live elastic capacity snapshot of the Titan store."""
+
+        active = len(self.memory.active_items)
+        total = len(self.memory.items)
+        current = int(self.memory.max_items)
+        baseline = int(self.memory.baseline_capacity)
+        usage_ratio = (active / current) if current > 0 else 0.0
+
+        return {
+            "baseline_capacity": baseline,
+            "current_capacity": current,
+            "expansion_active": current > baseline,
+            "available_slots": current - active,
+            "usage_ratio": round(usage_ratio, 6),
+            "active_items": active,
+            "inactive_items": total - active,
+            "total_items": total,
         }

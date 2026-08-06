@@ -169,6 +169,39 @@ A live lock causes the run to exit without launching a concurrent consolidation.
 
 The lock must be absent after every terminal outcome. If `nightly.lock` remains after a crashed process, inspect `latest.json` and `runs.jsonl` before removing it manually.
 
+## Capacity maintenance
+
+While the hot site is expanded, each nightly run also maintains capacity
+inside the same protected runner and the same repository lock. The step
+acquires `mutation_lock("nightly_capacity_maintenance")` and runs:
+
+```text
+prune -> consistency gate -> compact -> shrink
+```
+
+- Pressure is observed with the usage-only override
+  (`PressureWeights(usage_ratio=1.0, momentum=0.0, entropy=0.0,
+  surprise=0.0, persistence=0.0)`), so the default policy prunes at >= 70%
+  usage.
+- Automatic soft-forgets use the fixed reviewer
+  `memorix_nightly_capacity` and the run reference in the reason, capped at
+  `max_automatic_deactivations` (200).
+- Compaction and shrinking are skipped when the consistency gate fails.
+- Shrinking restores the baseline only when
+  `active_after <= floor(baseline * 0.80)`.
+- The cold archive is fingerprinted before and after; any change raises
+  `RuntimeError`.
+- A changed run records `capacity_maintained` with the fixed 12-key report
+  (capacity_before, capacity_after, active_before, active_after,
+  automatic_soft_forgets, compaction_attempted, compaction_applied,
+  shrink_attempted, shrink_applied, shrink_skipped_reason, consistency_ok,
+  cold_site_modified) and appends one JSON line to
+  `capacity_maintenance.jsonl`.
+
+When the hot site is not expanded the step is a no-op (no lock, no event).
+`latest.json` now carries both `consolidation` and `capacity_maintenance`
+sections after a successful run.
+
 ## Operational verification
 
 Run the complete repository verification:

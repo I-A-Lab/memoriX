@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
+from contextlib import nullcontext
+
 from memory.gateway.adaptive_validation import (
     AdaptiveValidationMetadataService,
 )
 from memory.gateway.capacity_control import (
-    require_capacity_admission,
+    ensure_expanded_capacity,
 )
+from memory.gateway.capacity_operations import CapacityOperations
 
 from dataclasses import replace
 
@@ -26,6 +29,21 @@ from memory.hot_site.titan_active_memory import (
 )
 
 
+def _split_memory_units(content: str) -> list[str]:
+    """Split validated content into atomic Titan units.
+
+    The splitter lives in titan_model, which imports torch eagerly; it is
+    imported lazily here so importing the validation gateway does not pull
+    torch into non-Titan tooling.
+    """
+
+    from memory.hot_site.titan_active_memory.titan_model import (
+        split_memory_units,
+    )
+
+    return split_memory_units(content)
+
+
 class CandidateValidationError(RuntimeError):
     """Raised when candidate validation cannot be completed safely."""
 
@@ -39,6 +57,7 @@ class MemoryValidationService:
         hot_site: HotSiteTitanMemory,
         *,
         configured_capacity: int = 50_000,
+        capacity_operations: CapacityOperations | None = None,
     ) -> None:
         if configured_capacity <= 0:
             raise ValueError("configured_capacity must be positive.")
@@ -46,6 +65,7 @@ class MemoryValidationService:
         self._candidate_store = candidate_store
         self._hot_site = hot_site
         self._configured_capacity = configured_capacity
+        self._capacity_operations = capacity_operations
 
     def validate(
         self,
@@ -109,11 +129,6 @@ class MemoryValidationService:
             explicit_target or candidate.target_memory_id
         )
 
-        require_capacity_admission(
-            self._hot_site,
-            configured_capacity=self._configured_capacity,
-        )
-
         content = (
             final_content.strip()
             if final_content is not None
@@ -124,6 +139,9 @@ class MemoryValidationService:
             raise ValueError(
                 "Validated memory content must not be empty."
             )
+
+        units = _split_memory_units(content)
+        required_slots = max(1, len(units))
 
         superseded_memory = None
         version = 1
@@ -182,11 +200,33 @@ class MemoryValidationService:
                      ),
         )
 
-        self._hot_site.store_validated(
-            validated_memory,
-            validated_by=reviewer,
-            validation_reason=explanation,
+        lock_context = (
+            self._capacity_operations.mutation_lock(
+                "capacity_expansion"
+            )
+            if self._capacity_operations is not None
+            else nullcontext()
         )
+
+        with lock_context:
+            ensure_expanded_capacity(
+                self._hot_site,
+                configured_capacity=self._configured_capacity,
+                required_slots=required_slots,
+                capacity_operations=self._capacity_operations,
+                applied_by=reviewer,
+                reason=explanation,
+                lock_held=(
+                    self._capacity_operations is not None
+                ),
+            )
+
+            self._hot_site.store_validated(
+                validated_memory,
+                validated_by=reviewer,
+                validation_reason=explanation,
+                units=units,
+            )
 
         if superseded_memory is not None:
             target_action, target_error = self._soft_deactivate(
