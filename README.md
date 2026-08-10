@@ -5,112 +5,98 @@
     <img src="packages/console/app/src/asset/logo-ornate-light.svg" alt="memoriX logo">
   </picture>
 </p>
-<p align="center">The open source AI coding agent powered by advanced long-term memory.</p>
-<p align="center">
-  <a href="README.md">English</a> |
-  <a href="README.fr.md">Français</a>
-</p>
+<p align="center">L'agent de codage IA open source propulsé par une mémoire à long terme avancée.</p>
 
 ---
 
 ## Qu'est-ce que memoriX ?
 
-**memoriX** est un agent de codage IA open source de nouvelle génération. Il ne se contente pas de générer du code : il dispose d'un système de mémoire à long terme avancé (via une intégration MCP et Titan) lui permettant d'orchestrer un cycle de développement logiciel (SDLC) complet, de retenir le contexte de manière durable, de gérer la pression de la mémoire, et d'apprendre des sessions précédentes.
+**memoriX** est un agent de codage IA de nouvelle génération, conçu pour les développeurs exigeants. Il ne se contente pas de générer du code ponctuel : grâce à son système de mémoire à long terme avancé (intégrant le moteur Titan et le protocole MCP), il est capable de retenir le contexte de vos projets de manière durable.
+
+memoriX orchestre un cycle de développement logiciel (SDLC) complet et multi-agents. Il comprend le contexte global, gère la charge cognitive (pression de la mémoire) et apprend des sessions précédentes pour ne jamais répéter les mêmes erreurs.
 
 ### Fonctionnalités Clés
 
-- **Orchestration SDLC Multi-Agents** : memoriX intègre un workflow complexe avec des agents spécialisés (`sdlc`, `dev_branch`, `test_branch`, `sdlc-orchestrator`) qui valident les besoins, créent des plans, implémentent le code et génèrent des tests de manière isolée et sécurisée.
-- **Mémoire à Long Terme (Titan)** : Intégration d'une mémoire persistante, incluant des scores de rétention adaptatifs, une consolidation contrôlée, des blocs de sujets dynamiques, et des diagnostics de pression de la mémoire.
-- **Recherche et cycle de vie des politiques de mémoire** : Modélisation, évaluation et validation de différentes politiques de rétention avant leur application.
-- **Observabilité et Diagnostics** : Outils intégrés pour évaluer la capacité et la saturation de la mémoire jusqu'à des millions d'éléments sans impacter les performances de l'espace de travail actif.
+- 🧠 **Mémoire à Long Terme (Titan)** : Persistance intelligente du contexte, avec un système de scoring adaptatif, une consolidation des données et la création de blocs thématiques dynamiques.
+- 🤖 **Orchestration SDLC Multi-Agents** : Des agents spécialisés isolés (`sdlc`, `dev_branch`, `test_branch`, `sdlc-orchestrator`) qui travaillent de concert pour valider les besoins, implémenter le code et générer des tests.
+- 📊 **Observabilité et Diagnostics** : Évaluation en temps réel de la capacité de mémoire et de la saturation du système, sans impacter les performances de vos développements.
+- ⚙️ **Routage Adaptatif** : Des plans d'élagage et de routage clairs garantissant que l'IA dispose toujours des éléments les plus pertinents pour accomplir sa tâche.
 
 ---
 
-## Installation
+## 🛠️ Installation et Lancement (Depuis les sources)
+
+Pour exécuter memoriX depuis son code source (recommandé pour ce dépôt) :
+
+### Prérequis
+- [Bun](https://bun.sh/) v1.3+ (Gestionnaire de paquets et runtime)
+- [Python](https://www.python.org/) 3.10+ (Pour le backend mémoire Titan)
+- Environnement PowerShell (recommandé sur Windows)
+
+### 1. Cloner le dépôt
 
 ```bash
-# YOLO
-curl -fsSL https://memorix.ai/install | bash
-
-# Package managers
-npm i -g memorix@latest        # or bun/pnpm/yarn
-scoop install memorix          # Windows
-choco install memorix          # Windows
-brew install memorix           # macOS and Linux
+git clone https://github.com/anomalyco/opencode.git memorix
+cd memorix
 ```
 
-> [!TIP]
-> Si vous utilisiez d'anciennes versions de l'outil, veillez à les désinstaller avant d'installer memoriX.
+### 2. Installer les dépendances
 
-### Desktop App (BETA)
-
-memoriX est également disponible en tant qu'application de bureau.
-
-| Platform              | Download                           |
-| --------------------- | ---------------------------------- |
-| macOS (Apple Silicon) | `memorix-desktop-mac-arm64.dmg`   |
-| macOS (Intel)         | `memorix-desktop-mac-x64.dmg`     |
-| Windows               | `memorix-desktop-windows-x64.exe` |
-| Linux                 | `.deb`, `.rpm`, or `.AppImage`     |
+Le projet utilise **Bun** pour gérer efficacement l'architecture monorepo :
 
 ```bash
-# macOS (Homebrew)
-brew install --cask memorix-desktop
-# Windows (Scoop)
-scoop bucket add extras; scoop install extras/memorix-desktop
+bun install
 ```
 
----
+### 3. Lancer l'application memoriX
 
-## Les Agents memoriX
+Le projet dispose d'un lanceur PowerShell dédié qui initialise le runtime Python, démarre le serveur MCP et lance l'environnement memoriX avec sa configuration complète prête à l'emploi :
 
-memoriX intègre un workflow exclusif basé sur une orchestration SDLC (Software Development Life Cycle). Ses agents spécialisés sont conçus pour structurer la création logicielle via une mémoire partagée persistante.
-
-- **sdlc** — Clarifie les exigences, produit les PRD/SRS et les plans, demande des approbations explicites, délègue l'implémentation et les tests, et gère la validation.
-- **dev_branch** — Implémente le code de l'application à partir de contrats immuables approuvés.
-- **test_branch** — Crée des tests automatisés ciblés indépendamment de l'implémentation.
-- **sdlc-orchestrator** — Évalue les résultats des tests et gère les cycles de correction délimités.
-
-Les outils natifs de mémoire sont enregistrés dans le registre partagé et accessibles à `sdlc`, `dev_branch`, et `test_branch` selon leurs permissions.
-
----
-
-## Architecture de la Mémoire (memoriX Integration)
-
-Le cœur de memoriX est son système de mémoire externe. Il inclut :
-
-- **Diagnostics de pression de la mémoire** : État de la pression en lecture seule et inspection via Python, MCP et des outils natifs. (Voir `docs/MEMORIX_MEMORY_PRESSURE.md`)
-- **Scoring adaptatif de rétention** : memoriX classe les mémoires du hot-site en utilisant des scores déterministes et explicables (dry-run). (Voir `docs/MEMORIX_RETENTION_SCORING.md`)
-- **Routage adaptatif** : Construction de plans d'admission et d'élagage explicables basés sur les signaux de capacité et de rétention.
-- **Capacité et saturation** : Inspection de capacité du hot-site, élagage "soft", et validation synthétique jusqu'à 6 millions d'éléments actifs.
-- **Recherche de politique de mémoire** : Comparaison des politiques de rétention et de routage sans appliquer la politique. (Voir `docs/MEMORIX_POLICY_SEARCH.md`)
-- **Blocs de sujets dynamiques** : Structuration de la mémoire. (Voir `docs/MEMORIX_TOPIC_BLOCKS.md`)
-- **Consolidation contrôlée** : Plans de consolidation approuvés manuellement, planification, récupération et intégration MCP.
-- **Observabilité** : Diagnostics délimités, snapshots, alertes, et évaluation continue sans impacter le moteur Titan.
-
-Consultez la documentation spécifique :
-- [Architecture](docs/MEMORIX_FINAL_ARCHITECTURE.md)
-- [Operations](docs/MEMORIX_OPERATIONS.md)
-- [Nightly operations](docs/MEMORIX_NIGHTLY_OPERATIONS.md)
-- [Validation report](docs/MEMORIX_VALIDATION_REPORT.md)
-
----
-
-## Scripts & Lancement
-
-Le projet dispose d'un lanceur PowerShell pour démarrer l'application avec toute la configuration memoriX prête à l'emploi (serveur MCP inclus, runtime validé) :
-
-```bash
-# Lancement de memoriX (Windows)
+```powershell
 .\scripts\start_opencode_with_memorix.ps1
 ```
 
-*(Note : le script PowerShell effectue des validations de sécurité sur le runtime pour garantir que la mémoire est bien séparée du dépôt du code).*
+*(Note : ce script effectue automatiquement les validations de sécurité sur l'environnement pour garantir que la mémoire est bien séparée de votre code source).*
 
 ---
 
-## Contribuer
+## 🚀 Utilisation Rapide (Versions pré-compilées)
 
-Si vous souhaitez contribuer à memoriX, veuillez lire notre [guide de contribution](./CONTRIBUTING.md) avant de soumettre une pull request.
+Si vous souhaitez utiliser memoriX globalement sur votre système, sans passer par les sources :
 
-**Rejoignez notre communauté :** [Discord](https://discord.gg/memorix) | [X.com](https://x.com/memorix)
+```bash
+# Installation YOLO (Linux / macOS)
+curl -fsSL https://memorix.ai/install | bash
+
+# Via les gestionnaires de paquets
+npm i -g memorix@latest        # ou bun / pnpm / yarn
+brew install memorix           # macOS (Homebrew)
+scoop install memorix          # Windows (Scoop)
+```
+
+> [!TIP]
+> Si vous utilisiez d'anciennes versions de l'outil, veillez à les désinstaller avant d'installer memoriX pour éviter tout conflit.
+
+---
+
+## 🏗️ Architecture de la Mémoire
+
+Le cœur de memoriX repose sur une séparation claire entre l'interface utilisateur et son système de mémoire externe. 
+
+L'intégration de la mémoire comprend :
+- **Hot-Site (Court Terme)** : Pour le contexte immédiat de session.
+- **Cold-Site (Long Terme)** : Consolidation, archivage et routage adaptatif (via MCP).
+- **Politiques de Mémoire** : Scoring de rétention déterministe pour gérer les millions d'éléments actifs sans surcharger le contexte du LLM.
+
+Pour plus d'informations techniques, consultez les dossiers :
+- [Architecture Finale](docs/MEMORIX_FINAL_ARCHITECTURE.md)
+- [Opérations](docs/MEMORIX_OPERATIONS.md)
+
+---
+
+## 🤝 Contribuer
+
+Les contributions sont les bienvenues ! Veuillez consulter notre [Guide de Contribution](./CONTRIBUTING.md) pour prendre connaissance des bonnes pratiques avant de soumettre une Pull Request.
+
+**Rejoignez la communauté :** 
+[Discord](https://discord.gg/memorix) | [X.com / Twitter](https://x.com/memorix)
