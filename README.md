@@ -5,98 +5,74 @@
     <img src="packages/console/app/src/asset/logo-ornate-light.svg" alt="memoriX logo">
   </picture>
 </p>
-<p align="center">L'agent de codage IA open source propulsé par une mémoire à long terme avancée.</p>
+<p align="center">Autonomous coding agent system based on a persistent long-term memory architecture.</p>
 
 ---
 
-## Qu'est-ce que memoriX ?
+## Introduction
 
-**memoriX** est un agent de codage IA de nouvelle génération, conçu pour les développeurs exigeants. Il ne se contente pas de générer du code ponctuel : grâce à son système de mémoire à long terme avancé (intégrant le moteur Titan et le protocole MCP), il est capable de retenir le contexte de vos projets de manière durable.
+**memoriX** is an artificial intelligence-driven software development agent designed to operate within a persistent memory architecture. Unlike stateless generation models, memoriX implements a comprehensive orchestration of the Software Development Life Cycle (SDLC). It relies on the Titan memory engine and the Model Context Protocol (MCP) to deterministically manage cognitive load, context retention, and information retrieval over extended development sessions.
 
-memoriX orchestre un cycle de développement logiciel (SDLC) complet et multi-agents. Il comprend le contexte global, gère la charge cognitive (pression de la mémoire) et apprend des sessions précédentes pour ne jamais répéter les mêmes erreurs.
+## Core Features
 
-### Fonctionnalités Clés
+- **Multi-Agent SDLC Orchestration**: The system relies on a distributed architecture of isolated specialized agents (`sdlc`, `dev_branch`, `test_branch`, `sdlc-orchestrator`). These agents collaborate via strict contracts to validate specifications, implement logic, and generate tests deterministically.
+- **Adaptive Memory Retention (Titan)**: Implementation of an intelligent persistence system including adaptive retention scoring, allowing controlled pruning and consolidation of data without loss of contextual integrity.
+- **Dynamic Data Structuring**: Unsupervised classification of context into thematic blocks, facilitating selective access and reducing information noise.
+- **State Analysis and Observability**: Integration of real-time diagnostic tools to evaluate memory saturation and pressure (capacity tested up to several million active nodes) without degrading the performance of the primary process.
 
-- 🧠 **Mémoire à Long Terme (Titan)** : Persistance intelligente du contexte, avec un système de scoring adaptatif, une consolidation des données et la création de blocs thématiques dynamiques.
-- 🤖 **Orchestration SDLC Multi-Agents** : Des agents spécialisés isolés (`sdlc`, `dev_branch`, `test_branch`, `sdlc-orchestrator`) qui travaillent de concert pour valider les besoins, implémenter le code et générer des tests.
-- 📊 **Observabilité et Diagnostics** : Évaluation en temps réel de la capacité de mémoire et de la saturation du système, sans impacter les performances de vos développements.
-- ⚙️ **Routage Adaptatif** : Des plans d'élagage et de routage clairs garantissant que l'IA dispose toujours des éléments les plus pertinents pour accomplir sa tâche.
+## Specifications and Prerequisites
 
----
+Executing the system from the source code requires the following environment:
+- **Bun** (v1.3 or higher): Required for package management and monorepo execution.
+- **Python** (v3.10 or higher): Required for the Titan memory engine and underlying analysis processes.
+- **Execution Environment**: PowerShell (recommended environment for Windows systems).
 
-## 🛠️ Installation et Lancement (Depuis les sources)
+## Installation Procedure (Compilation from source)
 
-Pour exécuter memoriX depuis son code source (recommandé pour ce dépôt) :
+1. **Cloning the source repository**
+   ```bash
+   git clone https://github.com/anomalyco/memoriX.git
+   cd memoriX
+   ```
 
-### Prérequis
-- [Bun](https://bun.sh/) v1.3+ (Gestionnaire de paquets et runtime)
-- [Python](https://www.python.org/) 3.10+ (Pour le backend mémoire Titan)
-- Environnement PowerShell (recommandé sur Windows)
+2. **Dependency Resolution**
+   The monorepo architecture requires the installation of modules via Bun:
+   ```bash
+   bun install
+   ```
 
-### 1. Cloner le dépôt
+## Runtime Execution
 
-```bash
-git clone https://github.com/anomalyco/opencode.git memorix
-cd memorix
-```
-
-### 2. Installer les dépendances
-
-Le projet utilise **Bun** pour gérer efficacement l'architecture monorepo :
-
-```bash
-bun install
-```
-
-### 3. Lancer l'application memoriX
-
-Le projet dispose d'un lanceur PowerShell dédié qui initialise le runtime Python, démarre le serveur MCP et lance l'environnement memoriX avec sa configuration complète prête à l'emploi :
+To initialize the execution environment, establish the connection to the MCP server, and launch the primary orchestration loop, execute the following bootstrap script:
 
 ```powershell
 .\scripts\start_opencode_with_memorix.ps1
 ```
 
-*(Note : ce script effectue automatiquement les validations de sécurité sur l'environnement pour garantir que la mémoire est bien séparée de votre code source).*
+*(Technical note: This script performs security validations on the execution environment to ensure strict isolation between the agent's memory space and the application's source code.)*
 
----
+## Global Installation (Pre-compiled binaries)
 
-## 🚀 Utilisation Rapide (Versions pré-compilées)
-
-Si vous souhaitez utiliser memoriX globalement sur votre système, sans passer par les sources :
+For utilizing memoriX as a global system tool without local compilation, the following methods are supported:
 
 ```bash
-# Installation YOLO (Linux / macOS)
+# Automated installation (POSIX Environments)
 curl -fsSL https://memorix.ai/install | bash
 
-# Via les gestionnaires de paquets
-npm i -g memorix@latest        # ou bun / pnpm / yarn
-brew install memorix           # macOS (Homebrew)
-scoop install memorix          # Windows (Scoop)
+# Installation via package managers
+npm i -g memorix@latest        # Alternative: bun / pnpm / yarn
+brew install memorix           # macOS (via Homebrew)
+scoop install memorix          # Windows (via Scoop)
 ```
 
-> [!TIP]
-> Si vous utilisiez d'anciennes versions de l'outil, veillez à les désinstaller avant d'installer memoriX pour éviter tout conflit.
+## Memory System Architecture
 
----
+The architecture of memoriX enforces a strict separation between the presentation layer (user interface) and the memory management daemon. The conceptual model is divided into several components:
 
-## 🏗️ Architecture de la Mémoire
+- **Hot-Site (Short-Term Memory)**: Space allocated to maintaining the active session context, optimized for minimal latency.
+- **Cold-Site (Long-Term Memory)**: Persistence space dedicated to archiving, consolidation, and adaptive routing (interfaced via MCP).
+- **Eviction Policies**: Deterministic scoring algorithms preventing the saturation of the Large Language Model (LLM) context window.
 
-Le cœur de memoriX repose sur une séparation claire entre l'interface utilisateur et son système de mémoire externe. 
-
-L'intégration de la mémoire comprend :
-- **Hot-Site (Court Terme)** : Pour le contexte immédiat de session.
-- **Cold-Site (Long Terme)** : Consolidation, archivage et routage adaptatif (via MCP).
-- **Politiques de Mémoire** : Scoring de rétention déterministe pour gérer les millions d'éléments actifs sans surcharger le contexte du LLM.
-
-Pour plus d'informations techniques, consultez les dossiers :
-- [Architecture Finale](docs/MEMORIX_FINAL_ARCHITECTURE.md)
-- [Opérations](docs/MEMORIX_OPERATIONS.md)
-
----
-
-## 🤝 Contribuer
-
-Les contributions sont les bienvenues ! Veuillez consulter notre [Guide de Contribution](./CONTRIBUTING.md) pour prendre connaissance des bonnes pratiques avant de soumettre une Pull Request.
-
-**Rejoignez la communauté :** 
-[Discord](https://discord.gg/memorix) | [X.com / Twitter](https://x.com/memorix)
+For comprehensive documentation of the architecture and its protocols, please consult the reference documents:
+- [Detailed Architecture](docs/MEMORIX_FINAL_ARCHITECTURE.md)
+- [Operations Manual](docs/MEMORIX_OPERATIONS.md)
