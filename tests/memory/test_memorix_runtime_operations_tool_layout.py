@@ -15,16 +15,19 @@ OPERATIONS_ROOT = TOOLS_ROOT / "operations"
 EXPECTED_RUNTIME_TOOLS = {
     "memorix_mcp_server.py",
     "start_opencode_with_memorix.ps1",
+    "start_memorix.ps1",
 }
 
 EXPECTED_OPERATION_TOOLS = {
     "install_memorix_nightly_task.ps1",
     "install_memorix_opencode_command.ps1",
+    "install_memorix_command.ps1",
     "memorix_nightly.py",
     "memorix_runtime_backup.py",
     "memorix_runtime_restore.py",
     "remove_memorix_nightly_task.ps1",
     "remove_memorix_opencode_command.ps1",
+    "remove_memorix_command.ps1",
     "run_memorix_nightly.ps1",
 }
 

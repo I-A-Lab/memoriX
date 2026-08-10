@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "profiles": {
+    "smoke": {
+      "pairs": 5,
+      "seeds": [101],
+      "memory_count": 10,
+      "distractor_count": 20,
+      "timeout_seconds": 240,
+      "automatic": true
+    },
+    "pilot": {
+      "pairs": 30,
+      "seeds": [101, 202, 303],
+      "memory_count": 100,
+      "distractor_count": 100,
+      "timeout_seconds": 360,
+      "automatic": true
+    },
+    "standard": {
+      "pairs": 100,
+      "seeds": [101, 202, 303, 404, 505],
+      "memory_count": 1000,
+      "distractor_count": 2000,
+      "timeout_seconds": 480,
+      "automatic": true
+    },
+    "large": {
+      "pairs": 500,
+      "seeds": [101, 202, 303, 404, 505],
+      "memory_count": 10000,
+      "distractor_count": 20000,
+      "timeout_seconds": 600,
+      "automatic": false
+    },
+    "research": {
+      "pairs": 1000,
+      "seeds": [101, 202, 303, 404, 505, 606, 707, 808, 909, 1010],
+      "memory_count": 100000,
+      "distractor_count": 250000,
+      "timeout_seconds": 900,
+      "automatic": false
+    }
+  }
+}

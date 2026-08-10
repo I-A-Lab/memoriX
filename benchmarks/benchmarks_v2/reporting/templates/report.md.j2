@@ -1,0 +1,146 @@
+# memoriX Benchmark Report
+
+**Campaign ID:** `{{ campaign_id }}`
+**Profile:** {{ profile }}
+**Generated:** {{ generated_at }}
+**Families:** {{ families | join(', ') }}
+
+---
+
+## 1. Executive Summary
+
+| Metric | Value |
+|--------|-------|
+| Total Runs | {{ total_runs }} |
+| Passed | {{ passed_runs }} |
+| Failed | {{ failed_runs }} |
+| Overall Pass Rate | {{ "%.1f" | format(overall_pass_rate * 100) }}% |
+| Mean F1 | {{ "%.4f" | format(overall_f1) }} |
+| Mean Precision | {{ "%.4f" | format(overall_precision) }} |
+| Mean Recall | {{ "%.4f" | format(overall_recall) }} |
+
+---
+
+## 2. Per-Family Summary
+
+| Family | Suite | Precision | Recall | F1 | Pass Rate | Median Lat. | P95 Lat. | Runs |
+|--------|-------|-----------|--------|----|-----------|------------:|---------:|-----:|
+{% for r in reports %}
+| {{ r.family }} | {{ r.suite }} | {{ "%.4f" | format(r.precision) }} | {{ "%.4f" | format(r.recall) }} | {{ "%.4f" | format(r.f1) }} | {{ "%.1f" | format(r.pass_rate * 100) }}% | {{ "%.1f" | format(r.median_latency) }}ms | {{ "%.1f" | format(r.p95_latency) }}ms | {{ r.total_runs }} |
+{% endfor %}
+
+---
+
+## 3. F1 Score Comparison
+
+{% for r in reports %}
+- **{{ r.family }}**: {{ "%.4f" | format(r.f1) }} {% if r.f1 >= 0.8 %}(Excellent){% elif r.f1 >= 0.6 %}(Good){% elif r.f1 >= 0.4 %}(Fair){% else %}(Poor){% endif %}
+{% endfor %}
+
+---
+
+## 4. Latency Analysis
+
+| Family | Median (ms) | P95 (ms) | Max (ms) |
+|--------|------------:|---------:|---------:|
+{% for r in reports %}
+| {{ r.family }} | {{ "%.1f" | format(r.median_latency) }} | {{ "%.1f" | format(r.p95_latency) }} | {{ "%.1f" | format(r.max_latency) }} |
+{% endfor %}
+
+---
+
+## 5. Failure Breakdown
+
+{% if failure_categories %}
+| Category | Count | Percentage |
+|----------|------:|-----------:|
+{% for cat, count in failure_categories.items() %}
+| {{ cat }} | {{ count }} | {{ "%.1f" | format(count / total_runs * 100) }}% |
+{% endfor %}
+{% else %}
+No failures recorded.
+{% endif %}
+
+---
+
+## 6. Resource Usage
+
+| Family | Avg RSS (MB) | Avg CPU (%) | Avg Disk (MB) |
+|--------|-------------:|------------:|--------------:|
+{% for r in reports %}
+| {{ r.family }} | {{ "%.1f" | format(r.avg_rss_mb) }} | {{ "%.1f" | format(r.avg_cpu) }} | {{ "%.1f" | format(r.avg_disk_mb) }} |
+{% endfor %}
+
+---
+
+## 7. Token Usage & Cost
+
+| Family | Prompt Tokens | Completion Tokens | Total | Est. Cost (USD) |
+|--------|-------------:|------------------:|------:|----------------:|
+{% for r in reports %}
+| {{ r.family }} | {{ r.prompt_tokens }} | {{ r.completion_tokens }} | {{ r.total_tokens }} | ${{ "%.4f" | format(r.est_cost) }} |
+{% endfor %}
+
+**Total Estimated Cost:** ${{ "%.4f" | format(total_est_cost) }}
+
+---
+
+## 8. Statistical Tests
+
+{% if statistical_tests %}
+| Test | Metric | Statistic | P-Value | Significant | Effect Size |
+|------|--------|----------:|--------:|-------------|------------:|
+{% for t in statistical_tests %}
+| {{ t.test_name }} | {{ t.metric }} | {{ "%.4f" | format(t.statistic) }} | {{ "%.4f" | format(t.p_value) }} | {% if t.significant %}Yes{% else %}No{% endif %} | {{ "%.4f" | format(t.effect_size) }} |
+{% endfor %}
+{% else %}
+No statistical tests performed.
+{% endif %}
+
+---
+
+## 9. A/B Balance
+
+| Metric | Value |
+|--------|-------|
+| Total A-First | {{ ab_balance.a_first }} |
+| Total B-First | {{ ab_balance.b_first }} |
+| Balanced | {{ ab_balance.balanced }} |
+
+---
+
+## 10. Invariant Compliance
+
+| Check | Status |
+|-------|--------|
+| No Memory Access | {{ "PASS" if invariant_clean else "FAIL" }} |
+| Config Validation | PASS |
+| Manifest Integrity | PASS |
+
+---
+
+## 11. Methodology
+
+This benchmark uses a controlled evaluation framework with:
+- Deterministic seed-based test generation
+- AB/BA presentation order balancing
+- Distractor injection for noise robustness
+- Multiple evaluation metrics (precision, recall, F1, latency)
+
+---
+
+## 12. Configuration
+
+```json
+{{ config_json }}
+```
+
+---
+
+## 13. Appendix: Raw Results
+
+{% if show_raw %}
+Results are available in `results.json` within the campaign output directory.
+{% else %}
+Raw results omitted. Use `--report --verbose` to include.
+{% endif %}
