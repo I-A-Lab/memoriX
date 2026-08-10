@@ -1,6 +1,6 @@
-# memoriX — Guide d'utilisation et de validation
+# memoriX — Usage and Validation Guide
 
-## Préparation
+## Preparation
 
 ```powershell
 Set-Location "D:\Ecole\Vietnam Projet\memoriX"
@@ -10,9 +10,9 @@ $PythonExe = (
 ).Trim()
 ```
 
-## Règle de runtime
+## Runtime Rule
 
-Les tests et validations manuelles doivent utiliser un runtime extérieur au dépôt :
+Manual tests and validations must use a runtime outside the repository:
 
 ```powershell
 $RuntimeRoot = Join-Path `
@@ -20,9 +20,9 @@ $RuntimeRoot = Join-Path `
     "memorix-runtime"
 ```
 
-Le dossier `memory/runtime` ne doit pas être créé par les tests.
+The `memory/runtime` folder must not be created by tests.
 
-## Prévalidation du lanceur OpenCode
+## Application Launcher Pre-validation
 
 ```powershell
 & "tools\memorix\runtime\start_opencode_with_memorix.ps1" `
@@ -30,7 +30,7 @@ Le dossier `memory/runtime` ne doit pas être créé par les tests.
     -ValidateOnly
 ```
 
-## Lancement OpenCode avec memoriX
+## Launching the Application with memoriX
 
 ```powershell
 & "tools\memorix\runtime\start_opencode_with_memorix.ps1" `
@@ -38,7 +38,7 @@ Le dossier `memory/runtime` ne doit pas être créé par les tests.
     -ResetRuntime
 ```
 
-## Outils OpenCode
+## Native Tools
 
 - `memory_store` ;
 - `memory_retrieve` ;
@@ -47,20 +47,20 @@ Le dossier `memory/runtime` ne doit pas être créé par les tests.
 - `memory_candidate_reject` ;
 - `memory_consolidate` ;
 - `memory_status`;
-- `project_archive_record` — mutation avec confirmation;
-- `project_archive_list` — lecture seule;
-- `project_snapshot_rebuild` — mutation avec confirmation;
-- `project_snapshot_get` — lecture seule.
+- `project_archive_record` — mutation with confirmation;
+- `project_archive_list` — read-only;
+- `project_snapshot_rebuild` — mutation with confirmation;
+- `project_snapshot_get` — read-only.
 
-Une candidate pending ou rejected ne doit jamais être retournée par `memory_retrieve`.
+A pending or rejected candidate must never be returned by `memory_retrieve`.
 
-## Typecheck OpenCode
+## Typecheck
 
 ```powershell
 bun run --cwd "packages\opencode" typecheck
 ```
 
-## Tests TypeScript memoriX
+## memoriX TypeScript Tests
 
 ```powershell
 bun test `
@@ -69,9 +69,9 @@ bun test `
     "test/memorix"
 ```
 
-## Tests Python
+## Python Tests
 
-Limiter les threads numériques évite les ralentissements excessifs de Torch et de BLAS :
+Limiting numeric threads avoids excessive slowdowns from Torch and BLAS:
 
 ```powershell
 $env:OMP_NUM_THREADS = "1"
@@ -88,24 +88,24 @@ $env:MEMORIX_RUNTIME_ROOT = Join-Path `
     -p "test_*.py"
 ```
 
-Sous Windows PowerShell 5.1, `unittest` peut écrire son affichage normal sur stderr. La validation réelle repose sur `$LASTEXITCODE` et sur la ligne `OK`.
+On Windows PowerShell 5.1, `unittest` may write its normal output to stderr. Actual validation relies on `$LASTEXITCODE` and the `OK` line.
 
-## Serveur MCP
+## MCP Server
 
 ```powershell
 & $PythonExe "tools\memorix\runtime\memorix_mcp_server.py"
 ```
 
-Le serveur attend des requêtes JSON-RPC sur stdin et répond sur stdout.
+The server expects JSON-RPC requests on stdin and responds on stdout.
 
-## Benchmark adaptatif
+## Adaptive Benchmark
 
 ```powershell
 & $PythonExe `
     "tools\memorix\research\memorix_adaptive_design_benchmark.py"
 ```
 
-Le benchmark utilise des scénarios synthétiques et n'applique aucune action.
+The benchmark uses synthetic scenarios and does not apply any actions.
 
 ## Live Probe
 
@@ -115,7 +115,7 @@ Le benchmark utilise des scénarios synthétiques et n'applique aucune action.
     $RuntimeRoot
 ```
 
-Résultat attendu :
+Expected output:
 
 ```text
 status: healthy
@@ -124,28 +124,28 @@ read_only: true
 runtime_modified: false
 ```
 
-## Variables principales
+## Main Variables
 
 - `MEMORIX_ENABLED` ;
 - `MEMORIX_PYTHON_EXECUTABLE` ;
 - `MEMORIX_PROJECT_ROOT` ;
 - `MEMORIX_RUNTIME_ROOT` ;
 - `MEMORIX_TIMEOUT_MS` ;
-- paramètres `MEMORIX_TITAN_*` ;
-- paramètres `MEMORIX_HOOK_*`.
+- `MEMORIX_TITAN_*` parameters ;
+- `MEMORIX_HOOK_*` parameters.
 
-## Contrats de sécurité
+## Security Contracts
 
-- retrieval hot-site only ;
-- cold search explicite uniquement ;
-- aucune validation automatique ;
-- aucune réhydratation automatique ;
-- aucune suppression physique du cold site ;
-- fonctions adaptatives en observation ou dry-run ;
-- outils mémoire exclus des hooks ;
-- panne memoriX non bloquante pour OpenCode.
+- hot-site only retrieval ;
+- explicit cold search only ;
+- no automatic validation ;
+- no automatic rehydration ;
+- no physical deletion from the cold site ;
+- adaptive functions in observation or dry-run ;
+- memory tools excluded from hooks ;
+- memoriX failure is non-blocking for the main application.
 
-## Vérifications Git
+## Git Checks
 
 ```powershell
 git status --short
@@ -155,7 +155,7 @@ git log -10 --oneline
 
 ## Project Archive
 
-Le Project Archive est un stockage cold explicite et append-only :
+The Project Archive is an explicit append-only cold storage:
 
 ```text
 <runtime>/cold_site/project_archive/
@@ -163,27 +163,27 @@ Le Project Archive est un stockage cold explicite et append-only :
 └── project_snapshots.jsonl
 ```
 
-Outils MCP :
+MCP Tools:
 
 - `memorix_project_entry_record`;
 - `memorix_project_entries_list`;
 - `memorix_project_snapshot_rebuild`;
 - `memorix_project_snapshot_get`.
 
-Les entrées structurées sont immuables. Chaque reconstruction ajoute une nouvelle version de snapshot. Aucune de ces opérations n'écrit dans Titan et aucune donnée Project Archive n'est utilisée comme fallback de retrieval.
+Structured entries are immutable. Each rebuild adds a new snapshot version. None of these operations write to Titan and no Project Archive data is used as a retrieval fallback.
 
-Permissions OpenCode :
+Application Permissions:
 
 - `project_archive_record` : `ask`;
 - `project_snapshot_rebuild` : `ask`;
-- `project_archive_list` : lecture seule;
-- `project_snapshot_get` : lecture seule.
+- `project_archive_list` : read-only;
+- `project_snapshot_get` : read-only.
 
-Les quatre outils sont obligatoirement exclus des hooks.
+All four tools are mandatory exclusions from hooks.
 
-## Nightly protégé
+## Protected Nightly
 
-Le nightly utilise un runner unique avec verrou, historique append-only et état terminal :
+The nightly uses a unique runner with a lock, append-only history, and terminal state:
 
 ```text
 <runtime>/operations/nightly/
@@ -192,7 +192,7 @@ Le nightly utilise un runner unique avec verrou, historique append-only et état
 └── nightly.lock
 ```
 
-Commandes principales :
+Main commands:
 
 ```powershell
 $RuntimeRoot = Join-Path $env:LOCALAPPDATA "memoriX\runtime"
@@ -208,9 +208,9 @@ $RuntimeRoot = Join-Path $env:LOCALAPPDATA "memoriX\runtime"
     -DailyAt "02:00"
 ```
 
-L'outil OpenCode `memory_nightly_run` demande une permission native avant exécution. Il est exclu des hooks et utilise `clear_short_term_after_success=true` par défaut.
+The native `memory_nightly_run` tool requires native permission before execution. It is excluded from hooks and uses `clear_short_term_after_success=true` by default.
 
-La procédure complète d'installation, de vérification et de dépannage est décrite dans [MEMORIX_NIGHTLY_OPERATIONS.md](MEMORIX_NIGHTLY_OPERATIONS.md).
+The complete installation, verification, and troubleshooting procedure is described in [MEMORIX_NIGHTLY_OPERATIONS.md](MEMORIX_NIGHTLY_OPERATIONS.md).
 
 ## Capacity operations
 
@@ -222,15 +222,15 @@ procedures are in `MEMORIX_CAPACITY_OPERATIONS.md`.
 
 ## Memory pressure operations
 
-Use `memorix_memory_pressure.py` for local diagnosis, or the read-only MCP/OpenCode pressure tools. Synthetic counts up to 6,000,000 do not allocate equivalent objects.
+Use `memorix_memory_pressure.py` for local diagnosis, or the read-only MCP/native pressure tools. Synthetic counts up to 6,000,000 do not allocate equivalent objects.
 
 ## Retention-ranking operations
 
-Use `tools/memorix/diagnostics/memorix_retention_ranking.py` for local diagnostics and the MCP/OpenCode retention-ranking tools for integrated inspection. All operations are read-only. The synthetic benchmark is `tools/memorix/research/memorix_retention_ranking_benchmark.py`.
+Use `tools/memorix/diagnostics/memorix_retention_ranking.py` for local diagnostics and the MCP/native retention-ranking tools for integrated inspection. All operations are read-only. The synthetic benchmark is `tools/memorix/research/memorix_retention_ranking_benchmark.py`.
 
 ## Adaptive-routing operations
 
-Use `tools/memorix/diagnostics/memorix_adaptive_routing.py`, MCP `memorix_adaptive_routing_plan`, or OpenCode `adaptive_routing_plan` for read-only diagnostics.
+Use `tools/memorix/diagnostics/memorix_adaptive_routing.py`, MCP `memorix_adaptive_routing_plan`, or native `adaptive_routing_plan` for read-only diagnostics.
 
 ## Policy-search operations
 
@@ -247,7 +247,7 @@ See `docs/MEMORIX_TOPIC_BLOCKS.md` and `docs/MEMORIX_TOPIC_BLOCKS_VALIDATION.md`
 
 ## Part 26 - controlled consolidation
 
-memoriX now supports reviewed consolidation plans, local session state, scheduling, recovery, MCP, and OpenCode integration.
+memoriX now supports reviewed consolidation plans, local session state, scheduling, recovery, MCP, and application integration.
 
 ## Part 27 - Observability
 
