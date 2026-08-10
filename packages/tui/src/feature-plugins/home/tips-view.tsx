@@ -1,4 +1,4 @@
-import type { TuiPluginApi } from "@memoriX-ai/plugin/tui"
+import type { TuiPluginApi } from "@opencode-ai/plugin/tui"
 import { createMemo, For, type Accessor } from "solid-js"
 import { DEFAULT_THEMES, useTheme } from "../../context/theme"
 import { useCommandShortcut } from "../../keymap"
@@ -89,7 +89,7 @@ function configShortcut(api: TuiPluginApi, command: string): TipShortcut {
   return () =>
     api.tuiConfig.keybinds
       .get(command)
-      .map((binding) => api.keys.formatSequence(Array.from(api.keymap.parseKeySequence(binding.key))))
+      .map((binding: any) => api.keys.formatSequence(Array.from(api.keymap.parseKeySequence(binding.key))))
       .filter(Boolean)
       .join(", ")
 }

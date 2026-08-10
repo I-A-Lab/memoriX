@@ -1651,8 +1651,6 @@ export function Prompt(props: PromptProps) {
                         </text>
                       )}
                     </Match>
-                    <Match when={true}>
-                    </Match>
                   </Switch>
                   <text fg={theme.text}>
                     {paletteShortcut()} <span style={{ fg: theme.textMuted }}>commands</span>
