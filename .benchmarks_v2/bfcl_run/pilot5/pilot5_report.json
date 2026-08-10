@@ -1,0 +1,211 @@
+{
+  "campaign": "oracle_pilot",
+  "results": [
+    {
+      "question_id": "bfcl_customer_001",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE The PIN format consists of 6 digits.",
+      "memorix_response": "VALUE: The account PIN format is 1234"
+    },
+    {
+      "question_id": "bfcl_customer_002",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: high"
+    },
+    {
+      "question_id": "bfcl_customer_003",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: high"
+    },
+    {
+      "question_id": "bfcl_customer_004",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE",
+      "memorix_response": "LOW"
+    },
+    {
+      "question_id": "bfcl_customer_005",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "7",
+      "memorix_response": "VALUE: 30 days"
+    },
+    {
+      "question_id": "bfcl_customer_006",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE The PIN format consists of 6 digits.",
+      "memorix_response": "VALUE: 1234"
+    },
+    {
+      "question_id": "bfcl_customer_007",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE The PIN format consists of 6 digits.",
+      "memorix_response": "VALUE: 1357"
+    },
+    {
+      "question_id": "bfcl_customer_008",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE",
+      "memorix_response": "LOW"
+    },
+    {
+      "question_id": "bfcl_customer_009",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "7",
+      "memorix_response": "VALUE: 90 days"
+    },
+    {
+      "question_id": "bfcl_customer_010",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "7",
+      "memorix_response": "VALUE: 60 days"
+    },
+    {
+      "question_id": "bfcl_customer_011",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE The PIN format consists of 6 digits.",
+      "memorix_response": "PIN format: 5678"
+    },
+    {
+      "question_id": "bfcl_customer_012",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "7",
+      "memorix_response": "VALUE: 90 days"
+    },
+    {
+      "question_id": "bfcl_customer_013",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: French"
+    },
+    {
+      "question_id": "bfcl_customer_014",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE\n(Please provide the actual value stored in the system for the account's preferred contact method.)",
+      "memorix_response": "VALUE: mail"
+    },
+    {
+      "question_id": "bfcl_customer_015",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE\n(Please provide the actual value stored in the system for the account's preferred contact method.)",
+      "memorix_response": "VALUE: chat"
+    },
+    {
+      "question_id": "bfcl_customer_016",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE\n(Please provide the actual value stored in the system for the account's preferred contact method.)",
+      "memorix_response": "EMAIL"
+    },
+    {
+      "question_id": "bfcl_customer_017",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE\n(Please provide the actual value stored in the system for the account's preferred contact method.)",
+      "memorix_response": "VALUE: phone"
+    },
+    {
+      "question_id": "bfcl_customer_018",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE",
+      "memorix_response": "LOW"
+    },
+    {
+      "question_id": "bfcl_customer_019",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE The PIN format consists of 6 digits.",
+      "memorix_response": "VALUE: 2468"
+    },
+    {
+      "question_id": "bfcl_customer_020",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: medium"
+    },
+    {
+      "question_id": "bfcl_customer_021",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE\n(Please provide the actual value stored in the system for the account's preferred contact method.)",
+      "memorix_response": "EMAIL"
+    },
+    {
+      "question_id": "bfcl_customer_022",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE\n(Please provide the actual value stored in the system for the account's preferred contact method.)",
+      "memorix_response": "EMAIL"
+    },
+    {
+      "question_id": "bfcl_customer_023",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE The PIN format consists of 6 digits.",
+      "memorix_response": "VALUE\n1357"
+    },
+    {
+      "question_id": "bfcl_customer_024",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE\n(Please provide the actual value stored in the system for the account's preferred contact method.)",
+      "memorix_response": "VALUE: mail"
+    },
+    {
+      "question_id": "bfcl_customer_025",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "7",
+      "memorix_response": "VALUE: 60 days"
+    }
+  ],
+  "summary": {
+    "total_pairs": 25,
+    "baseline_correct": 0,
+    "memorix_correct": 19,
+    "rate_memorix": 0.76
+  }
+}

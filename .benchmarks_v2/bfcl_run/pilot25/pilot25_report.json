@@ -1,0 +1,1011 @@
+{
+  "campaign": "oracle_pilot",
+  "results": [
+    {
+      "question_id": "bfcl_customer_001",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE The PIN format consists of 6 digits.",
+      "memorix_response": "VALUE: The account PIN format is 1234"
+    },
+    {
+      "question_id": "bfcl_customer_002",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: high"
+    },
+    {
+      "question_id": "bfcl_customer_003",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: high"
+    },
+    {
+      "question_id": "bfcl_customer_004",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE",
+      "memorix_response": "LOW"
+    },
+    {
+      "question_id": "bfcl_customer_005",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "7",
+      "memorix_response": "VALUE: 30 days"
+    },
+    {
+      "question_id": "bfcl_customer_006",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE The PIN format consists of 6 digits.",
+      "memorix_response": "VALUE: 1234"
+    },
+    {
+      "question_id": "bfcl_customer_007",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE The PIN format consists of 6 digits.",
+      "memorix_response": "VALUE: 1357"
+    },
+    {
+      "question_id": "bfcl_customer_008",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE",
+      "memorix_response": "LOW"
+    },
+    {
+      "question_id": "bfcl_customer_009",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "7",
+      "memorix_response": "VALUE: 90 days"
+    },
+    {
+      "question_id": "bfcl_customer_010",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "7",
+      "memorix_response": "VALUE: 60 days"
+    },
+    {
+      "question_id": "bfcl_customer_011",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE The PIN format consists of 6 digits.",
+      "memorix_response": "PIN format: 5678"
+    },
+    {
+      "question_id": "bfcl_customer_012",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "7",
+      "memorix_response": "VALUE: 90 days"
+    },
+    {
+      "question_id": "bfcl_customer_013",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: French"
+    },
+    {
+      "question_id": "bfcl_customer_014",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE\n(Please provide the actual value stored in the system for the account's preferred contact method.)",
+      "memorix_response": "VALUE: mail"
+    },
+    {
+      "question_id": "bfcl_customer_015",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE\n(Please provide the actual value stored in the system for the account's preferred contact method.)",
+      "memorix_response": "VALUE: chat"
+    },
+    {
+      "question_id": "bfcl_customer_016",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE\n(Please provide the actual value stored in the system for the account's preferred contact method.)",
+      "memorix_response": "EMAIL"
+    },
+    {
+      "question_id": "bfcl_customer_017",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE\n(Please provide the actual value stored in the system for the account's preferred contact method.)",
+      "memorix_response": "VALUE: phone"
+    },
+    {
+      "question_id": "bfcl_customer_018",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE",
+      "memorix_response": "LOW"
+    },
+    {
+      "question_id": "bfcl_customer_019",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE The PIN format consists of 6 digits.",
+      "memorix_response": "VALUE: 2468"
+    },
+    {
+      "question_id": "bfcl_customer_020",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: medium"
+    },
+    {
+      "question_id": "bfcl_customer_021",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE\n(Please provide the actual value stored in the system for the account's preferred contact method.)",
+      "memorix_response": "EMAIL"
+    },
+    {
+      "question_id": "bfcl_customer_022",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE\n(Please provide the actual value stored in the system for the account's preferred contact method.)",
+      "memorix_response": "EMAIL"
+    },
+    {
+      "question_id": "bfcl_customer_023",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE The PIN format consists of 6 digits.",
+      "memorix_response": "VALUE\n1357"
+    },
+    {
+      "question_id": "bfcl_customer_024",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE\n(Please provide the actual value stored in the system for the account's preferred contact method.)",
+      "memorix_response": "VALUE: mail"
+    },
+    {
+      "question_id": "bfcl_customer_025",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "7",
+      "memorix_response": "VALUE: 60 days"
+    },
+    {
+      "question_id": "bfcl_customer_026",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE\n(Please provide the actual value stored in the system for the account's preferred contact method.)",
+      "memorix_response": "EMAIL"
+    },
+    {
+      "question_id": "bfcl_customer_027",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE The PIN format consists of 6 digits.",
+      "memorix_response": "VALUE: the account PIN format is 1234"
+    },
+    {
+      "question_id": "bfcl_customer_028",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: medium"
+    },
+    {
+      "question_id": "bfcl_customer_029",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: urgent"
+    },
+    {
+      "question_id": "bfcl_customer_030",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE\n(Please provide the actual value stored in the system for the account's preferred contact method.)",
+      "memorix_response": "EMAIL"
+    },
+    {
+      "question_id": "bfcl_finance_001",
+      "domain": "finance",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: 14.99"
+    },
+    {
+      "question_id": "bfcl_finance_002",
+      "domain": "finance",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "N/A",
+      "memorix_response": "VALUE: 2.75%"
+    },
+    {
+      "question_id": "bfcl_finance_003",
+      "domain": "finance",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: 700"
+    },
+    {
+      "question_id": "bfcl_finance_004",
+      "domain": "finance",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE",
+      "memorix_response": "4.99"
+    },
+    {
+      "question_id": "bfcl_finance_005",
+      "domain": "finance",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: 700"
+    },
+    {
+      "question_id": "bfcl_finance_006",
+      "domain": "finance",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "N/A",
+      "memorix_response": "VALUE: 3.25%"
+    },
+    {
+      "question_id": "bfcl_finance_007",
+      "domain": "finance",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: 10000"
+    },
+    {
+      "question_id": "bfcl_finance_008",
+      "domain": "finance",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: 2500"
+    },
+    {
+      "question_id": "bfcl_finance_009",
+      "domain": "finance",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: 789012"
+    },
+    {
+      "question_id": "bfcl_finance_010",
+      "domain": "finance",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE\n9.99"
+    },
+    {
+      "question_id": "bfcl_finance_011",
+      "domain": "finance",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: 700"
+    },
+    {
+      "question_id": "bfcl_finance_012",
+      "domain": "finance",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: 123456"
+    },
+    {
+      "question_id": "bfcl_finance_013",
+      "domain": "finance",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: 700"
+    },
+    {
+      "question_id": "bfcl_finance_014",
+      "domain": "finance",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: 19.99"
+    },
+    {
+      "question_id": "bfcl_finance_015",
+      "domain": "finance",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: 5000"
+    },
+    {
+      "question_id": "bfcl_finance_016",
+      "domain": "finance",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: 700"
+    },
+    {
+      "question_id": "bfcl_finance_017",
+      "domain": "finance",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: 720"
+    },
+    {
+      "question_id": "bfcl_finance_018",
+      "domain": "finance",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: 456789"
+    },
+    {
+      "question_id": "bfcl_finance_019",
+      "domain": "finance",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: 700"
+    },
+    {
+      "question_id": "bfcl_finance_020",
+      "domain": "finance",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "N/A",
+      "memorix_response": "VALUE: 3.25%"
+    },
+    {
+      "question_id": "bfcl_finance_021",
+      "domain": "finance",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: 456789"
+    },
+    {
+      "question_id": "bfcl_finance_022",
+      "domain": "finance",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: 4.99"
+    },
+    {
+      "question_id": "bfcl_finance_023",
+      "domain": "finance",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: 19.99"
+    },
+    {
+      "question_id": "bfcl_finance_024",
+      "domain": "finance",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: 123456"
+    },
+    {
+      "question_id": "bfcl_finance_025",
+      "domain": "finance",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE\n9.99"
+    },
+    {
+      "question_id": "bfcl_healthcare_001",
+      "domain": "healthcare",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE:NONE",
+      "memorix_response": "O+"
+    },
+    {
+      "question_id": "bfcl_healthcare_002",
+      "domain": "healthcare",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE:NONE",
+      "memorix_response": "AB-"
+    },
+    {
+      "question_id": "bfcl_healthcare_003",
+      "domain": "healthcare",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE\n(Replace VALUE with the actual frequency provided by the prescription notes.)",
+      "memorix_response": "VALUE: once daily"
+    },
+    {
+      "question_id": "bfcl_healthcare_004",
+      "domain": "healthcare",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE\n(Replace VALUE with the actual frequency provided by the prescription notes.)",
+      "memorix_response": "VALUE: the medication frequency is once daily"
+    },
+    {
+      "question_id": "bfcl_healthcare_005",
+      "domain": "healthcare",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "PRESCRIPTION_NOTES_VALUE",
+      "memorix_response": "VALUE: 500 mg"
+    },
+    {
+      "question_id": "bfcl_healthcare_006",
+      "domain": "healthcare",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE\n(Replace VALUE with the actual frequency provided by the prescription notes.)",
+      "memorix_response": "VALUE: three times daily"
+    },
+    {
+      "question_id": "bfcl_healthcare_007",
+      "domain": "healthcare",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: 2025-01-20"
+    },
+    {
+      "question_id": "bfcl_healthcare_008",
+      "domain": "healthcare",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE:NONE",
+      "memorix_response": "B+"
+    },
+    {
+      "question_id": "bfcl_healthcare_009",
+      "domain": "healthcare",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "PRESCRIPTION_NOTES_VALUE",
+      "memorix_response": "VALUE: 750 mg"
+    },
+    {
+      "question_id": "bfcl_healthcare_010",
+      "domain": "healthcare",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "PRESCRIPTION_NOTES_VALUE",
+      "memorix_response": "VALUE: 500 mg"
+    },
+    {
+      "question_id": "bfcl_healthcare_011",
+      "domain": "healthcare",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE:NONE",
+      "memorix_response": "VALUE: sulfa, aspirin, latex, penicillin"
+    },
+    {
+      "question_id": "bfcl_healthcare_012",
+      "domain": "healthcare",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE\n(Replace VALUE with the actual frequency provided by the prescription notes.)",
+      "memorix_response": "VALUE: three times daily"
+    },
+    {
+      "question_id": "bfcl_healthcare_013",
+      "domain": "healthcare",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE\n(Replace VALUE with the actual frequency provided by the prescription notes.)",
+      "memorix_response": "VALUE: once daily"
+    },
+    {
+      "question_id": "bfcl_healthcare_014",
+      "domain": "healthcare",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE:NONE",
+      "memorix_response": "AB-"
+    },
+    {
+      "question_id": "bfcl_healthcare_015",
+      "domain": "healthcare",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE",
+      "memorix_response": "2025-01-20"
+    },
+    {
+      "question_id": "bfcl_healthcare_016",
+      "domain": "healthcare",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE:NONE",
+      "memorix_response": "aspirin, latex, penicillin, sulfa"
+    },
+    {
+      "question_id": "bfcl_healthcare_017",
+      "domain": "healthcare",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE:NONE",
+      "memorix_response": "AB-"
+    },
+    {
+      "question_id": "bfcl_healthcare_018",
+      "domain": "healthcare",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE\n(Replace VALUE with the actual frequency provided by the prescription notes.)",
+      "memorix_response": "VALUE: the medication frequency is every other day"
+    },
+    {
+      "question_id": "bfcl_healthcare_019",
+      "domain": "healthcare",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE:NONE",
+      "memorix_response": "VALUE: aspirin"
+    },
+    {
+      "question_id": "bfcl_healthcare_020",
+      "domain": "healthcare",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE:NONE",
+      "memorix_response": "VALUE: aspirin, latex, penicillin, sulfa"
+    },
+    {
+      "question_id": "bfcl_healthcare_021",
+      "domain": "healthcare",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE\n(Replace VALUE with the actual frequency provided by the prescription notes.)",
+      "memorix_response": "VALUE\n- the medication frequency is three times daily"
+    },
+    {
+      "question_id": "bfcl_healthcare_022",
+      "domain": "healthcare",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE\n(Replace VALUE with the actual frequency provided by the prescription notes.)",
+      "memorix_response": "VALUE: three times daily"
+    },
+    {
+      "question_id": "bfcl_healthcare_023",
+      "domain": "healthcare",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: 2025-01-20"
+    },
+    {
+      "question_id": "bfcl_healthcare_024",
+      "domain": "healthcare",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE:NONE",
+      "memorix_response": "the patient blood type is B+"
+    },
+    {
+      "question_id": "bfcl_healthcare_025",
+      "domain": "healthcare",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE:NONE",
+      "memorix_response": "AB-"
+    },
+    {
+      "question_id": "bfcl_notetaker_001",
+      "domain": "notetaker",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE\nTuesday"
+    },
+    {
+      "question_id": "bfcl_notetaker_002",
+      "domain": "notetaker",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE\n(No meeting venue found in the provided meeting notes.)",
+      "memorix_response": "VALUE: Room 401"
+    },
+    {
+      "question_id": "bfcl_notetaker_003",
+      "domain": "notetaker",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE\nNOT_FOUND",
+      "memorix_response": "the board decision is rejected"
+    },
+    {
+      "question_id": "bfcl_notetaker_004",
+      "domain": "notetaker",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: 9:00 AM"
+    },
+    {
+      "question_id": "bfcl_notetaker_005",
+      "domain": "notetaker",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE\n(No meeting venue found in the provided meeting notes.)",
+      "memorix_response": "VALUE: Room 401"
+    },
+    {
+      "question_id": "bfcl_notetaker_006",
+      "domain": "notetaker",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: Dave"
+    },
+    {
+      "question_id": "bfcl_notetaker_007",
+      "domain": "notetaker",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE\nNOT_FOUND",
+      "memorix_response": "the board decision is deferred"
+    },
+    {
+      "question_id": "bfcl_notetaker_008",
+      "domain": "notetaker",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: Friday"
+    },
+    {
+      "question_id": "bfcl_notetaker_009",
+      "domain": "notetaker",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE\n3:00 PM"
+    },
+    {
+      "question_id": "bfcl_notetaker_010",
+      "domain": "notetaker",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE\nthe meeting time is 10:00 AM"
+    },
+    {
+      "question_id": "bfcl_notetaker_011",
+      "domain": "notetaker",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: Carol"
+    },
+    {
+      "question_id": "bfcl_notetaker_012",
+      "domain": "notetaker",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE the project deadline is Monday"
+    },
+    {
+      "question_id": "bfcl_notetaker_013",
+      "domain": "notetaker",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE the project deadline is Thursday"
+    },
+    {
+      "question_id": "bfcl_notetaker_014",
+      "domain": "notetaker",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: 1:30 PM"
+    },
+    {
+      "question_id": "bfcl_notetaker_015",
+      "domain": "notetaker",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: Tuesday"
+    },
+    {
+      "question_id": "bfcl_notetaker_016",
+      "domain": "notetaker",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE Tuesday"
+    },
+    {
+      "question_id": "bfcl_notetaker_017",
+      "domain": "notetaker",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE\nNOT_FOUND",
+      "memorix_response": "BOARD DECISION IS DEFERRED"
+    },
+    {
+      "question_id": "bfcl_notetaker_018",
+      "domain": "notetaker",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: Dave"
+    },
+    {
+      "question_id": "bfcl_notetaker_019",
+      "domain": "notetaker",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE\nNOT_FOUND",
+      "memorix_response": "the board decision is rejected"
+    },
+    {
+      "question_id": "bfcl_notetaker_020",
+      "domain": "notetaker",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE\n(No meeting venue found in the provided meeting notes.)",
+      "memorix_response": "Room 401"
+    },
+    {
+      "question_id": "bfcl_notetaker_021",
+      "domain": "notetaker",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE\nNOT_FOUND",
+      "memorix_response": "VALUE The board decision is deferred."
+    },
+    {
+      "question_id": "bfcl_notetaker_022",
+      "domain": "notetaker",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE\nNOT_FOUND",
+      "memorix_response": "the board decision is rejected"
+    },
+    {
+      "question_id": "bfcl_notetaker_023",
+      "domain": "notetaker",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE\nNOT_FOUND",
+      "memorix_response": "deferred"
+    },
+    {
+      "question_id": "bfcl_notetaker_024",
+      "domain": "notetaker",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: Alice"
+    },
+    {
+      "question_id": "bfcl_notetaker_025",
+      "domain": "notetaker",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE\nNOT_FOUND",
+      "memorix_response": "deferred"
+    },
+    {
+      "question_id": "bfcl_student_001",
+      "domain": "student",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "SYLLABUS_VALUE",
+      "memorix_response": "VALUE 25%"
+    },
+    {
+      "question_id": "bfcl_student_002",
+      "domain": "student",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE\nChapter 2"
+    },
+    {
+      "question_id": "bfcl_student_003",
+      "domain": "student",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "SYLLABUS_VALUE",
+      "memorix_response": "VALUE\n15%"
+    },
+    {
+      "question_id": "bfcl_student_004",
+      "domain": "student",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "5:00 PM"
+    },
+    {
+      "question_id": "bfcl_student_005",
+      "domain": "student",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: 7:00 PM"
+    },
+    {
+      "question_id": "bfcl_student_006",
+      "domain": "student",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "May 15"
+    },
+    {
+      "question_id": "bfcl_student_007",
+      "domain": "student",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "June 2"
+    },
+    {
+      "question_id": "bfcl_student_008",
+      "domain": "student",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: 90"
+    },
+    {
+      "question_id": "bfcl_student_009",
+      "domain": "student",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE\nChapter 4"
+    },
+    {
+      "question_id": "bfcl_student_010",
+      "domain": "student",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "SYLLABUS_VALUE",
+      "memorix_response": "VALUE\n20%"
+    },
+    {
+      "question_id": "bfcl_student_011",
+      "domain": "student",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "SYLLABUS_VALUE",
+      "memorix_response": "VALUE: 20%"
+    },
+    {
+      "question_id": "bfcl_student_012",
+      "domain": "student",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "SYLLABUS_VALUE",
+      "memorix_response": "VALUE: 25%"
+    },
+    {
+      "question_id": "bfcl_student_013",
+      "domain": "student",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE\nChapter 7"
+    },
+    {
+      "question_id": "bfcl_student_014",
+      "domain": "student",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE\nChapter 2"
+    },
+    {
+      "question_id": "bfcl_student_015",
+      "domain": "student",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE\nChapter 2"
+    },
+    {
+      "question_id": "bfcl_student_016",
+      "domain": "student",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "6:30 PM"
+    },
+    {
+      "question_id": "bfcl_student_017",
+      "domain": "student",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE\n80"
+    },
+    {
+      "question_id": "bfcl_student_018",
+      "domain": "student",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: 90"
+    },
+    {
+      "question_id": "bfcl_student_019",
+      "domain": "student",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE\nChapter 2"
+    },
+    {
+      "question_id": "bfcl_student_020",
+      "domain": "student",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "6:30 PM"
+    }
+  ],
+  "summary": {
+    "total_pairs": 125,
+    "baseline_correct": 0,
+    "memorix_correct": 95,
+    "rate_memorix": 0.76
+  }
+}

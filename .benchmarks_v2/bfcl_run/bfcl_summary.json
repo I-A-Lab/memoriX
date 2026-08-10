@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "scale": 5,
+  "model": "qwen2.5:3b",
+  "consolidated": true,
+  "campaigns": {
+    "canary": {
+      "total_pairs": 5,
+      "baseline_correct": 0,
+      "memorix_correct": 4,
+      "rate_memorix": 0.8
+    },
+    "pilot5": {
+      "total_pairs": 25,
+      "baseline_correct": 0,
+      "memorix_correct": 19,
+      "rate_memorix": 0.76
+    },
+    "pilot25": {
+      "total_pairs": 125,
+      "baseline_correct": 0,
+      "memorix_correct": 95,
+      "rate_memorix": 0.76
+    },
+    "blind": {
+      "total_questions": 125,
+      "corpus_contains_reference": 125,
+      "retrieval_contains_reference": 96,
+      "correct_answer": 96,
+      "rate_corpus_contains_reference": 1.0,
+      "rate_retrieval_contains_reference": 0.768,
+      "rate_correct_answer": 0.768
+    },
+    "robustness": {
+      "total_cases": 50,
+      "total_runs": 150,
+      "corpus_contains_reference": 150,
+      "retrieval_contains_reference": 96,
+      "correct_answer": 96,
+      "cases_successful_3of3": 22,
+      "cases_successful_at_least_2of3": 34
+    }
+  }
+}

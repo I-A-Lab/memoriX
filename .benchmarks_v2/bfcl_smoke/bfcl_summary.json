@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "scale": 1,
+  "model": "qwen2.5:3b",
+  "campaigns": {
+    "canary": {
+      "total_pairs": 1,
+      "baseline_correct": 0,
+      "memorix_correct": 1,
+      "rate_memorix": 1.0
+    },
+    "pilot5": {
+      "total_pairs": 5,
+      "baseline_correct": 0,
+      "memorix_correct": 4,
+      "rate_memorix": 0.8
+    }
+  }
+}

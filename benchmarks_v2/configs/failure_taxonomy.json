@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "categories": {
+    "TECH_TIMEOUT": {
+      "description": "Run exceeded the configured timeout threshold",
+      "regex": "(?i)timeout|timed?\\s*out|deadline\\s*exceeded"
+    },
+    "TECH_OOM": {
+      "description": "Out-of-memory or RSS exceeded hard ceiling",
+      "regex": "(?i)out\\s*of\\s*memory|oom|memory\\s*exceeded|allocation\\s*failed"
+    },
+    "TECH_CORRUPTION": {
+      "description": "Data corruption or integrity check failure",
+      "regex": "(?i)corrupt|integrity\\s*check\\s*fail|checksum\\s*mismatch|hash\\s*mismatch"
+    },
+    "TECH_IO_ERROR": {
+      "description": "File-system or network I/O failure",
+      "regex": "(?i)io\\s*error|file\\s*not\\s*found|permission\\s*denied|connection\\s*(refused|reset|error)"
+    },
+    "TECH_DEPENDENCY": {
+      "description": "Missing or broken dependency",
+      "regex": "(?i)import\\s*error|module\\s*not\\s*found|no\\s*module\\s*named|dependency\\s*not\\s*satisfied"
+    },
+    "TECH_CONFIG": {
+      "description": "Invalid configuration or missing required field",
+      "regex": "(?i)config\\s*(error|invalid|missing)|missing\\s*required\\s*(field|parameter)|validation\\s*error"
+    },
+    "TECH_UNCAUGHT": {
+      "description": "Unhandled exception or unexpected crash",
+      "regex": "(?i)unhandled|unexpected|traceback|exception|error\\s*\\(most\\s*recent\\s*call"
+    },
+    "AGENT_REFUSAL": {
+      "description": "Agent refused to perform the requested action",
+      "regex": "(?i)i\\s*can'?t|unable\\s*to\\s*assist|against\\s*(my|the)\\s*policy|refuse|not\\s*authorized"
+    },
+    "AGENT_HALLUCINATION": {
+      "description": "Agent produced fabricated facts or references",
+      "regex": "(?i)hallucinat|fabricat|invented|not\\s*found\\s*in\\s*(source|context)|source\\s*not\\s*available"
+    },
+    "AGENT_DRIFT": {
+      "description": "Agent response drifted from the original query intent",
+      "regex": "(?i)drift|off.?topic|not\\s*relevant|does\\s*not\\s*address|unrelated\\s*response"
+    },
+    "AGENT_FORMAT": {
+      "description": "Agent output violated the required format or schema",
+      "regex": "(?i)invalid\\s*format|malformed|schema\\s*violation|expected\\s*(json|list|table)|parse\\s*error"
+    },
+    "AGENT_TRUNCATION": {
+      "description": "Agent response was truncated or incomplete",
+      "regex": "(?i)truncat|incomplete|cut\\s*off|length\\s*limit|token\\s*limit"
+    },
+    "AGENT_SAFETY": {
+      "description": "Agent triggered a safety filter or content policy block",
+      "regex": "(?i)safety|content\\s*policy|blocked|filtered|sensitive\\s*content"
+    },
+    "MEM_RECALL_MISS": {
+      "description": "Memory recall failed to retrieve the target memory",
+      "regex": "(?i)recall\\s*miss|not\\s*recalled|memory\\s*not\\s*found|no\\s*matching\\s*memory"
+    },
+    "MEM_RECALL_DRIFT": {
+      "description": "Memory recall returned an incorrect or off-topic memory",
+      "regex": "(?i)wrong\\s*memory|incorrect\\s*recall|recall\\s*drift|unrelated\\s*memory"
+    },
+    "MEM_FORGET": {
+      "description": "Previously stored memory was lost or not persisted",
+      "regex": "(?i)forget|lost|not\\s*persisted|missing\\s*memory|memory\\s*expired"
+    },
+    "MEM_CONSOLIDATION": {
+      "description": "Memory consolidation or merging produced incorrect results",
+      "regex": "(?i)consolidat|merge\\s*error|incorrect\\s*consolidation|data\\s*loss\\s*during"
+    },
+    "MEM_DUPLICATE": {
+      "description": "Duplicate memory was created instead of updating existing",
+      "regex": "(?i)duplicate|already\\s*exists|redundant|not\\s*deduplicated"
+    },
+    "PASS": {
+      "description": "Run completed successfully with no failure",
+      "regex": "(?i)^success$|^pass$|^ok$"
+    }
+  }
+}

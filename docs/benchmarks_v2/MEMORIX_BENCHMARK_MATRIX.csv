@@ -1,0 +1,13 @@
+Campaign Name,Historical Value,Raw Data Available,Reliability,Limitations,Proposed New Version
+Internal OpenCode A/B,58 valid pairs,No,Moderate,Small sample size; unknown statistical power,Large OpenCode A/B (1000+ pairs)
+Historical Multi-agent,750 pairs,No,Low,Raw data missing; old protocol,Multi-agent Shared Memory (750+ pairs)
+Galileo proxy,20 runs,No,Low,No retrieval influence; unofficial metric,Arena-inspired local campaign
+BFCL Canary,1 pair,No,High,Demonstration only,Fully Blind Curation (100+ cases)
+BFCL 5-case pilot,5 pairs,No,High,Too small,Fully Blind Curation (100+ cases)
+BFCL 25-case oracle,25 pairs,No,High,Oracle-assisted selection; not autonomous,Ablation: Oracle vs Blind Retrieval
+BFCL Blind Curation,25 cases,No,High,Identified bottleneck in answer generation,Extended Blind Curation (100+ cases)
+Three-seed robustness,10 cases x 3 seeds,No,High,Diagnostic scope only,Stress Test Robustness (5 seeds; high distractors)
+Capacity Phase 1/1B,36 distinct facts,No,High,Limited scale,Scale to extreme (100k memories)
+Scaled Load,5000 memories,No,High,Only measured latency,Latency + Capacity Edge Cases (Expand/Shrink)
+Manual Extension,5000 to 6000,No,High,Requires restart,Automated expansion verification
+Real todo-list,1 SDLC cycle,No,High,Single case study,SDLC Full Lifecycle (100+ cases)

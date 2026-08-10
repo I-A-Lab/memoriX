@@ -1,0 +1,19 @@
+{
+  "campaign": "oracle_pilot",
+  "results": [
+    {
+      "question_id": "bfcl_customer_001",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE The PIN format consists of 6 digits.",
+      "memorix_response": "VALUE: The account PIN format is 1234"
+    }
+  ],
+  "summary": {
+    "total_pairs": 1,
+    "baseline_correct": 0,
+    "memorix_correct": 1,
+    "rate_memorix": 1.0
+  }
+}

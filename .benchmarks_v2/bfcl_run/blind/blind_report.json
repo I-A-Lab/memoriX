@@ -1,0 +1,1014 @@
+{
+  "campaign": "blind_curation",
+  "results": [
+    {
+      "question_id": "bfcl_customer_001",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: The account PIN format is 1234"
+    },
+    {
+      "question_id": "bfcl_customer_002",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: high"
+    },
+    {
+      "question_id": "bfcl_customer_003",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: high"
+    },
+    {
+      "question_id": "bfcl_customer_004",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "LOW"
+    },
+    {
+      "question_id": "bfcl_customer_005",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 30 days"
+    },
+    {
+      "question_id": "bfcl_customer_006",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 1234"
+    },
+    {
+      "question_id": "bfcl_customer_007",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 1357"
+    },
+    {
+      "question_id": "bfcl_customer_008",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "LOW"
+    },
+    {
+      "question_id": "bfcl_customer_009",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 90 days"
+    },
+    {
+      "question_id": "bfcl_customer_010",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 60 days"
+    },
+    {
+      "question_id": "bfcl_customer_011",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "PIN format: 5678"
+    },
+    {
+      "question_id": "bfcl_customer_012",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 90 days"
+    },
+    {
+      "question_id": "bfcl_customer_013",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: French"
+    },
+    {
+      "question_id": "bfcl_customer_014",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: mail"
+    },
+    {
+      "question_id": "bfcl_customer_015",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: chat"
+    },
+    {
+      "question_id": "bfcl_customer_016",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: email"
+    },
+    {
+      "question_id": "bfcl_customer_017",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "phone"
+    },
+    {
+      "question_id": "bfcl_customer_018",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "LOW"
+    },
+    {
+      "question_id": "bfcl_customer_019",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 2468"
+    },
+    {
+      "question_id": "bfcl_customer_020",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: medium"
+    },
+    {
+      "question_id": "bfcl_customer_021",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "EMAIL"
+    },
+    {
+      "question_id": "bfcl_customer_022",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "EMAIL"
+    },
+    {
+      "question_id": "bfcl_customer_023",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE\n1357"
+    },
+    {
+      "question_id": "bfcl_customer_024",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "EMAIL"
+    },
+    {
+      "question_id": "bfcl_customer_025",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "60 days"
+    },
+    {
+      "question_id": "bfcl_customer_026",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "EMAIL"
+    },
+    {
+      "question_id": "bfcl_customer_027",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "1234"
+    },
+    {
+      "question_id": "bfcl_customer_028",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: medium"
+    },
+    {
+      "question_id": "bfcl_customer_029",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: urgent"
+    },
+    {
+      "question_id": "bfcl_customer_030",
+      "domain": "customer",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "EMAIL"
+    },
+    {
+      "question_id": "bfcl_finance_001",
+      "domain": "finance",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE: 4.99"
+    },
+    {
+      "question_id": "bfcl_finance_002",
+      "domain": "finance",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 2.75%"
+    },
+    {
+      "question_id": "bfcl_finance_003",
+      "domain": "finance",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE: 700"
+    },
+    {
+      "question_id": "bfcl_finance_004",
+      "domain": "finance",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE: 4.99"
+    },
+    {
+      "question_id": "bfcl_finance_005",
+      "domain": "finance",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 700"
+    },
+    {
+      "question_id": "bfcl_finance_006",
+      "domain": "finance",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 3.25%"
+    },
+    {
+      "question_id": "bfcl_finance_007",
+      "domain": "finance",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 10000"
+    },
+    {
+      "question_id": "bfcl_finance_008",
+      "domain": "finance",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 2500"
+    },
+    {
+      "question_id": "bfcl_finance_009",
+      "domain": "finance",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 789012"
+    },
+    {
+      "question_id": "bfcl_finance_010",
+      "domain": "finance",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE\n9.99"
+    },
+    {
+      "question_id": "bfcl_finance_011",
+      "domain": "finance",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE: 700"
+    },
+    {
+      "question_id": "bfcl_finance_012",
+      "domain": "finance",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 123456"
+    },
+    {
+      "question_id": "bfcl_finance_013",
+      "domain": "finance",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 700"
+    },
+    {
+      "question_id": "bfcl_finance_014",
+      "domain": "finance",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 19.99"
+    },
+    {
+      "question_id": "bfcl_finance_015",
+      "domain": "finance",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE: 5000"
+    },
+    {
+      "question_id": "bfcl_finance_016",
+      "domain": "finance",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 700"
+    },
+    {
+      "question_id": "bfcl_finance_017",
+      "domain": "finance",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 720"
+    },
+    {
+      "question_id": "bfcl_finance_018",
+      "domain": "finance",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 456789"
+    },
+    {
+      "question_id": "bfcl_finance_019",
+      "domain": "finance",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 700"
+    },
+    {
+      "question_id": "bfcl_finance_020",
+      "domain": "finance",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 3.25%"
+    },
+    {
+      "question_id": "bfcl_finance_021",
+      "domain": "finance",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 456789"
+    },
+    {
+      "question_id": "bfcl_finance_022",
+      "domain": "finance",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE\n9.99"
+    },
+    {
+      "question_id": "bfcl_finance_023",
+      "domain": "finance",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 19.99"
+    },
+    {
+      "question_id": "bfcl_finance_024",
+      "domain": "finance",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 123456"
+    },
+    {
+      "question_id": "bfcl_finance_025",
+      "domain": "finance",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE\n9.99"
+    },
+    {
+      "question_id": "bfcl_healthcare_001",
+      "domain": "healthcare",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "O+"
+    },
+    {
+      "question_id": "bfcl_healthcare_002",
+      "domain": "healthcare",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "AB-"
+    },
+    {
+      "question_id": "bfcl_healthcare_003",
+      "domain": "healthcare",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: the medication frequency is once daily"
+    },
+    {
+      "question_id": "bfcl_healthcare_004",
+      "domain": "healthcare",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: the medication frequency is once daily"
+    },
+    {
+      "question_id": "bfcl_healthcare_005",
+      "domain": "healthcare",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE: 500 mg"
+    },
+    {
+      "question_id": "bfcl_healthcare_006",
+      "domain": "healthcare",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: three times daily"
+    },
+    {
+      "question_id": "bfcl_healthcare_007",
+      "domain": "healthcare",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 2025-01-20"
+    },
+    {
+      "question_id": "bfcl_healthcare_008",
+      "domain": "healthcare",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "B+"
+    },
+    {
+      "question_id": "bfcl_healthcare_009",
+      "domain": "healthcare",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 750 mg"
+    },
+    {
+      "question_id": "bfcl_healthcare_010",
+      "domain": "healthcare",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 500 mg"
+    },
+    {
+      "question_id": "bfcl_healthcare_011",
+      "domain": "healthcare",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: sulfa, aspirin, latex, penicillin"
+    },
+    {
+      "question_id": "bfcl_healthcare_012",
+      "domain": "healthcare",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: three times daily"
+    },
+    {
+      "question_id": "bfcl_healthcare_013",
+      "domain": "healthcare",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: once daily"
+    },
+    {
+      "question_id": "bfcl_healthcare_014",
+      "domain": "healthcare",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "AB-"
+    },
+    {
+      "question_id": "bfcl_healthcare_015",
+      "domain": "healthcare",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "2025-01-20"
+    },
+    {
+      "question_id": "bfcl_healthcare_016",
+      "domain": "healthcare",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "aspirin, latex, penicillin, sulfa"
+    },
+    {
+      "question_id": "bfcl_healthcare_017",
+      "domain": "healthcare",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "AB-"
+    },
+    {
+      "question_id": "bfcl_healthcare_018",
+      "domain": "healthcare",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: the medication frequency is every other day"
+    },
+    {
+      "question_id": "bfcl_healthcare_019",
+      "domain": "healthcare",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE: aspirin"
+    },
+    {
+      "question_id": "bfcl_healthcare_020",
+      "domain": "healthcare",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: aspirin, latex, penicillin, sulfa"
+    },
+    {
+      "question_id": "bfcl_healthcare_021",
+      "domain": "healthcare",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE\n- the medication frequency is three times daily"
+    },
+    {
+      "question_id": "bfcl_healthcare_022",
+      "domain": "healthcare",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: three times daily"
+    },
+    {
+      "question_id": "bfcl_healthcare_023",
+      "domain": "healthcare",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE: 2025-01-20"
+    },
+    {
+      "question_id": "bfcl_healthcare_024",
+      "domain": "healthcare",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "the patient blood type is B+"
+    },
+    {
+      "question_id": "bfcl_healthcare_025",
+      "domain": "healthcare",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "AB-"
+    },
+    {
+      "question_id": "bfcl_notetaker_001",
+      "domain": "notetaker",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE\nthe project deadline is Thursday"
+    },
+    {
+      "question_id": "bfcl_notetaker_002",
+      "domain": "notetaker",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "ROOM 401"
+    },
+    {
+      "question_id": "bfcl_notetaker_003",
+      "domain": "notetaker",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "the board decision is rejected"
+    },
+    {
+      "question_id": "bfcl_notetaker_004",
+      "domain": "notetaker",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 9:00 AM"
+    },
+    {
+      "question_id": "bfcl_notetaker_005",
+      "domain": "notetaker",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: Room 401"
+    },
+    {
+      "question_id": "bfcl_notetaker_006",
+      "domain": "notetaker",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: Dave"
+    },
+    {
+      "question_id": "bfcl_notetaker_007",
+      "domain": "notetaker",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: deferred"
+    },
+    {
+      "question_id": "bfcl_notetaker_008",
+      "domain": "notetaker",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE: Friday"
+    },
+    {
+      "question_id": "bfcl_notetaker_009",
+      "domain": "notetaker",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE\nthe meeting time is 3:00 PM"
+    },
+    {
+      "question_id": "bfcl_notetaker_010",
+      "domain": "notetaker",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE\nthe meeting time is 10:00 AM"
+    },
+    {
+      "question_id": "bfcl_notetaker_011",
+      "domain": "notetaker",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE: Carol"
+    },
+    {
+      "question_id": "bfcl_notetaker_012",
+      "domain": "notetaker",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: Monday"
+    },
+    {
+      "question_id": "bfcl_notetaker_013",
+      "domain": "notetaker",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE the project deadline is Thursday"
+    },
+    {
+      "question_id": "bfcl_notetaker_014",
+      "domain": "notetaker",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 1:30 PM"
+    },
+    {
+      "question_id": "bfcl_notetaker_015",
+      "domain": "notetaker",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "Friday"
+    },
+    {
+      "question_id": "bfcl_notetaker_016",
+      "domain": "notetaker",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE Tuesday"
+    },
+    {
+      "question_id": "bfcl_notetaker_017",
+      "domain": "notetaker",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "BOARD DECISION IS DEFERRED"
+    },
+    {
+      "question_id": "bfcl_notetaker_018",
+      "domain": "notetaker",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: Dave"
+    },
+    {
+      "question_id": "bfcl_notetaker_019",
+      "domain": "notetaker",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "the board decision is rejected"
+    },
+    {
+      "question_id": "bfcl_notetaker_020",
+      "domain": "notetaker",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "Room 401"
+    },
+    {
+      "question_id": "bfcl_notetaker_021",
+      "domain": "notetaker",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE The board decision is deferred."
+    },
+    {
+      "question_id": "bfcl_notetaker_022",
+      "domain": "notetaker",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "the board decision is rejected"
+    },
+    {
+      "question_id": "bfcl_notetaker_023",
+      "domain": "notetaker",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "deferred"
+    },
+    {
+      "question_id": "bfcl_notetaker_024",
+      "domain": "notetaker",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: Alice"
+    },
+    {
+      "question_id": "bfcl_notetaker_025",
+      "domain": "notetaker",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "deferred"
+    },
+    {
+      "question_id": "bfcl_student_001",
+      "domain": "student",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE 25%"
+    },
+    {
+      "question_id": "bfcl_student_002",
+      "domain": "student",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE\nChapter 2"
+    },
+    {
+      "question_id": "bfcl_student_003",
+      "domain": "student",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE: 20%"
+    },
+    {
+      "question_id": "bfcl_student_004",
+      "domain": "student",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "6:30 PM"
+    },
+    {
+      "question_id": "bfcl_student_005",
+      "domain": "student",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 7:00 PM"
+    },
+    {
+      "question_id": "bfcl_student_006",
+      "domain": "student",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "May 15"
+    },
+    {
+      "question_id": "bfcl_student_007",
+      "domain": "student",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "June 2"
+    },
+    {
+      "question_id": "bfcl_student_008",
+      "domain": "student",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE: 90"
+    },
+    {
+      "question_id": "bfcl_student_009",
+      "domain": "student",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE\nChapter 4"
+    },
+    {
+      "question_id": "bfcl_student_010",
+      "domain": "student",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE\n20%"
+    },
+    {
+      "question_id": "bfcl_student_011",
+      "domain": "student",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 20%"
+    },
+    {
+      "question_id": "bfcl_student_012",
+      "domain": "student",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "25%"
+    },
+    {
+      "question_id": "bfcl_student_013",
+      "domain": "student",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE\nChapter 7"
+    },
+    {
+      "question_id": "bfcl_student_014",
+      "domain": "student",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE\nChapter 2\nChapter 4\nChapter 7\nChapter 9"
+    },
+    {
+      "question_id": "bfcl_student_015",
+      "domain": "student",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE\nChapter 2"
+    },
+    {
+      "question_id": "bfcl_student_016",
+      "domain": "student",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "6:30 PM"
+    },
+    {
+      "question_id": "bfcl_student_017",
+      "domain": "student",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE\n80"
+    },
+    {
+      "question_id": "bfcl_student_018",
+      "domain": "student",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 90"
+    },
+    {
+      "question_id": "bfcl_student_019",
+      "domain": "student",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE Chapter 7"
+    },
+    {
+      "question_id": "bfcl_student_020",
+      "domain": "student",
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "6:30 PM"
+    }
+  ],
+  "summary": {
+    "total_questions": 125,
+    "corpus_contains_reference": 125,
+    "retrieval_contains_reference": 96,
+    "correct_answer": 96,
+    "rate_corpus_contains_reference": 1.0,
+    "rate_retrieval_contains_reference": 0.768,
+    "rate_correct_answer": 0.768
+  }
+}

@@ -1,0 +1,1364 @@
+{
+  "campaign": "robustness",
+  "results": [
+    {
+      "question_id": "bfcl_customer_001",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE: The account PIN format is not specified"
+    },
+    {
+      "question_id": "bfcl_customer_001",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "The account PIN format is not specified."
+    },
+    {
+      "question_id": "bfcl_customer_001",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "TBD"
+    },
+    {
+      "question_id": "bfcl_customer_002",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE: not specified"
+    },
+    {
+      "question_id": "bfcl_customer_002",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: high"
+    },
+    {
+      "question_id": "bfcl_customer_002",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "the support ticket priority is high"
+    },
+    {
+      "question_id": "bfcl_customer_003",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: high"
+    },
+    {
+      "question_id": "bfcl_customer_003",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: high"
+    },
+    {
+      "question_id": "bfcl_customer_003",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: high"
+    },
+    {
+      "question_id": "bfcl_customer_004",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: low"
+    },
+    {
+      "question_id": "bfcl_customer_004",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "LOW"
+    },
+    {
+      "question_id": "bfcl_customer_004",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "LOW"
+    },
+    {
+      "question_id": "bfcl_customer_005",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: the password reset period is 30 days"
+    },
+    {
+      "question_id": "bfcl_customer_005",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: the password reset period is 30 days"
+    },
+    {
+      "question_id": "bfcl_customer_005",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 30 days"
+    },
+    {
+      "question_id": "bfcl_customer_006",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "account PIN format is pending"
+    },
+    {
+      "question_id": "bfcl_customer_006",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "TBD"
+    },
+    {
+      "question_id": "bfcl_customer_006",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE: the account PIN format is not specified"
+    },
+    {
+      "question_id": "bfcl_customer_007",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE: The account PIN format is N/A"
+    },
+    {
+      "question_id": "bfcl_customer_007",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE: The account PIN format is unknown."
+    },
+    {
+      "question_id": "bfcl_customer_007",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "TBD"
+    },
+    {
+      "question_id": "bfcl_customer_008",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "LOW"
+    },
+    {
+      "question_id": "bfcl_customer_008",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: low"
+    },
+    {
+      "question_id": "bfcl_customer_008",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "LOW"
+    },
+    {
+      "question_id": "bfcl_customer_009",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 90 days"
+    },
+    {
+      "question_id": "bfcl_customer_009",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: the password reset period is 90 days"
+    },
+    {
+      "question_id": "bfcl_customer_009",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 90 days"
+    },
+    {
+      "question_id": "bfcl_customer_010",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "PASSWORD_RESET_PERIOD_VALUE: 60"
+    },
+    {
+      "question_id": "bfcl_customer_010",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "PASSWORD_RESET_PERIOD_VALUE: 90"
+    },
+    {
+      "question_id": "bfcl_customer_010",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "TBD"
+    },
+    {
+      "question_id": "bfcl_customer_011",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE: The account PIN format is not specified"
+    },
+    {
+      "question_id": "bfcl_customer_011",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE: The account PIN format is not specified"
+    },
+    {
+      "question_id": "bfcl_customer_011",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE: TBD"
+    },
+    {
+      "question_id": "bfcl_customer_012",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 90 days"
+    },
+    {
+      "question_id": "bfcl_customer_012",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: the password reset period is 90 days"
+    },
+    {
+      "question_id": "bfcl_customer_012",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 90 days"
+    },
+    {
+      "question_id": "bfcl_customer_013",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: the default account language is French"
+    },
+    {
+      "question_id": "bfcl_customer_013",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: French"
+    },
+    {
+      "question_id": "bfcl_customer_013",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: the default account language is French"
+    },
+    {
+      "question_id": "bfcl_customer_014",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "EMAIL"
+    },
+    {
+      "question_id": "bfcl_customer_014",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: mail"
+    },
+    {
+      "question_id": "bfcl_customer_014",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: mail"
+    },
+    {
+      "question_id": "bfcl_customer_015",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "PREFERRED_CONTACT_METHOD chat"
+    },
+    {
+      "question_id": "bfcl_customer_015",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "PREFERRED_CONTACT_METHOD chat"
+    },
+    {
+      "question_id": "bfcl_customer_015",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "PREFERRED_CONTACT_METHOD chat"
+    },
+    {
+      "question_id": "bfcl_customer_016",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "PENDING"
+    },
+    {
+      "question_id": "bfcl_customer_016",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: mail"
+    },
+    {
+      "question_id": "bfcl_customer_016",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: mail"
+    },
+    {
+      "question_id": "bfcl_customer_017",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: phone"
+    },
+    {
+      "question_id": "bfcl_customer_017",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "PREFERRED CONTACT METHOD IS PHONE"
+    },
+    {
+      "question_id": "bfcl_customer_017",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "phone"
+    },
+    {
+      "question_id": "bfcl_customer_018",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: low"
+    },
+    {
+      "question_id": "bfcl_customer_018",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: low"
+    },
+    {
+      "question_id": "bfcl_customer_018",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "LOW"
+    },
+    {
+      "question_id": "bfcl_customer_019",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE: pending"
+    },
+    {
+      "question_id": "bfcl_customer_019",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "PIN format: unknown"
+    },
+    {
+      "question_id": "bfcl_customer_019",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 2468"
+    },
+    {
+      "question_id": "bfcl_customer_020",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: medium"
+    },
+    {
+      "question_id": "bfcl_customer_020",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: medium"
+    },
+    {
+      "question_id": "bfcl_customer_020",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "MEDIUM"
+    },
+    {
+      "question_id": "bfcl_customer_021",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: email"
+    },
+    {
+      "question_id": "bfcl_customer_021",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "PREFERRED_CONTACT_METHOD_EMAIL"
+    },
+    {
+      "question_id": "bfcl_customer_021",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "email"
+    },
+    {
+      "question_id": "bfcl_customer_022",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: email"
+    },
+    {
+      "question_id": "bfcl_customer_022",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "email"
+    },
+    {
+      "question_id": "bfcl_customer_022",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: email"
+    },
+    {
+      "question_id": "bfcl_customer_023",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "the account PIN format is pending"
+    },
+    {
+      "question_id": "bfcl_customer_023",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE: unknown"
+    },
+    {
+      "question_id": "bfcl_customer_023",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "the account PIN format is not specified"
+    },
+    {
+      "question_id": "bfcl_customer_024",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: mail"
+    },
+    {
+      "question_id": "bfcl_customer_024",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: mail"
+    },
+    {
+      "question_id": "bfcl_customer_024",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "EMAIL"
+    },
+    {
+      "question_id": "bfcl_customer_025",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "PASSWORD_RESET_PERIOD_VALUE: 90"
+    },
+    {
+      "question_id": "bfcl_customer_025",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "PASSWORD_RESET_PERIOD_VALUE: 90"
+    },
+    {
+      "question_id": "bfcl_customer_025",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 60 days"
+    },
+    {
+      "question_id": "bfcl_customer_026",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: email"
+    },
+    {
+      "question_id": "bfcl_customer_026",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: email"
+    },
+    {
+      "question_id": "bfcl_customer_026",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: email"
+    },
+    {
+      "question_id": "bfcl_customer_027",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE: N/A"
+    },
+    {
+      "question_id": "bfcl_customer_027",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE: the account PIN format is unknown"
+    },
+    {
+      "question_id": "bfcl_customer_027",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "PIN format: TBD"
+    },
+    {
+      "question_id": "bfcl_customer_028",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: medium"
+    },
+    {
+      "question_id": "bfcl_customer_028",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: medium"
+    },
+    {
+      "question_id": "bfcl_customer_028",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: medium"
+    },
+    {
+      "question_id": "bfcl_customer_029",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "the support ticket priority is urgent"
+    },
+    {
+      "question_id": "bfcl_customer_029",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "the support ticket priority is urgent"
+    },
+    {
+      "question_id": "bfcl_customer_029",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "the support ticket priority is urgent"
+    },
+    {
+      "question_id": "bfcl_customer_030",
+      "domain": "customer",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: email"
+    },
+    {
+      "question_id": "bfcl_customer_030",
+      "domain": "customer",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: email"
+    },
+    {
+      "question_id": "bfcl_customer_030",
+      "domain": "customer",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: email"
+    },
+    {
+      "question_id": "bfcl_finance_001",
+      "domain": "finance",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 14.99"
+    },
+    {
+      "question_id": "bfcl_finance_001",
+      "domain": "finance",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 14.99"
+    },
+    {
+      "question_id": "bfcl_finance_001",
+      "domain": "finance",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 14.99"
+    },
+    {
+      "question_id": "bfcl_finance_002",
+      "domain": "finance",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "Savings interest rate: 2.75%"
+    },
+    {
+      "question_id": "bfcl_finance_002",
+      "domain": "finance",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 2.75%"
+    },
+    {
+      "question_id": "bfcl_finance_002",
+      "domain": "finance",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 2.75%"
+    },
+    {
+      "question_id": "bfcl_finance_003",
+      "domain": "finance",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 680"
+    },
+    {
+      "question_id": "bfcl_finance_003",
+      "domain": "finance",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 680"
+    },
+    {
+      "question_id": "bfcl_finance_003",
+      "domain": "finance",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 680"
+    },
+    {
+      "question_id": "bfcl_finance_004",
+      "domain": "finance",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 14.99"
+    },
+    {
+      "question_id": "bfcl_finance_004",
+      "domain": "finance",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE: 19.99"
+    },
+    {
+      "question_id": "bfcl_finance_004",
+      "domain": "finance",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 14.99"
+    },
+    {
+      "question_id": "bfcl_finance_005",
+      "domain": "finance",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 700"
+    },
+    {
+      "question_id": "bfcl_finance_005",
+      "domain": "finance",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 700"
+    },
+    {
+      "question_id": "bfcl_finance_005",
+      "domain": "finance",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 700"
+    },
+    {
+      "question_id": "bfcl_finance_006",
+      "domain": "finance",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "pending"
+    },
+    {
+      "question_id": "bfcl_finance_006",
+      "domain": "finance",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "BLOCKED"
+    },
+    {
+      "question_id": "bfcl_finance_006",
+      "domain": "finance",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 3.25%"
+    },
+    {
+      "question_id": "bfcl_finance_007",
+      "domain": "finance",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "pending"
+    },
+    {
+      "question_id": "bfcl_finance_007",
+      "domain": "finance",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "TBD"
+    },
+    {
+      "question_id": "bfcl_finance_007",
+      "domain": "finance",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "TBD"
+    },
+    {
+      "question_id": "bfcl_finance_008",
+      "domain": "finance",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "PENDING"
+    },
+    {
+      "question_id": "bfcl_finance_008",
+      "domain": "finance",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "TBD"
+    },
+    {
+      "question_id": "bfcl_finance_008",
+      "domain": "finance",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "TBD"
+    },
+    {
+      "question_id": "bfcl_finance_009",
+      "domain": "finance",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 789012"
+    },
+    {
+      "question_id": "bfcl_finance_009",
+      "domain": "finance",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "TBD"
+    },
+    {
+      "question_id": "bfcl_finance_009",
+      "domain": "finance",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 789012"
+    },
+    {
+      "question_id": "bfcl_finance_010",
+      "domain": "finance",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 9.99"
+    },
+    {
+      "question_id": "bfcl_finance_010",
+      "domain": "finance",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 9.99"
+    },
+    {
+      "question_id": "bfcl_finance_010",
+      "domain": "finance",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 9.99"
+    },
+    {
+      "question_id": "bfcl_finance_011",
+      "domain": "finance",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 650"
+    },
+    {
+      "question_id": "bfcl_finance_011",
+      "domain": "finance",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 650"
+    },
+    {
+      "question_id": "bfcl_finance_011",
+      "domain": "finance",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 650"
+    },
+    {
+      "question_id": "bfcl_finance_012",
+      "domain": "finance",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE: N/A"
+    },
+    {
+      "question_id": "bfcl_finance_012",
+      "domain": "finance",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE: unknown"
+    },
+    {
+      "question_id": "bfcl_finance_012",
+      "domain": "finance",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "TBD"
+    },
+    {
+      "question_id": "bfcl_finance_013",
+      "domain": "finance",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 700"
+    },
+    {
+      "question_id": "bfcl_finance_013",
+      "domain": "finance",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 700"
+    },
+    {
+      "question_id": "bfcl_finance_013",
+      "domain": "finance",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 700"
+    },
+    {
+      "question_id": "bfcl_finance_014",
+      "domain": "finance",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 19.99"
+    },
+    {
+      "question_id": "bfcl_finance_014",
+      "domain": "finance",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "TBD"
+    },
+    {
+      "question_id": "bfcl_finance_014",
+      "domain": "finance",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 19.99"
+    },
+    {
+      "question_id": "bfcl_finance_015",
+      "domain": "finance",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "pending"
+    },
+    {
+      "question_id": "bfcl_finance_015",
+      "domain": "finance",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "VALUE: the daily transaction limit is blocked"
+    },
+    {
+      "question_id": "bfcl_finance_015",
+      "domain": "finance",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 2500"
+    },
+    {
+      "question_id": "bfcl_finance_016",
+      "domain": "finance",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 700"
+    },
+    {
+      "question_id": "bfcl_finance_016",
+      "domain": "finance",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 700"
+    },
+    {
+      "question_id": "bfcl_finance_016",
+      "domain": "finance",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 700"
+    },
+    {
+      "question_id": "bfcl_finance_017",
+      "domain": "finance",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 720"
+    },
+    {
+      "question_id": "bfcl_finance_017",
+      "domain": "finance",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 720"
+    },
+    {
+      "question_id": "bfcl_finance_017",
+      "domain": "finance",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 720"
+    },
+    {
+      "question_id": "bfcl_finance_018",
+      "domain": "finance",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 456789"
+    },
+    {
+      "question_id": "bfcl_finance_018",
+      "domain": "finance",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": false,
+      "correct_answer": false,
+      "response": "TBD"
+    },
+    {
+      "question_id": "bfcl_finance_018",
+      "domain": "finance",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 456789"
+    },
+    {
+      "question_id": "bfcl_finance_019",
+      "domain": "finance",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 700"
+    },
+    {
+      "question_id": "bfcl_finance_019",
+      "domain": "finance",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 700"
+    },
+    {
+      "question_id": "bfcl_finance_019",
+      "domain": "finance",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 700"
+    },
+    {
+      "question_id": "bfcl_finance_020",
+      "domain": "finance",
+      "seed": 1,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "savings interest rate is 3.25%"
+    },
+    {
+      "question_id": "bfcl_finance_020",
+      "domain": "finance",
+      "seed": 2,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 3.25%"
+    },
+    {
+      "question_id": "bfcl_finance_020",
+      "domain": "finance",
+      "seed": 3,
+      "corpus_contains_reference": true,
+      "retrieval_contains_reference": true,
+      "correct_answer": true,
+      "response": "VALUE: 3.25%"
+    }
+  ],
+  "summary": {
+    "total_cases": 50,
+    "total_runs": 150,
+    "corpus_contains_reference": 150,
+    "retrieval_contains_reference": 96,
+    "correct_answer": 96,
+    "cases_successful_3of3": 22,
+    "cases_successful_at_least_2of3": 34
+  }
+}

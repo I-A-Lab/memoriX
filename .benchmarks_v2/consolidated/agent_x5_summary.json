@@ -1,0 +1,167 @@
+{
+  "benchmark": "agent_multisession_x5",
+  "expected_queries_per_condition": 5000,
+  "modes": {
+    "memorix_core": {
+      "aggregate": {
+        "exact_value_rate": 0.375,
+        "forbidden_information_use_rate": 0.0,
+        "mean_response_ms": 257.30846064,
+        "p95_response_ms": 430.1338,
+        "prior_information_reuse_rate": 0.375,
+        "query_count": 5000,
+        "session_resume_success_rate": 0.375,
+        "task_success_rate": 0.375,
+        "tool_call_count": 8750,
+        "turn_count": 5002
+      },
+      "per_seed": {
+        "101": {
+          "exact_value_rate": 0.375,
+          "forbidden_information_use_rate": 0.0,
+          "mean_response_ms": 275.1540431,
+          "p95_response_ms": 430.1338,
+          "prior_information_reuse_rate": 0.375,
+          "query_count": 1000,
+          "session_resume_success_rate": 0.375,
+          "task_success_rate": 0.375,
+          "tool_call_count": 1750,
+          "turn_count": 1002
+        },
+        "202": {
+          "exact_value_rate": 0.375,
+          "forbidden_information_use_rate": 0.0,
+          "mean_response_ms": 255.8916224,
+          "p95_response_ms": 366.3917,
+          "prior_information_reuse_rate": 0.375,
+          "query_count": 1000,
+          "session_resume_success_rate": 0.375,
+          "task_success_rate": 0.375,
+          "tool_call_count": 1750,
+          "turn_count": 1002
+        },
+        "303": {
+          "exact_value_rate": 0.375,
+          "forbidden_information_use_rate": 0.0,
+          "mean_response_ms": 256.6968781,
+          "p95_response_ms": 363.6265,
+          "prior_information_reuse_rate": 0.375,
+          "query_count": 1000,
+          "session_resume_success_rate": 0.375,
+          "task_success_rate": 0.375,
+          "tool_call_count": 1750,
+          "turn_count": 1002
+        },
+        "404": {
+          "exact_value_rate": 0.375,
+          "forbidden_information_use_rate": 0.0,
+          "mean_response_ms": 252.41974679999998,
+          "p95_response_ms": 362.7034,
+          "prior_information_reuse_rate": 0.375,
+          "query_count": 1000,
+          "session_resume_success_rate": 0.375,
+          "task_success_rate": 0.375,
+          "tool_call_count": 1750,
+          "turn_count": 1002
+        },
+        "505": {
+          "exact_value_rate": 0.375,
+          "forbidden_information_use_rate": 0.0,
+          "mean_response_ms": 246.3800128,
+          "p95_response_ms": 355.0181,
+          "prior_information_reuse_rate": 0.375,
+          "query_count": 1000,
+          "session_resume_success_rate": 0.375,
+          "task_success_rate": 0.375,
+          "tool_call_count": 1750,
+          "turn_count": 1002
+        }
+      }
+    },
+    "no_memory": {
+      "aggregate": {
+        "exact_value_rate": 0.25,
+        "forbidden_information_use_rate": 0.0,
+        "mean_response_ms": 0.00021718,
+        "p95_response_ms": 0.0005,
+        "prior_information_reuse_rate": 0.25,
+        "query_count": 5000,
+        "session_resume_success_rate": 0.25,
+        "task_success_rate": 0.25,
+        "tool_call_count": 5000,
+        "turn_count": 5002
+      },
+      "per_seed": {
+        "101": {
+          "exact_value_rate": 0.25,
+          "forbidden_information_use_rate": 0.0,
+          "mean_response_ms": 0.0002222,
+          "p95_response_ms": 0.0003,
+          "prior_information_reuse_rate": 0.25,
+          "query_count": 1000,
+          "session_resume_success_rate": 0.25,
+          "task_success_rate": 0.25,
+          "tool_call_count": 1000,
+          "turn_count": 1002
+        },
+        "202": {
+          "exact_value_rate": 0.25,
+          "forbidden_information_use_rate": 0.0,
+          "mean_response_ms": 0.00020669999999999998,
+          "p95_response_ms": 0.0004,
+          "prior_information_reuse_rate": 0.25,
+          "query_count": 1000,
+          "session_resume_success_rate": 0.25,
+          "task_success_rate": 0.25,
+          "tool_call_count": 1000,
+          "turn_count": 1002
+        },
+        "303": {
+          "exact_value_rate": 0.25,
+          "forbidden_information_use_rate": 0.0,
+          "mean_response_ms": 0.0001754,
+          "p95_response_ms": 0.0003,
+          "prior_information_reuse_rate": 0.25,
+          "query_count": 1000,
+          "session_resume_success_rate": 0.25,
+          "task_success_rate": 0.25,
+          "tool_call_count": 1000,
+          "turn_count": 1002
+        },
+        "404": {
+          "exact_value_rate": 0.25,
+          "forbidden_information_use_rate": 0.0,
+          "mean_response_ms": 0.0002249,
+          "p95_response_ms": 0.0003,
+          "prior_information_reuse_rate": 0.25,
+          "query_count": 1000,
+          "session_resume_success_rate": 0.25,
+          "task_success_rate": 0.25,
+          "tool_call_count": 1000,
+          "turn_count": 1002
+        },
+        "505": {
+          "exact_value_rate": 0.25,
+          "forbidden_information_use_rate": 0.0,
+          "mean_response_ms": 0.0002567,
+          "p95_response_ms": 0.0005,
+          "prior_information_reuse_rate": 0.25,
+          "query_count": 1000,
+          "session_resume_success_rate": 0.25,
+          "task_success_rate": 0.25,
+          "tool_call_count": 1000,
+          "turn_count": 1002
+        }
+      }
+    }
+  },
+  "seeds": [
+    101,
+    202,
+    303,
+    404,
+    505
+  ],
+  "size": "medium",
+  "top_k": 5
+}

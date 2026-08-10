@@ -1,0 +1,17 @@
+campaign,condition_a,condition_b,metric,result_a,result_b,delta_or_rate
+ab_overall,no_memory,memorix_core,pass_rate,31.9% (327/1024),60.0% (614/1024),+28.0pp
+ab_families,no_memory,memorix_core,won_lost_tied,--,12 won / 4 lost / 16 tied,--
+bfcl_canary,baseline,memorix,correct,0/5,4/5,80%
+bfcl_pilot5,baseline,memorix,correct,0/25,19/25,76%
+bfcl_pilot25,baseline,memorix,correct,0/125,95/125,76%
+bfcl_blind,baseline,memorix,corpus_contains_reference,0/125,125/125,100%
+bfcl_blind,baseline,memorix,retrieval_contains_reference,0/125,96/125,76.8%
+bfcl_blind,baseline,memorix,correct_answer,0/125,96/125,76.8%
+bfcl_robustness,multi_seed,multi_seed,corpus_contains_reference,--,150/150,100%
+bfcl_robustness,multi_seed,multi_seed,retrieval_contains_reference,--,96/150,64.0%
+bfcl_robustness,multi_seed,multi_seed,correct_answer,--,96/150,64.0%
+bfcl_robustness,multi_seed,multi_seed,cases_3of3,--,22/50,44.0%
+multi_agent,no_memory,memorix_core,task_success_rate,25.0%,37.5%,+12.5pp
+multi_agent,no_memory,memorix_core,forbidden_information_use,0.0%,0.0%,0.0pp
+capacity,stable_range,configured_capacity,admission_allowed,true (<=10k),false (>=50k),overflow blocked
+capacity,stable_range,configured_capacity,status_latency_ms,~0.95 max (<=10k),<=1.03 (>=50k),no degradation

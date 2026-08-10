@@ -1,6 +1,43 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "provider": {},
+  "provider": {
+    "ollama": {
+      "name": "Ollama",
+      "npm": "@ai-sdk/openai-compatible",
+      "api": "http://localhost:11434/v1",
+      "env": [],
+      "models": {
+        "qwen2.5:3b": {
+          "name": "Qwen 2.5 3B",
+          "id": "qwen2.5:3b",
+          "context": 32768,
+          "temperature": false,
+          "tool_call": true
+        },
+        "qwen2.5:7b": {
+          "name": "Qwen 2.5 7B",
+          "id": "qwen2.5:7b",
+          "context": 32768,
+          "temperature": false,
+          "tool_call": true
+        },
+        "gemma2:2b": {
+          "name": "Gemma 2 2B",
+          "id": "gemma2:2b",
+          "context": 8192,
+          "temperature": false,
+          "tool_call": true
+        },
+        "llama3.2:latest": {
+          "name": "Llama 3.2",
+          "id": "llama3.2:latest",
+          "context": 8192,
+          "temperature": false,
+          "tool_call": true
+        }
+      }
+    }
+  },
   "permission": {
     "memory_store": "allow",
     "memory_candidate_validate": "ask",

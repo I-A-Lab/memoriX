@@ -1,0 +1,51 @@
+{
+  "campaign": "oracle_pilot",
+  "results": [
+    {
+      "question_id": "bfcl_customer_001",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE The PIN format consists of 6 digits.",
+      "memorix_response": "VALUE: The account PIN format is 1234"
+    },
+    {
+      "question_id": "bfcl_customer_002",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: high"
+    },
+    {
+      "question_id": "bfcl_customer_003",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "VALUE",
+      "memorix_response": "VALUE: high"
+    },
+    {
+      "question_id": "bfcl_customer_004",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": false,
+      "baseline_response": "VALUE",
+      "memorix_response": "LOW"
+    },
+    {
+      "question_id": "bfcl_customer_005",
+      "domain": "customer",
+      "baseline_correct": false,
+      "memorix_correct": true,
+      "baseline_response": "7",
+      "memorix_response": "VALUE: 30 days"
+    }
+  ],
+  "summary": {
+    "total_pairs": 5,
+    "baseline_correct": 0,
+    "memorix_correct": 4,
+    "rate_memorix": 0.8
+  }
+}

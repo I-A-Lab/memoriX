@@ -1,0 +1,580 @@
+memoriX
+Benchmark Master Report
+Internal, community-derived, BFCL-derived, robustness, capacity and real-integration evaluations
+Project
+memoriX — persistent external memory for AI agents and LLMs
+Author
+Elwen Coroller
+Company
+NETCAB J.S.C., Da Nang
+Period
+Summer 2026 internship
+Reference version
+Commit 31316850e196227392daf752cd42a0ee9502b6d8
+31 July 2026
+Contents
+1. Purpose, scope and interpretation rules
+2. Technical reference baseline
+3. Campaign overview
+4. Internal OpenCode A/B benchmarks
+5. Historical multi-agent benchmark
+6. Community Galileo campaign
+7. BFCL-derived evaluations
+8. Three-seed robustness study
+9. Capacity, saturation and topic blocks
+10. Scaled load and extension
+11. Real todo-list integration validation
+12. Cross-benchmark synthesis
+13. Excluded incidents and corrections
+14. Limitations, conclusions and future work
+Appendix A. Sources and hashes
+Appendix B. Unaudited historical results
+1. Purpose, scope and interpretation rules
+This document is the consolidated source of truth for the benchmarks performed during memoriX development. It replaces scattered notes and explicitly separates audited results, reported historical results and invalid executions.
+Central conclusion: memoriX strongly improves internal tasks when relevant memories are available, operates stably through MCP, preserves 92% of references in BFCL-derived blind curation, produces 72% correct answers in that condition, and was validated up to 5,000 atomic memories with lossless manual extension.
+Percentages from different protocols are never merged as if they measured the same quantity.
+BFCL campaigns are local and BFCL-derived; they are not official leaderboard scores.
+The Galileo campaign uses a local completion/tool-call proxy, not the official Galileo score.
+Robustness and capacity results come from targeted diagnostic protocols.
+Invalidated executions are documented only for reproducibility and excluded from conclusions.
+2. Technical reference baseline
+Parameter
+Value
+Dépôt / Repository
+memoriX
+Branche / Branch
+elwen
+Commit
+31316850e196227392daf752cd42a0ee9502b6d8
+État Git / Git state
+clean, synchronized with origin/elwen
+Python memoriX
+3.10.11
+PyTorch
+2.13.0+cpu
+CUDA
+disabled
+Backend
+titan_external
+Device
+cpu
+Titan dimensions
+d_model=256; hidden_dim=256; target_dim=256
+OpenCode model
+opencode/big-pickle (observed in final session exports)
+Memory transport
+MCP JSON-RPC over stdio
+Normal retrieval
+hot-site only; no automatic cold fallback
+Runners use external workspaces and runtimes. The repository was checked before and after campaigns; no final campaign created a branch, commit or push.
+3. Campaign overview
+Campaign
+Volume
+Purpose
+Key result
+Status
+Internal benchmarks
+58 valid pairs
+OpenCode A/B
+memoriX: 58/58 tasks; baseline: 38/58
+Internal, non-community
+Historical multi-agent
+750 cases per condition
+Shared memory
+642/750 with manager + shared Titan
+Historical; raw reports absent
+Galileo
+10 scenarios, 20 runs
+Community integration
+41/41 memory calls succeeded; retrievals empty
+Technical, unofficial
+BFCL canary
+1 pair
+End-to-end transport
+baseline wrong; memoriX correct
+BFCL-derived
+BFCL 5 cases
+5 pairs
+Multi-domain transport
+0/5 vs 5/5
+Evidence oracle
+BFCL 25 oracle
+25 pairs
+Storage/retrieval
+0/25 vs 25/25
+Selection oracle
+BFCL blind
+25 questions, 37 sources
+Autonomous curation
+23 corpus / 22 retrieval / 18 answers
+Main result
+Robustness
+10 cases × 3 seeds
+Order + distractors
+29/30 corpus; 22/30 retrieval; 20/30 answers
+Diagnostic
+Capacity phases 1/1B
+Saturation + multi-fact + topics
+Capacity semantics
+Safe saturation; 36/36 distinct facts
+Diagnostic
+Scaled load
+100 → 5,000
+Persistence and latency
+100% probes; overflow blocked
+Validated capacity ≥ 5,000
+Manual extension
+5,000 → capacity 6,000
+Lossless extension
+5,100 active; 1,100/1,100 probes
+Validated after restart
+Real todo-list
+1 SDLC cycle
+Real memory lifecycle
+short-term → candidate → validation → Titan
+Functional validation
+4. Internal OpenCode A/B benchmarks
+Two configurations using the same model, prompts, workspaces, tasks and hidden tests were compared: standard OpenCode without persistent memory and OpenCode with memoriX through MCP.
+Campaign
+Pairs
+Baseline tasks
+memoriX tasks
+Baseline hidden
+memoriX hidden
+W / T / L
+Small
+12
+8/12 (66.7 %)
+12/12 (100 %)
+27/33 (81.8 %)
+33/33 (100 %)
+4 / 8 / 0
+Medium
+22
+12/22 (54.5 %)
+22/22 (100 %)
+56/74 (75.7 %)
+74/74 (100 %)
+10 / 12 / 0
+Large
+24
+18/24 (75.0 %)
+24/24 (100 %)
+74/84 (88.1 %)
+84/84 (100 %)
+6 / 18 / 0
+Figure 1 — Task success rates across the three internal campaigns.
+4.1 Cumulative summary
+Metric
+No memory
+memoriX
+Successful tasks
+38/58 — 65.5%
+58/58 — 100%
+Successful hidden tests
+157/191 — 82.2%
+191/191 — 100%
+Head-to-head
+—
+20 wins, 38 ties, 0 losses
+The small benchmark also measured a reduction in mean duration from 133.1 s to 78.0 s (−41.4%) and in mean tool calls from 14.17 to 6.75 (−52.4%). These gains must not be generalized to other campaigns, which do not have equally detailed timing measurements.
+Medium campaign: two baseline runs affected by HTTP 401 provider errors were excluded; analysis uses 22 valid pairs.
+Large campaign: 3 seeds, 8 task families and 1,000 distractors per seed; 24/24 exact or paraphrased probes were retrieved at rank 1.
+All three campaigns are internal: they demonstrate an advantage in the project harness, not a community score.
+5. Historical multi-agent benchmark
+This earlier benchmark used a manager, web and software development agents, a DevOps agent, a tester and an evaluator. It follows a protocol distinct from BFCL.
+Configuration
+Result
+Rate
+Evidence status
+No memory
+0/750
+0 %
+Historical
+Single Titan
+85/750
+11.3%
+Historical
+Manager + shared Titan
+642/750
+85.6%
+Historical
+The figures are retained because they document project evolution, but the raw reports are not present in the current handoff archive. They are therefore not aggregated with audited results.
+6. Community Galileo campaign
+Item
+Result
+Scenarios
+10/10
+Runs
+20/20
+Technically valid runs
+20/20
+Pairs with same model
+10/10
+Invalid simulator responses
+0
+Successful memory calls
+41/41
+Baseline completion
+7/10
+memoriX completion
+5/10
+Proxy advantage baseline / memoriX
+6 / 4
+Official score
+No
+The 11 memory_retrieve calls in this campaign returned no memories. Retrieved memory therefore did not influence the tasks. The campaign mainly validates Python-environment separation, MCP transport, technical stability and repository integrity.
+Allowed interpretation: technically stable community integration. Disallowed interpretation: evidence of a Galileo performance gain or an official score.
+7. BFCL-derived evaluations
+The BFCL installation was frozen at commit f7cf7359… with bfcl-eval 2025.12.17. BFCL_v4_memory contains 155 base questions across five domains and three official memory backends, yielding 465 derived evaluations. memoriX is a custom external backend.
+Domain
+Questions
+customer
+30
+finance
+25
+healthcare
+25
+notetaker
+25
+student
+50
+Dataset SHA-256: 67867501782b23cad5cf285fcfeb420af711f081481e74605fddd0af3422f09a
+7.1 Canary and guided pilots
+Campaign
+Baseline
+memoriX
+Retrieval
+Memory calls
+Scientific limitation
+Canary
+Wrong
+Correct
+1/1
+4/4
+Evidence window selected using the reference
+5-case pilot
+0/5
+5/5
+5/5
+20/20
+Reference-assisted selection
+25-case oracle pilot
+0/25
+25/25
+25/25
+102/102
+The correct passage is selected using the reference
+These campaigns show that, when the correct information is explicitly stored, the store → validate → new session → retrieve → answer pipeline is highly reliable. They do not demonstrate autonomous selection of what should be remembered.
+7.2 Fully blind curation — main result
+Stage
+Result
+Rate
+Correct baseline
+0/25
+0 %
+Curated corpus contains reference
+23/25
+92.0 %
+Retrieval contains reference
+22/25
+88.0 %
+Correct final answer
+18/25
+72.0 %
+Global text compression
+0.208462
+20.85%
+Figure 2 — Source of losses in blind curation.
+The blind contract is respected: 37 complete prerequisite conversations are curated before future questions or official answers are accessible. Losses decompose into 2 curation losses, 1 retrieval loss and 4 answer losses.
+Domain
+Corpus
+Retrieval
+Answer
+customer
+5/5
+4/5
+4/5
+finance
+4/5
+4/5
+4/5
+healthcare
+4/5
+4/5
+4/5
+notetaker
+5/5
+5/5
+2/5
+student
+5/5
+5/5
+4/5
+Figure 3 — Difference between the oracle pilot, blind curation and robustness test.
+8. Three-seed robustness study
+Ten diagnostic cases—including blind-curation failure modes and three controls—were repeated across three seeds with source reordering and distractors. All 111 curations and 60 runs are technically complete.
+Metric
+Result
+Corpus contains reference
+29/30 — 96.7%
+Retrieval contains reference
+22/30 — 73.3%
+Correct answer
+20/30 — 66.7%
+Strictly formatted answer
+17/30 — 56.7%
+Cases successful on 3/3 seeds
+6/10
+Cases successful on at least 2/3 seeds
+7/10
+Distractor intrusions
+2 — without final error
+Issue
+Count
+Success
+20
+Curation loss
+1
+Retrieval loss
+7
+Answer loss
+2
+Retrieval becomes the main bottleneck in this deliberately difficult selection. The baseline scores 0/30. memoriX is more expensive in this protocol: about 19.19 s per run versus 11.72 s for the baseline, because it loads Titan and retrieves up to ten memories.
+The 20/30 result is diagnostic, not representative of all BFCL: the ten cases were selected to include known successes and failures.
+9. Capacity, saturation and topic blocks
+Test
+Result
+Interpretation
+Saturation at capacities 10 and 25
+2/2 valid contracts
+Overflow candidate remains pending; no overwrite
+Logical pruning
+Validated
+A freed slot allows validation of the blocked candidate
+Capacity recommendations
+KEEP / WATCH / EXPAND
+EXPAND recommends 100 → 125 but does not apply it
+36 distinct facts
+36/36 before and after restart
+Sufficient atomic capacity
+20 facts, atomic capacity 10
+10/20
+Logical-memory / Titan-unit divergence
+Untagged routing
+4/48 exact; 27/48 acceptable
+Lexical fragmentation
+Tagged routing
+47/48 exact; 48/48 acceptable
+Canonical tags recommended
+Topic-block lifecycle
+Validated
+Create, alias, merge, archive, restore
+Topic blocks are logical metadata, not physical Titan partitions. Without an explicit tag, the router often selects a dominant word—such as guitar, children or brings—which fragments a theme. With a canonical tag, routing becomes almost deterministic.
+The initial 4/36 multi-fact test is excluded: all “access code” sentences were interpreted as updates to the same secret_code attribute. The corrected phase 1B result supersedes it.
+10. Scaled load and extension
+Memories
+Probes after restart
+Median ms
+P95 ms
+Restart s
+Titan MiB
+100
+100/100
+39.0
+58.0
+0.05
+2.52
+500
+500/500
+164.5
+251.4
+0.17
+3.56
+1000
+1000/1000
+320.0
+455.0
+0.41
+4.87
+2500
+1000/1000
+790.9
+1121.2
+0.91
+8.79
+5000
+1000/1000
+1609.7
+1998.3
+1.80
+15.33
+Figure 4 — Retrieval latency growth with memory count.
+At 5,000 single-fact memories, logical and atomic counts are equal. All 1,000 probes are retrieved before and after restart. The 5,001st candidate is rejected, remains pending and is not retrievable, with no silent deletion.
+10.1 Manual extension
+Check
+Result
+Capacity
+5 000 → 6 000
+Active memories after extension
+5 100
+5,001st candidate validated
+Yes
+Old memories after restart
+1 000/1 000
+New memories after restart
+100/100
+Logical / Titan counts
+Equal
+Source runtime
+Unchanged
+Automatic extension
+No
+Conclusion: capacity can be extended without rebuilding or losing memory, but extension currently requires a configuration change and backend restart.
+11. Real todo-list integration validation
+A real SDLC cycle in OpenCode created a todo-list application, produced a PRD, plans, files and five passing tests. The observed memory behavior matches the memoriX contract.
+Interactions and tool calls are logged in short_term/events.jsonl (65 observed events).
+The “Todo list app v1 built and validated” milestone is recorded in the cold project archive.
+memory_store creates candidate_fc33665bb9094b278e51fe11867bc8a6 in pending_review.
+The candidate is not retrievable before validation.
+After user approval, memory_candidate_validate writes the memory to Titan.
+memory_retrieve retrieves the architecture as memory_35d2e874d38f4759aff502601d0bb1c4.
+This test also identifies an improvement to formalize: OpenCode should automatically propose a candidate at the end of a validated cycle, but must never validate it automatically. Two nearly identical project_archive_record calls were observed and could be deduplicated.
+12. Cross-benchmark synthesis
+Question
+Evidence-based answer
+Does OpenCode–MCP–Python transport work?
+Yes: Galileo, BFCL and the todo-list validate transport and calls.
+Is validated storage persistent?
+Yes: persistence after restart up to 5,100 active memories.
+Can the system retrieve explicitly stored information?
+Yes: 25/25 in the oracle pilot and 36/36 distinct facts.
+Does the system always choose the right memories autonomously?
+No: 23/25 blind corpus; 22/25 retrieval; 18/25 answers.
+What is the main bottleneck?
+Protocol-dependent: curation and generation in blind evaluation, then retrieval in difficult robustness cases.
+Does memory saturate safely?
+Yes: validation blocked, candidate pending, no silent overwrite.
+Does EXPAND automatically resize Titan?
+No: dry-run recommendation; manual extension validated.
+Are topic blocks reliable?
+With tags: 47/48 exact. Without tags: substantial fragmentation.
+13. Excluded incidents and corrections
+Item
+Problem
+Treatment
+Initial robustness 0/30
+Different MEMORIX_USER_ID during curation and evaluation
+Invalid evaluation; replaced by corrected 20/30 archive
+25-case BFCL pilot at 12:29
+Only 23 reports present
+Excluded; replaced by complete 13:23 campaign
+Initial multi-fact 4/36
+secret_code rule collision on the same subject
+Excluded; replaced by 36/36 in phase 1B
+28 July Galileo
+Earlier superseded campaign
+Excluded from final result
+dev_branch as primary agent
+Silent fallback to default agent
+Corrected in robustness: build agent required
+Truncated BFCL question
+Formatting instruction omitted from one query
+Robustness runner now compares the full question
+Provider errors
+HTTP 401 and transient failures
+Technical runs excluded or retried under predefined rules
+A technical error permits a retry only when predefined (crash, infrastructure timeout, wrong backend, wrong model, agent fallback). A wrong answer, empty retrieval or insufficient curation is a scientific result and must not be replayed to improve the score.
+14. Limitations, conclusions and future work
+14.1 Supported conclusions
+In the internal protocol, OpenCode + memoriX succeeds on 58/58 valid tasks versus 38/58 for the baseline, with no paired loss.
+The memory pipeline is technically stable: storage, validation, restart and retrieval work on CPU.
+When the correct information is explicitly selected, memoriX reaches 25/25 in the BFCL-derived oracle pilot.
+Under blind curation, the system preserves 23/25 references, retrieves 22/25 and produces 18/25 correct answers.
+In the diagnostic robustness benchmark, the corpus contains 29/30 references, retrieval finds 22/30 and 20/30 answers are correct.
+Capacity was validated at least to 5,000 atomic memories and manually extended to 5,100 active memories without loss.
+Topic blocks are highly reliable with canonical tags but fragmented without guidance.
+14.2 Unsupported conclusions
+memoriX officially scores 100% on BFCL.
+The absolute maximum capacity is 5,000 memories.
+EXPAND automatically resizes Titan.
+Internal results prove general superiority across all agents and datasets.
+The Galileo proxy result is an official leaderboard score.
+14.3 Priority future work
+Formalize automatic candidate creation at the end of a validated OpenCode cycle while keeping human validation.
+Deduplicate identical project_archive_record writes.
+Improve retrieval for weak formulations or lexically distant memories.
+Require final-answer generation to use retrieved evidence before returning UNKNOWN.
+Make topic blocks more semantic and use tags as an explicit policy.
+Add controlled and auditable capacity extension, potentially triggered after an EXPAND recommendation.
+Measure RAM and optimize latency beyond 2,500–5,000 memories.
+Appendix A. Sources and hashes
+ID
+Description
+File
+Size
+SHA-256
+S1
+Internal benchmark memo
+memo_benchmarks_internes_memoriX_vs_sans_memoire(2).docx
+0.04 MiB
+72e9287cae85a11eda8f00aca1dd7e93b74b322312094ba461b5421a1ba528d3
+S2
+Benchmark handoff archive
+memorix-benchmark-results.zip
+304.22 MiB
+73368af05fa4b7e2921b50e39a263ee11da0d111bc20228b4d583d65626189c0
+S3
+Corrected robustness results
+memorix-bfcl-robustness-10x3-v1.0-20260730-070236-corrected.zip
+7.46 MiB
+edd70fc38161075a8fbd178f09bedc885e75329e62fd56a1aa17a16240a35648
+S4
+Capacity/topic phase 1
+memorix-capacity-topic-phase1-v1.0-20260730-104259.zip
+0.10 MiB
+098b79298dcfaacad5c39f73e240ba9e11bf67fda3f4a849a1e9866ef9fbaa7b
+S5
+Capacity/topic phase 1B
+memorix-capacity-topic-phase1b-v1.1-20260730-105722.zip
+0.04 MiB
+d49c4cfb2097507658a9f263fcca2578d091c45dfd45d493dadb8a547ed57ef6
+S6
+Scaled-load results
+memorix-single-fact-scaled-load-v2.0-20260730-110820.zip
+3.24 MiB
+c56d437f848ecac8599a71e5c038111b52ab7c39cc451cb3bfabfc8348501f4a
+S7
+Manual extension results
+memorix-manual-capacity-extension-v1.0-20260731-062012.zip
+2.80 MiB
+f422df56f474f5b1ff41d86697270812c229568e1c5ec4ee432e632cfb51da76
+S8
+OpenCode todo-list trace
+Texte collé(83).txt
+0.01 MiB
+af3e4932edef574ad6abb7e3050552a8558b87c86e1a400fbc79c249b09e6bcf
+S9
+memoriX source repository archive
+memorix-project-source.zip
+55.91 MiB
+5b416af6ecc51bad14e99990b7e264a006af998ce4190532693a605957ea92dd
+Main internal paths of audited reports:
+S2 → full-pilot-results/galileo-full-pilot-20260729-051849/full_pilot_report.json
+S2 → bfcl-memory/pilot-results/.../canary_report.json
+S2 → bfcl-memory/five-case-pilot-results/.../five_case_pilot_report.json
+S2 → bfcl-memory/twenty-five-case-pilot-results/...-132300/twenty_five_case_pilot_report.json
+S2 → bfcl-memory/blind-curation-results/.../blind_curation_25_report.json
+S3 → robustness_report.json
+S4 → capacity_topic_phase1_report.json
+S5 → capacity_topic_phase1b_report.json
+S6 → scaled_load_report.json
+S7 → manual_extension_report.json
+Appendix B. Unaudited historical results
+The multi-agent results 0/750, 85/750 and 642/750 are retained as historical evidence, but their raw reports are not present in the supplied archives. Numerical comparisons across Mamba, Transformer, LSTM, GRU, GNN, Titan Legacy and current Titan are not reproduced because audited aggregate reports are unavailable.
+Likely folders to search if a complete historical appendix is required:
+D:\Ecole\Vietnam Projet\memoriX\benchmarks
+D:\Ecole\Vietnam Projet\memoriX\exports
+D:\Ecole\Vietnam Projet\memoriX\results
+D:\Ecole\Vietnam Projet\community-benchmarks
+End of benchmark master report
