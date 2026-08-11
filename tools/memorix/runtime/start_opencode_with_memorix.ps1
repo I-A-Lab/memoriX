@@ -70,12 +70,16 @@ if ([string]::IsNullOrWhiteSpace($CurrentBranch)) {
     throw "Aucune branche Git active n'a été détectée."
 }
 
-$PythonExe = (
-    py -3.10 -c "import sys; print(sys.executable)"
-).Trim()
+$PythonExe = ""
+if (Get-Command py -ErrorAction SilentlyContinue) {
+    $PythonExe = (py -3 -c "import sys; print(sys.executable)" 2>$null).Trim()
+}
+if ([string]::IsNullOrWhiteSpace($PythonExe) -and (Get-Command python -ErrorAction SilentlyContinue)) {
+    $PythonExe = (python -c "import sys; print(sys.executable)" 2>$null).Trim()
+}
 
-if ($LASTEXITCODE -ne 0) {
-    throw "Python 3.10 est introuvable."
+if ([string]::IsNullOrWhiteSpace($PythonExe)) {
+    throw "Python 3 est introuvable."
 }
 
 if (-not (Test-Path $PythonExe -PathType Leaf)) {

@@ -1,72 +1,149 @@
-# MEMORY AGENTX
-<p align="center">Autonomous coding agent system based on a persistent long-term memory architecture.</p>
+# MemoriX
+
+<p align="center">
+  <em>Design and Evaluation of a Controlled Persistent Memory System for LLM-Based Code Agents</em>
+</p>
+
+<p align="center">
+  <a href="README.md">English</a> •
+  <a href="README.fr.md">Français</a> •
+  <a href="README.es.md">Español</a> •
+  <a href="README.zh.md">中文</a> •
+  <a href="README.ja.md">日本語</a>
+</p>
 
 ---
 
-## Introduction
+## 📖 What is MemoriX?
 
-**memoriX** is an artificial intelligence-driven software development agent designed to operate within a persistent memory architecture. Unlike stateless generation models, memoriX implements a comprehensive orchestration of the Software Development Life Cycle (SDLC). It relies on the Titan memory engine and the Model Context Protocol (MCP) to deterministically manage cognitive load, context retention, and information retrieval over extended development sessions.
+**MemoriX** is an advanced persistent memory system designed specifically for Large Language Model (LLM)-based autonomous coding agents (such as OpenCode). 
 
-## Core Features
+As AI agents increasingly assist with complex software development tasks, their continuity across sessions remains fragile. When an agent session terminates, all context—decisions made, constraints discovered, conventions established—usually evaporates. Existing solutions like parametric fine-tuning, vector databases (RAG), or unstructured context dumps fail to provide controlled, auditable, and queryable long-term memory without causing context flooding.
 
-- **Multi-Agent SDLC Orchestration**: The system relies on a distributed architecture of isolated specialized agents (`sdlc`, `dev_branch`, `test_branch`, `sdlc-orchestrator`). These agents collaborate via strict contracts to validate specifications, implement logic, and generate tests deterministically.
-- **Adaptive Memory Retention (Titan)**: Implementation of an intelligent persistence system including adaptive retention scoring, allowing controlled pruning and consolidation of data without loss of contextual integrity.
-- **Dynamic Data Structuring**: Unsupervised classification of context into thematic blocks, facilitating selective access and reducing information noise.
-- **State Analysis and Observability**: Integration of real-time diagnostic tools to evaluate memory saturation and pressure (capacity tested up to several million active nodes) without degrading the performance of the primary process.
+**MemoriX shifts agent memory from a simple storage challenge to a structured knowledge-governance problem.** It provides explicit admission control, logical forgetting, strict project isolation, and safe saturation behavior.
 
-## Specifications and Prerequisites
+---
 
-Executing the system from the source code requires the following environment:
-- **Bun** (v1.3 or higher): Required for package management and monorepo execution.
-- **Python** (v3.10 or higher): Required for the Titan memory engine and underlying analysis processes.
-- **Execution Environment**: PowerShell (recommended environment for Windows systems).
+## 🧠 System Architecture
 
-## Installation Procedure (Compilation from source)
+MemoriX draws architectural inspiration from the multi-level structure of human memory. It enforces a strict knowledge lifecycle: **observe → propose → validate → retrieve → update → forget**.
 
-1. **Cloning the source repository**
-   ```bash
-   git clone https://github.com/anomalyco/memoriX.git
-   cd memoriX
-   ```
+### 1. Short-Term Memory (STM)
+A transient journal of recent interactions and events between the agent and the tools. STM serves as an ephemeral buffer; it is **not** queried during normal memory retrieval.
 
-2. **Dependency Resolution**
-   The monorepo architecture requires the installation of modules via Bun:
-   ```bash
-   bun install
-   ```
+### 2. Cold Site (Historical Archive)
+A durable, append-only archive (`events_archive.jsonl`) that stores all events for audit and traceability. It preserves raw history but is strictly quarantined from active reasoning to prevent noise contamination.
 
-## Runtime Execution
+### 3. Project Archive
+A specialized branch of the Cold Site that stores structured project milestones, architectural decisions, and versioned snapshots at meaningful project boundaries. 
 
-To initialize the execution environment, establish the connection to the MCP server, and launch the primary orchestration loop, execute the following bootstrap script:
+### 4. Candidate Store (The Validation Boundary)
+Automation may select and propose information, but admission into active knowledge requires **explicit validation**. The Candidate Store acts as a staging area holding proposed knowledge (`PENDING` state) until it is manually or programmatically validated.
+
+### 5. Titan Hot Site (Active Memory)
+The sole active memory system queried during agent retrieval. It is backed by a single Titan neural memory instance. Only validated memories enter the Hot Site. It deduplicates facts, handles logical forgetting (when new memories supersede old ones), and groups memories into thematic blocks.
+
+---
+
+## 🛠 Tech Stack & Integration
+
+MemoriX maintains a clean runtime boundary using the **Model Context Protocol (MCP)** via JSON-RPC over `stdio`. 
+
+- **Orchestration Layer (TypeScript / Bun)**: Manages agent lifecycle, Software Development Life Cycle (SDLC) workflows, and communicates with the memory subsystem via MCP.
+- **Memory Subsystem (Python 3.10+)**: Handles the Titan neural memory backend, consolidation pipelines, and storage management.
+
+The system natively supports a **Multi-Agent SDLC Workflow**, delegating tasks among specialized agents:
+- `sdlc`: Architect/Orchestrator (PRD/SRS, planning, delegation).
+- `dev_branch`: Implementation within the development scope.
+- `test_branch`: Independent testing and validation.
+
+---
+
+## 🚀 Key Benchmarks & Performance
+
+Evaluated rigorously through a paired A/B benchmark (2,048 runs across 32 task families using `qwen2.5:3b`):
+- **+28.0% Pass Rate**: Overall task pass rate improved from 31.9% (without memory) to 60.0% (with MemoriX).
+- **Perfect Isolation**: Zero forbidden-information leaks across different projects or users.
+- **Capacity Elasticity**: Safe saturation behavior tested up to 6,000,000 active memory items. The system elegantly rejects overflow instead of silently overwriting existing memories once the 50,000 capacity boundary is hit.
+- **Latency**: Negligible overhead (+120 ms median retrieval latency).
+
+---
+
+## 📦 Complete Installation Guide (From A to Z)
+
+This guide will walk you through installing MemoriX and OpenCode from scratch. It is designed to be accessible even if you are completely new to these tools.
+
+### Step 1: Prerequisites
+
+Before starting, ensure you have the following installed on your machine:
+
+1. **Git**: Used to download the source code.
+   - Download & Install: [git-scm.com](https://git-scm.com/)
+2. **Node.js & Bun**: Bun is a fast all-in-one JavaScript runtime used to run the OpenCode interface.
+   - Download Node.js (required by some plugins): [nodejs.org](https://nodejs.org/)
+   - Install Bun: Open your terminal (PowerShell) and run:
+     ```powershell
+     powershell -c "irm bun.sh/install.ps1 | iex"
+     ```
+3. **Python 3.10 or higher**: Required for the Titan memory backend.
+   - Download & Install: [python.org](https://www.python.org/downloads/)
+   - ⚠️ **Important**: During installation, make sure to check the box **"Add Python to PATH"**.
+
+### Step 2: Clone the Repository
+
+Open your terminal (PowerShell recommended) and download the MemoriX source code:
 
 ```powershell
-.\scripts\start_opencode_with_memorix.ps1
+# Navigate to the folder where you want to install it
+cd C:\Your\Preferred\Folder
+
+# Clone the repository
+git clone https://github.com/anomalyco/memoriX.git
+
+# Enter the directory
+cd memoriX
 ```
 
-*(Technical note: This script performs security validations on the execution environment to ensure strict isolation between the agent's memory space and the application's source code.)*
+### Step 3: Install JavaScript Dependencies
 
-## Global Installation (Pre-compiled binaries)
+Use Bun to install all necessary packages for the workspace:
 
-For utilizing memoriX as a global system tool without local compilation, the following methods are supported:
-
-```bash
-# Automated installation (POSIX Environments)
-curl -fsSL https://memorix.ai/install | bash
-
-# Installation via package managers
-npm i -g memorix@latest        # Alternative: bun / pnpm / yarn
-brew install memorix           # macOS (via Homebrew)
-scoop install memorix          # Windows (via Scoop)
+```powershell
+bun install
 ```
+*(This may take a few moments depending on your connection.)*
 
-## Memory System Architecture
+### Step 4: Verify Python Environment
 
-The architecture of memoriX enforces a strict separation between the presentation layer (user interface) and the memory management daemon. The conceptual model is divided into several components:
+The system requires Python 3. To verify everything is set up correctly, MemoriX includes a pre-validation script. Run it with the following command:
 
-- **Hot-Site (Short-Term Memory)**: Space allocated to maintaining the active session context, optimized for minimal latency.
-- **Cold-Site (Long-Term Memory)**: Persistence space dedicated to archiving, consolidation, and adaptive routing (interfaced via MCP).
-- **Eviction Policies**: Deterministic scoring algorithms preventing the saturation of the Large Language Model (LLM) context window.
+```powershell
+.\tools\memorix\runtime\start_opencode_with_memorix.ps1 -ValidateOnly
+```
+**Expected Output:**
+You should see messages indicating `MemoriXGateway import OK` and a summary of your configuration. If you see an error about Python missing, ensure Python is installed and added to your PATH.
 
-For comprehensive documentation of the architecture and its protocols, please consult the reference documents:
+### Step 5: Start the System!
+
+Once validation passes, you can launch the full OpenCode interface with MemoriX memory enabled:
+
+```powershell
+.\tools\memorix\runtime\start_opencode_with_memorix.ps1
+```
+This script acts as the bridge: it launches the MCP server in the background and starts the OpenCode interface. You are now ready to code with an agent that *actually remembers*.
+
+---
+
+## ⚙️ Advanced Operations
+
+MemoriX includes several advanced tools for maintenance and Windows integration located in `tools/memorix/operations`:
+
+- **Nightly Consolidation**: `run_memorix_nightly.ps1` runs background consolidation and capacity maintenance.
+- **Global Command**: `install_memorix_opencode_command.ps1` registers MemoriX globally on your system.
+- **Backup & Restore**: `memorix_runtime_backup.py` and `memorix_runtime_restore.py` allow you to safely backup your agent's neural memory.
+
+---
+
+## 📖 Additional Documentation
 - [Detailed Architecture](docs/MEMORIX_FINAL_ARCHITECTURE.md)
 - [Operations Manual](docs/MEMORIX_OPERATIONS.md)
