@@ -68,11 +68,52 @@ Le système prend en charge nativement un **flux de travail SDLC Multi-Agents** 
 
 ## Benchmarks & Performances Clés
 
-Évalué rigoureusement via un benchmark A/B (2 048 exécutions sur 32 familles de tâches) :
-- **+28.0% de Taux de Réussite** : Le taux de réussite est passé de 31,9 % (sans mémoire) à 60,0 % (avec MemoriX).
-- **Isolation Parfaite** : Zéro fuite d'informations entre différents projets ou utilisateurs.
-- **Élasticité de Capacité** : Comportement de saturation sécurisé testé jusqu'à 6 000 000 d'éléments. Le système rejette élégamment le surplus au lieu d'écraser les mémoires existantes une fois la limite (50 000) atteinte.
-- **Latence** : Surcharge négligeable (+120 ms de latence de récupération médiane).
+MemoriX a été évalué rigoureusement via un benchmark A/B (2 048 exécutions sur 32 familles de tâches avec `qwen2.5:3b`).
+
+### 1. Résultats Globaux du Benchmark A/B
+
+| Métrique | Sans Mémoire | MemoriX | Δ |
+| -------- | ------------ | ------- | - |
+| **Taux de Réussite Global** | 31.9% (327/1024) | 60.0% (614/1024) | **+28.0pp** |
+| **Latence Médiane (Famille)** | 3 384 ms | 3 504 ms | +120 ms |
+| **Familles Évaluées** | 32 | 32 | — |
+| **Familles Gagnées** (Δ > 0) | — | 12 | — |
+| **Familles Perdues** (Δ < 0) | — | 4 | — |
+
+### 2. Flux de Travail SDLC Multi-Agents
+
+Évalue la réussite des tâches à travers différents rôles d'agents tout en empêchant strictement les fuites d'informations.
+
+| Métrique | Sans Mémoire | MemoriX | Delta |
+| -------- | ------------ | ------- | ----- |
+| **Taux de Réussite** | 25.0% | 37.5% | **+12.5pp** |
+| **Utilisation d'Infos Interdites** | 0.0% | 0.0% | **Isolation Parfaite** |
+| **Appels d'Outils** | 5 000 | 8 750 | — |
+| **Réponse Moyenne** | N/A | 257.3 ms | — |
+
+### 3. Récupération BFCL (Curation Aveugle)
+
+Évaluation indépendante du mécanisme de qualité de récupération sur 125 paires.
+
+| Étape | Résultat | Taux |
+| ----- | -------- | ---- |
+| Baseline correcte | 0/125 | 0% |
+| Le corpus contient la référence | 125/125 | 100% |
+| La récupération contient la référence | 96/125 | **76.8%** |
+| Réponse finale correcte | 96/125 | **76.8%** |
+
+### 4. Comportement en Saturation de Capacité
+
+Test de la réaction du système face à une charge croissante et une surcharge extrême.
+
+| Éléments Actifs | Admission Autorisée | Niveau de Pression | Ratio d'Utilisation | Latence de Décision |
+| --------------- | ------------------- | ------------------ | ------------------- | ------------------- |
+| 10 000 | ✅ | stable | 0.2 | 0.0013 ms |
+| **50 000** | ❌ | **critique** | **1.0** | **0.0009 ms** |
+| 500 000 | ❌ | critique | 10.0 | 0.0024 ms |
+| 6 000 000 | ❌ | critique | 120.0 | 0.0023 ms |
+
+*Note : MemoriX rejette élégamment le surplus (❌) au lieu d'écraser les mémoires existantes une fois la limite (50 000) atteinte, tout en maintenant une latence de décision inférieure à la milliseconde.*
 
 ---
 

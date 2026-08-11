@@ -68,11 +68,52 @@ The system natively supports a **Multi-Agent SDLC Workflow**, delegating tasks a
 
 ## Key Benchmarks & Performance
 
-Evaluated rigorously through a paired A/B benchmark (2,048 runs across 32 task families using `qwen2.5:3b`):
-- **+28.0% Pass Rate**: Overall task pass rate improved from 31.9% (without memory) to 60.0% (with MemoriX).
-- **Perfect Isolation**: Zero forbidden-information leaks across different projects or users.
-- **Capacity Elasticity**: Safe saturation behavior tested up to 6,000,000 active memory items. The system elegantly rejects overflow instead of silently overwriting existing memories once the 50,000 capacity boundary is hit.
-- **Latency**: Negligible overhead (+120 ms median retrieval latency).
+MemoriX was evaluated rigorously through a paired A/B benchmark (2,048 runs across 32 task families using `qwen2.5:3b`).
+
+### 1. Overall A/B Benchmark Results
+
+| Metric | No-Memory | MemoriX | Δ |
+| ------ | --------- | ------- | - |
+| **Overall Pass Rate** | 31.9% (327/1024) | 60.0% (614/1024) | **+28.0pp** |
+| **Median Family Latency** | 3,384 ms | 3,504 ms | +120 ms |
+| **Families Evaluated** | 32 | 32 | — |
+| **Families Won** (Δ > 0) | — | 12 | — |
+| **Families Lost** (Δ < 0) | — | 4 | — |
+
+### 2. Multi-Agent SDLC Workflow
+
+Evaluates task success across distinct agent roles while strictly preventing information leakage.
+
+| Metric | No-Memory | MemoriX | Delta |
+| ------ | --------- | ------- | ----- |
+| **Task Success Rate** | 25.0% | 37.5% | **+12.5pp** |
+| **Forbidden-Information Use** | 0.0% | 0.0% | **Perfect Isolation** |
+| **Tool Calls** | 5,000 | 8,750 | — |
+| **Mean Response** | N/A | 257.3 ms | — |
+
+### 3. BFCL-Derived Retrieval (Blind Curation)
+
+Independent evaluation of the retrieval quality mechanism on a 125-pair dataset.
+
+| Stage | Result | Rate |
+| ----- | ------ | ---- |
+| Correct baseline | 0/125 | 0% |
+| Curated corpus contains reference | 125/125 | 100% |
+| Retrieval contains reference | 96/125 | **76.8%** |
+| Correct final answer | 96/125 | **76.8%** |
+
+### 4. Capacity Saturation Behavior
+
+Testing the memory system's reaction to increasing load and extreme overload.
+
+| Active Items | Admission Allowed | Pressure Level | Usage Ratio | Decision Latency |
+| ------------ | ----------------- | -------------- | ----------- | ---------------- |
+| 10,000 | ✅ | stable | 0.2 | 0.0013 ms |
+| **50,000** | ❌ | **critical** | **1.0** | **0.0009 ms** |
+| 500,000 | ❌ | critical | 10.0 | 0.0024 ms |
+| 6,000,000 | ❌ | critical | 120.0 | 0.0023 ms |
+
+*Note: MemoriX elegantly rejects overflow (❌) instead of silently overwriting existing memories once the 50,000 capacity boundary is hit, all while maintaining sub-millisecond decision latency.*
 
 ---
 

@@ -43,11 +43,52 @@ MemoriX se inspira en la estructura de la memoria humana. Aplica un ciclo de vid
 
 ## Benchmarks y Rendimiento
 
-Evaluado rigurosamente mediante un benchmark A/B (2,048 ejecuciones en 32 familias de tareas):
-- **+28.0% Tasa de Éxito**: Mejora general del 31.9% al 60.0%.
-- **Aislamiento Perfecto**: Cero fugas de información.
-- **Elasticidad de Capacidad**: Comportamiento de saturación segura probado hasta 6,000,000 de elementos.
-- **Latencia**: Sobrecarga mínima (+120 ms).
+MemoriX fue evaluado rigurosamente mediante un benchmark A/B (2,048 ejecuciones en 32 familias de tareas usando `qwen2.5:3b`).
+
+### 1. Resultados Globales del Benchmark A/B
+
+| Métrica | Sin Memoria | MemoriX | Δ |
+| ------- | ----------- | ------- | - |
+| **Tasa de Éxito Global** | 31.9% (327/1024) | 60.0% (614/1024) | **+28.0pp** |
+| **Latencia Mediana** | 3,384 ms | 3,504 ms | +120 ms |
+| **Familias Evaluadas** | 32 | 32 | — |
+| **Familias Ganadas** (Δ > 0) | — | 12 | — |
+| **Familias Perdidas** (Δ < 0) | — | 4 | — |
+
+### 2. Flujo de Trabajo SDLC Multi-Agente
+
+Evalúa el éxito de tareas a través de distintos roles de agentes, previniendo fugas de información.
+
+| Métrica | Sin Memoria | MemoriX | Delta |
+| ------- | ----------- | ------- | ----- |
+| **Tasa de Éxito** | 25.0% | 37.5% | **+12.5pp** |
+| **Uso de Info Prohibida** | 0.0% | 0.0% | **Aislamiento Perfecto** |
+| **Llamadas a Herramientas**| 5,000 | 8,750 | — |
+| **Respuesta Media** | N/A | 257.3 ms | — |
+
+### 3. Recuperación BFCL (Evaluación Ciega)
+
+Evaluación independiente del mecanismo de calidad de recuperación.
+
+| Etapa | Resultado | Tasa |
+| ----- | --------- | ---- |
+| Baseline correcta | 0/125 | 0% |
+| Corpus contiene la referencia | 125/125 | 100% |
+| Recuperación contiene la ref. | 96/125 | **76.8%** |
+| Respuesta final correcta | 96/125 | **76.8%** |
+
+### 4. Comportamiento en Saturación de Capacidad
+
+Prueba del sistema frente a cargas crecientes y sobrecarga extrema.
+
+| Elementos Activos | Admisión Permitida | Nivel de Presión | Ratio de Uso | Latencia de Decisión |
+| ----------------- | ------------------ | ---------------- | ------------ | -------------------- |
+| 10,000 | ✅ | estable | 0.2 | 0.0013 ms |
+| **50,000** | ❌ | **crítico** | **1.0** | **0.0009 ms** |
+| 500,000 | ❌ | crítico | 10.0 | 0.0024 ms |
+| 6,000,000 | ❌ | crítico | 120.0 | 0.0023 ms |
+
+*Nota: MemoriX rechaza el exceso de forma elegante (❌) en lugar de sobrescribir memorias existentes una vez que se alcanza la capacidad de 50,000, manteniendo una latencia inferior al milisegundo.*
 
 ---
 
