@@ -130,7 +130,7 @@ class GatewayRecordingTests(PublicGatewayTestCase):
 class GatewayRetrievalContractTests(
     PublicGatewayTestCase
 ):
-    def test_active_retrieval_is_hot_site_only(self) -> None:
+    def test_active_retrieval_prefers_hot_site(self) -> None:
         memory = self.create_validated_hot_memory()
 
         result = self.gateway.retrieve_memory(
@@ -150,55 +150,109 @@ class GatewayRetrievalContractTests(
             memory.memory_id,
         )
 
-    def test_retrieval_never_falls_back_to_cold(
+    def test_retrieval_falls_back_to_short_term(self) -> None:
+        recorded = self.record_event(
+            content=(
+                "The recent working token is "
+                "STM-ONLY-7429."
+            )
+        )
+
+        result = self.gateway.retrieve_memory(
+            "STM-ONLY-7429"
+        )
+
+        self.assertEqual(
+            result.source,
+            RetrievalSource.SHORT_TERM,
+        )
+        self.assertEqual(len(result.matches), 1)
+        self.assertEqual(
+            result.matches[0].memory_id,
+            recorded.short_term_event.event_id,
+        )
+        self.assertEqual(
+            result.matches[0].metadata["retrieval_tier"],
+            "short_term",
+        )
+        self.assertFalse(
+            result.matches[0].metadata["validated"]
+        )
+
+    def test_retrieval_falls_back_to_cold_after_stm_miss(
         self,
     ) -> None:
-        self.record_event(
+        recorded = self.record_event(
             content=(
-                "The secret historical audit token is "
+                "The durable historical token is "
                 "COLD-ONLY-7429."
             )
         )
 
-        cold_before = (
-            self.paths.cold_archive_events.read_bytes()
+        from memory.hot_site.short_term_memory import (
+            ShortTermEventStore,
         )
+        ShortTermEventStore(
+            self.paths.short_term_events
+        ).clear()
 
         result = self.gateway.retrieve_memory(
             "COLD-ONLY-7429"
         )
 
-        cold_after = (
-            self.paths.cold_archive_events.read_bytes()
+        self.assertEqual(
+            result.source,
+            RetrievalSource.COLD_SITE,
         )
-        status = self.gateway.memory_status()
+        self.assertEqual(len(result.matches), 1)
+        self.assertEqual(
+            result.matches[0].memory_id,
+            recorded.archived_event.event_id,
+        )
+        self.assertEqual(
+            result.matches[0].metadata["retrieval_tier"],
+            "cold_site",
+        )
+        self.assertFalse(
+            result.matches[0].metadata["validated"]
+        )
+        self.assertFalse(
+            result.matches[0].metadata[
+                "automatic_rehydration"
+            ]
+        )
+
+    def test_short_term_wins_over_hot_site_and_cold(
+        self,
+    ) -> None:
+        self.record_event(
+            event_id="event_fallback_duplicate",
+            content="Priority token is PRIORITY-9911.",
+        )
+        memory = self.create_validated_hot_memory(
+            content=(
+                "Validated priority token is PRIORITY-9911."
+            ),
+        )
+
+        result = self.gateway.retrieve_memory(
+            "PRIORITY-9911"
+        )
 
         self.assertEqual(
             result.source,
-            RetrievalSource.HOT_SITE,
+            RetrievalSource.SHORT_TERM,
         )
         self.assertEqual(
-            result.matches,
-            (),
+            result.matches[0].memory_id,
+            "event_fallback_duplicate",
         )
         self.assertEqual(
-            status["hot_memories_total"],
-            0,
-        )
-        self.assertEqual(
-            status["hot_memories_active"],
-            0,
-        )
-        self.assertEqual(
-            status["candidates"]["pending"],
-            0,
+            result.matches[0].metadata["retrieval_tier"],
+            "short_term",
         )
         self.assertFalse(
-            status["automatic_rehydration"]
-        )
-        self.assertEqual(
-            cold_after,
-            cold_before,
+            result.matches[0].metadata["validated"]
         )
 
     def test_explicit_cold_search_finds_archived_event(
@@ -340,11 +394,11 @@ class GatewayStatusTests(PublicGatewayTestCase):
 
         self.assertEqual(
             status["retrieval_contract"],
-            "hot_site_only_no_cold_fallback",
+            "short_term_then_hot_then_cold_fallback",
         )
         self.assertEqual(
             status["cold_site_contract"],
-            "explicit_audit_history_only",
+            "audit_search_plus_final_retrieval_fallback",
         )
         self.assertFalse(
             status["automatic_rehydration"]

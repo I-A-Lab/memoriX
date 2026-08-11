@@ -89,8 +89,8 @@ class McpToolDeclarationTests(McpToolsTestCase):
         )
 
 
-class McpHotColdContractTests(McpToolsTestCase):
-    def test_record_and_hot_context_do_not_fallback(
+class McpHierarchicalRetrievalContractTests(McpToolsTestCase):
+    def test_record_and_context_falls_back_to_short_term(
         self,
     ) -> None:
         self.tools.call(
@@ -122,9 +122,9 @@ class McpHotColdContractTests(McpToolsTestCase):
 
         self.assertEqual(
             hot.source.value,
-            "hot_site",
+            "short_term",
         )
-        self.assertEqual(hot.matches, ())
+        self.assertEqual(len(hot.matches), 1)
         self.assertEqual(
             cold.source.value,
             "cold_audit",
@@ -285,7 +285,7 @@ class McpStructuredContentTests(unittest.TestCase):
         payload = tool_result_payload(
             {
                 "retrieval_contract": (
-                    "hot_site_only_no_cold_fallback"
+                    "short_term_then_hot_then_cold_fallback"
                 )
             }
         )
@@ -294,7 +294,7 @@ class McpStructuredContentTests(unittest.TestCase):
             payload["structuredContent"],
             {
                 "retrieval_contract": (
-                    "hot_site_only_no_cold_fallback"
+                    "short_term_then_hot_then_cold_fallback"
                 )
             },
         )

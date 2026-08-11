@@ -59,8 +59,8 @@ class PythonMemoryPackageContractTests(unittest.TestCase):
         required_phrases = (
             "short-term events are archived directly in the cold site",
             "validated candidates are stored in the hot site only",
-            "active retrieval uses the hot site only",
-            "there is no automatic cold-site fallback",
+            "normal retrieval uses a recency-first hierarchy: Short-Term Memory first, then Hot Site, then Cold Site as a final fallback",
+            "normal retrieval falls back to Cold Site only after Short-Term Memory and Hot Site miss",
             "there is no automatic cold-to-hot rehydration",
             "Observability reports, snapshots, alerts and drift analysis",
         )

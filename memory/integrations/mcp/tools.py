@@ -110,8 +110,9 @@ TOOL_DEFINITIONS: tuple[McpToolDefinition, ...] = (
     McpToolDefinition(
         name="memorix_context",
         description=(
-            "Retrieve active validated memory from the Titan hot "
-            "site only. There is no cold-site fallback."
+            "Retrieve memory using the recency-first hierarchy: "
+            "recent Short-Term Memory first, then validated Hot Site, "
+            "then durable Cold Site history as a final fallback."
         ),
         input_schema=_object_schema(
             {

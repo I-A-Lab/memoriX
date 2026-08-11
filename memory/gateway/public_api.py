@@ -2,8 +2,9 @@
 
 This gateway is the only supported high-level Python entry point.
 
-Active retrieval is strictly hot-site-only. Durable cold history can only be
-queried through the explicit search_cold_site_history() audit operation.
+Normal retrieval is hierarchical: validated Hot Site first, then recent
+Short-Term Memory, then durable Cold Site history as a final fallback.
+Pending candidates and Project Archive records are not part of normal retrieval.
 """
 
 from __future__ import annotations
@@ -63,6 +64,7 @@ from datetime import datetime, timezone
 from memory.hot_site.short_term_memory import (
     ShortTermEventStore,
 )
+from memory.retrieval import ShortTermSearchService
 from memory.hot_site.titan_active_memory import (
     HotSiteTitanMemory,
 )
@@ -102,6 +104,9 @@ class MemoriXGateway:
         )
         self._cold_search = ColdHistorySearchService(
             self._cold_archive
+        )
+        self._short_term_search = ShortTermSearchService(
+            self._short_term_store
         )
 
         self._project_archive_store = (
@@ -355,19 +360,58 @@ class MemoriXGateway:
         project_id: str | None = None,
         user_id: str | None = None,
     ) -> RetrievalResult:
-        """Retrieve active validated memory from Titan only.
+        """Retrieve memory through the trust-aware tier hierarchy.
 
-        Optional project and user identifiers are strict metadata filters
-        applied before neural ranking. This method never reads the cold archive
-        and never performs automatic rehydration.
+        Priority is Short-Term Memory -> Hot Site -> Cold Site. The next tier
+        is queried only when the previous tier has no relevant match. Pending
+        candidates and Project Archive records are never queried here.
+
+        Project/user scopes are enforced on every participating tier. Results
+        carry explicit provenance and validation/trust metadata.
         """
 
-        return self._hot_site.retrieve(
+        limit = top_k if top_k is not None else 5
+
+        short_term_result = self._short_term_search.search(
+            query,
+            limit=limit,
+            project_id=project_id,
+            user_id=user_id,
+        )
+        if short_term_result.matches:
+            return short_term_result
+
+        hot_result = self._hot_site.retrieve(
             query,
             role=role,
             top_k=top_k,
             project_id=project_id,
             user_id=user_id,
+        )
+        if hot_result.matches:
+            for match in hot_result.matches:
+                match.metadata.setdefault(
+                    "retrieval_tier", "hot_site"
+                )
+                match.metadata.setdefault(
+                    "trust_level", "validated_active"
+                )
+                match.metadata.setdefault("validated", True)
+                match.metadata.setdefault("fallback", True)
+            return hot_result
+
+        candidate_event_ids = frozenset(
+            event_id
+            for candidate in self._candidate_store.list_candidates()
+            for event_id in candidate.source_event_ids
+        )
+
+        return self._cold_search.search_for_retrieval(
+            query,
+            limit=limit,
+            project_id=project_id,
+            user_id=user_id,
+            exclude_event_ids=candidate_event_ids,
         )
 
     def search_cold_site_history(
@@ -751,12 +795,12 @@ class MemoriXGateway:
         }
 
         return {
-            "architecture": "memorix_hot_cold",
+            "architecture": "memorix_hierarchical_memory",
             "retrieval_contract": (
-                "hot_site_only_no_cold_fallback"
+                "short_term_then_hot_then_cold_fallback"
             ),
             "cold_site_contract": (
-                "explicit_audit_history_only"
+                "audit_search_plus_final_retrieval_fallback"
             ),
             "automatic_rehydration": False,
             "short_term_events": len(
@@ -871,7 +915,7 @@ def retrieve_memory(
     project_id: str | None = None,
     user_id: str | None = None,
 ) -> RetrievalResult:
-    """Retrieve active memory from the default Titan hot site only."""
+    """Retrieve memory through Short-Term -> Hot -> Cold fallback."""
 
     return get_default_gateway().retrieve_memory(
         query,
