@@ -92,6 +92,6 @@ Capacity management does not:
 - hard-delete hot memories;
 - delete or compact the cold archive;
 - automatically rehydrate cold history;
-- create a cold-search fallback for normal retrieval;
+- change the configured Hot/STM/Cold retrieval hierarchy or rehydrate Cold data into Titan;
 - apply pruning from OpenCode hooks;
 - mutate the runtime during synthetic benchmarks.

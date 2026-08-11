@@ -124,7 +124,7 @@ class McpToolProtocolTests(McpServerTestCase):
             result["structuredContent"][
                 "retrieval_contract"
             ],
-            "hot_site_only_no_cold_fallback",
+            "hot_then_short_term_then_cold_fallback",
         )
 
     def test_tool_domain_error_is_returned_as_mcp_error(

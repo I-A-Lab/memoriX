@@ -1,4 +1,4 @@
-﻿"""Explicit audit-only search over the durable cold-site event history.
+"""Explicit audit-only search over the durable cold-site event history.
 
 This module is deliberately separate from active-memory retrieval. It never
 writes to Titan and never rehydrates archived events into the hot site.
@@ -74,6 +74,27 @@ def _audit_score(
     return min(1.0, max(0.0, score))
 
 
+
+def _metadata_user_id(metadata: dict[str, object]) -> str | None:
+    value = metadata.get("user_id")
+    if value is None:
+        return None
+    return str(value)
+
+
+def _event_in_scope(
+    event: ArchivedEvent,
+    *,
+    project_id: str | None,
+    user_id: str | None,
+) -> bool:
+    if project_id is not None and event.project_id != project_id:
+        return False
+    if user_id is not None and _metadata_user_id(dict(event.metadata)) != user_id:
+        return False
+    return True
+
+
 class ColdHistorySearchService:
     """Perform explicit audit searches over the cold archive."""
 
@@ -83,64 +104,68 @@ class ColdHistorySearchService:
     ) -> None:
         self._archive = archive
 
-    def search(
+    def _search(
         self,
         query: str,
         *,
-        limit: int = 10,
+        limit: int,
+        project_id: str | None,
+        user_id: str | None,
+        source: RetrievalSource,
+        audit_only: bool,
+        exclude_event_ids: frozenset[str] = frozenset(),
     ) -> RetrievalResult:
-        """Search durable history without affecting active memory."""
-
         if not isinstance(query, str) or not query.strip():
             raise ValueError("query must not be empty.")
-
         if isinstance(limit, bool) or not isinstance(limit, int):
             raise TypeError("limit must be an integer.")
-
         if limit <= 0:
             raise ValueError("limit must be positive.")
 
-        scored_events: list[
-            tuple[float, ArchivedEvent]
-        ] = []
-
+        scored_events: list[tuple[float, ArchivedEvent]] = []
         for event in self._archive.list_events():
+            if event.event_id in exclude_event_ids:
+                continue
+            if not _event_in_scope(
+                event,
+                project_id=project_id,
+                user_id=user_id,
+            ):
+                continue
             score = _audit_score(query, event)
-
             if score > 0.0:
                 scored_events.append((score, event))
 
         scored_events.sort(
-            key=lambda item: (
-                item[0],
-                item[1].archived_at,
-            ),
+            key=lambda item: (item[0], item[1].archived_at),
             reverse=True,
         )
 
         matches: list[RetrievedMemory] = []
-
         for score, event in scored_events[:limit]:
             metadata = {
-                "audit_only": True,
+                "retrieval_tier": (
+                    "cold_audit" if audit_only else "cold_site"
+                ),
+                "trust_level": (
+                    "historical_audit"
+                    if audit_only
+                    else "historical_unvalidated"
+                ),
+                "audit_only": audit_only,
+                "validated": False,
                 "active_memory": False,
+                "fallback": not audit_only,
                 "event_type": event.event_type,
                 "source": event.source,
-                "original_created_at": (
-                    event.original_created_at
-                ),
+                "original_created_at": event.original_created_at,
                 "archived_at": event.archived_at,
                 "project_id": event.project_id,
                 "session_id": event.session_id,
-                "archive_metadata": dict(
-                    event.metadata
-                ),
-                "cold_site_contract": (
-                    "explicit_history_search_only"
-                ),
+                "user_id": _metadata_user_id(dict(event.metadata)),
+                "archive_metadata": dict(event.metadata),
                 "automatic_rehydration": False,
             }
-
             matches.append(
                 RetrievedMemory(
                     memory_id=event.event_id,
@@ -152,6 +177,46 @@ class ColdHistorySearchService:
 
         return RetrievalResult(
             query=query,
-            source=RetrievalSource.COLD_AUDIT,
+            source=source,
             matches=tuple(matches),
+        )
+
+    def search(
+        self,
+        query: str,
+        *,
+        limit: int = 10,
+        project_id: str | None = None,
+        user_id: str | None = None,
+    ) -> RetrievalResult:
+        """Explicitly search durable history for audit purposes."""
+
+        return self._search(
+            query,
+            limit=limit,
+            project_id=project_id,
+            user_id=user_id,
+            source=RetrievalSource.COLD_AUDIT,
+            audit_only=True,
+        )
+
+    def search_for_retrieval(
+        self,
+        query: str,
+        *,
+        limit: int = 10,
+        project_id: str | None = None,
+        user_id: str | None = None,
+        exclude_event_ids: frozenset[str] = frozenset(),
+    ) -> RetrievalResult:
+        """Search durable history as the final normal-retrieval fallback."""
+
+        return self._search(
+            query,
+            limit=limit,
+            project_id=project_id,
+            user_id=user_id,
+            source=RetrievalSource.COLD_SITE,
+            audit_only=False,
+            exclude_event_ids=exclude_event_ids,
         )

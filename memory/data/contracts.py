@@ -1,4 +1,4 @@
-﻿"""Typed domain contracts shared by the memoriX Python components.
+"""Typed domain contracts shared by the memoriX Python components.
 
 This module contains data only. It does not perform storage, retrieval,
 consolidation, Titan inference, MCP communication, or OpenCode integration.
@@ -94,9 +94,11 @@ class CandidateStatus(str, Enum):
 
 
 class RetrievalSource(str, Enum):
-    """Allowed retrieval sources under the active hot/cold contract."""
+    """Allowed retrieval sources under the hierarchical retrieval contract."""
 
     HOT_SITE = "hot_site"
+    SHORT_TERM = "short_term"
+    COLD_SITE = "cold_site"
     COLD_AUDIT = "cold_audit"
 
 
@@ -525,7 +527,7 @@ class RetrievedMemory:
 
 @dataclass(slots=True)
 class RetrievalResult:
-    """Result envelope for hot-site or explicit cold-audit searches."""
+    """Result envelope for hierarchical or explicit audit searches."""
 
     query: str
     source: RetrievalSource

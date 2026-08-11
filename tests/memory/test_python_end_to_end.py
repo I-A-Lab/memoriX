@@ -250,10 +250,10 @@ class DurableHistoryRestartTests(
             recorded.short_term_event.event_id,
         )
 
-    def test_cold_only_information_never_falls_back_after_restart(
+    def test_recent_information_falls_back_after_restart(
         self,
     ) -> None:
-        self.record_architecture_event(
+        recorded = self.record_architecture_event(
             event_id="event_cold_restart_001",
             content=(
                 "Historical audit secret token "
@@ -261,37 +261,42 @@ class DurableHistoryRestartTests(
             ),
         )
 
-        cold_before = (
-            self.paths.cold_archive_events.read_bytes()
-        )
-
         restarted = self.restart_gateway()
 
-        active_result = restarted.retrieve_memory(
+        recent_result = restarted.retrieve_memory(
             "COLD-RESTART-5517"
         )
 
-        cold_after_active_retrieval = (
-            self.paths.cold_archive_events.read_bytes()
+        self.assertEqual(
+            recent_result.source,
+            RetrievalSource.SHORT_TERM,
+        )
+        self.assertEqual(
+            recent_result.matches[0].memory_id,
+            recorded.short_term_event.event_id,
+        )
+
+        from memory.hot_site.short_term_memory import (
+            ShortTermEventStore,
+        )
+        ShortTermEventStore(
+            self.paths.short_term_events
+        ).clear()
+
+        cold_result = restarted.retrieve_memory(
+            "COLD-RESTART-5517"
         )
 
         self.assertEqual(
-            active_result.source,
-            RetrievalSource.HOT_SITE,
+            cold_result.source,
+            RetrievalSource.COLD_SITE,
         )
         self.assertEqual(
-            active_result.matches,
-            (),
+            cold_result.matches[0].memory_id,
+            recorded.archived_event.event_id,
         )
-        self.assertEqual(
-            restarted.memory_status()[
-                "hot_memories_total"
-            ],
-            0,
-        )
-        self.assertEqual(
-            cold_after_active_retrieval,
-            cold_before,
+        self.assertFalse(
+            cold_result.matches[0].metadata["validated"]
         )
 
         audit_result = (
@@ -423,7 +428,7 @@ class HotSiteRestartTests(
 
         self.assertEqual(
             retrieval.source,
-            RetrievalSource.HOT_SITE,
+            RetrievalSource.COLD_SITE,
         )
         self.assertEqual(
             retrieval.matches,

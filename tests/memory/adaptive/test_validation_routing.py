@@ -147,11 +147,11 @@ class ValidationTopicRoutingTests(unittest.TestCase):
 
         self.assertEqual(
             result.source,
-            "hot_site",
+            "short_term",
         )
-        self.assertEqual(
-            result.matches,
-            (),
+        self.assertGreaterEqual(
+            len(result.matches),
+            1,
         )
 
         cold = (
