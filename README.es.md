@@ -1,14 +1,14 @@
-<h1 align="center">MemoriX</h1>
+<h1 align="center">Memory AGENTX</h1>
 
 <p align="center">
   <em>Diseño y Evaluación de un Sistema de Memoria Persistente Controlada para Agentes de Código basados en LLM</em>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
-  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
-  <img src="https://img.shields.io/badge/Bun-000000?style=for-the-badge&logo=bun&logoColor=white" alt="Bun" />
-  <img src="https://img.shields.io/badge/PowerShell-5391FE?style=for-the-badge&logo=powershell&logoColor=white" alt="PowerShell" />
+  <img src="https://img.shields.io/badge/lenguaje-TypeScript-007ACC?style=flat-square" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/lenguaje-Python-3776AB?style=flat-square" alt="Python" />
+  <img src="https://img.shields.io/badge/runtime-Bun-000000?style=flat-square" alt="Bun" />
+  <img src="https://img.shields.io/badge/shell-PowerShell-5391FE?style=flat-square" alt="PowerShell" />
 </p>
 
 <p align="center">
