@@ -1,7 +1,14 @@
-# MemoriX
+<h1 align="center">MemoriX</h1>
 
 <p align="center">
   <em>LLMベースのコードエージェントのための制御された永続メモリシステムの設計と評価</em>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
+  <img src="https://img.shields.io/badge/Bun-000000?style=for-the-badge&logo=bun&logoColor=white" alt="Bun" />
+  <img src="https://img.shields.io/badge/PowerShell-5391FE?style=for-the-badge&logo=powershell&logoColor=white" alt="PowerShell" />
 </p>
 
 <p align="center">
@@ -14,13 +21,13 @@
 
 ---
 
-## 📖 MemoriX とは？
+## MemoriX とは？
 
 **MemoriX** は、自律型コーディングエージェント（OpenCodeなど）向けに設計された高度な永続メモリシステムです。エージェントのメモリを単純なストレージの課題から、構造化された**知識ガバナンス**の問題へと根本的に移行させます。
 
 ---
 
-## 🧠 システムアーキテクチャ
+## システムアーキテクチャ
 
 システムは人間の記憶モデルに触発されており、**観察 → 提案 → 検証 → 検索 → 更新 → 忘却**という厳密なライフサイクルを強制します。
 
@@ -32,7 +39,7 @@
 
 ---
 
-## 🚀 ベンチマークとパフォーマンス
+## ベンチマークとパフォーマンス
 
 厳密な A/B ベンチマークを通じて評価されました：
 - **+28.0% 成功率向上**: 31.9% から 60.0% へ。
@@ -41,7 +48,7 @@
 
 ---
 
-## 📦 完全なインストールガイド (A から Z)
+## 完全なインストールガイド (A から Z)
 
 このガイドでは、MemoriX と OpenCode をゼロからインストールする手順を説明します。
 
@@ -55,7 +62,7 @@
      ```
 3. **Python 3.10 以上**: Titan バックエンドに必要。
    - [python.org](https://www.python.org/downloads/)
-   - ⚠️ **重要**: インストール時に **"Add Python to PATH"** にチェックを入れてください。
+   - **重要**: インストール時に **"Add Python to PATH"** にチェックを入れてください。
 
 ### ステップ 2: リポジトリのクローン
 
@@ -92,6 +99,6 @@ bun install
 
 ---
 
-## 📖 ドキュメント
+## ドキュメント
 - [詳細アーキテクチャ](docs/MEMORIX_FINAL_ARCHITECTURE.md)
 - [操作マニュアル](docs/MEMORIX_OPERATIONS.md)

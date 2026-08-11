@@ -1,7 +1,14 @@
-# MemoriX
+<h1 align="center">MemoriX</h1>
 
 <p align="center">
   <em>Diseño y Evaluación de un Sistema de Memoria Persistente Controlada para Agentes de Código basados en LLM</em>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
+  <img src="https://img.shields.io/badge/Bun-000000?style=for-the-badge&logo=bun&logoColor=white" alt="Bun" />
+  <img src="https://img.shields.io/badge/PowerShell-5391FE?style=for-the-badge&logo=powershell&logoColor=white" alt="PowerShell" />
 </p>
 
 <p align="center">
@@ -14,7 +21,7 @@
 
 ---
 
-## 📖 ¿Qué es MemoriX?
+## ¿Qué es MemoriX?
 
 **MemoriX** es un sistema avanzado de memoria persistente diseñado específicamente para agentes de codificación autónomos basados en modelos de lenguaje grandes (LLM), como OpenCode.
 
@@ -22,7 +29,7 @@
 
 ---
 
-## 🧠 Arquitectura del Sistema
+## Arquitectura del Sistema
 
 MemoriX se inspira en la estructura de la memoria humana. Aplica un ciclo de vida estricto: **observar → proponer → validar → recuperar → actualizar → olvidar**.
 
@@ -34,7 +41,7 @@ MemoriX se inspira en la estructura de la memoria humana. Aplica un ciclo de vid
 
 ---
 
-## 🚀 Benchmarks y Rendimiento
+## Benchmarks y Rendimiento
 
 Evaluado rigurosamente mediante un benchmark A/B (2,048 ejecuciones en 32 familias de tareas):
 - **+28.0% Tasa de Éxito**: Mejora general del 31.9% al 60.0%.
@@ -44,7 +51,7 @@ Evaluado rigurosamente mediante un benchmark A/B (2,048 ejecuciones en 32 famili
 
 ---
 
-## 📦 Guía de Instalación Completa (De la A a la Z)
+## Guía de Instalación Completa (De la A a la Z)
 
 Esta guía te ayudará a instalar MemoriX y OpenCode desde cero. Está diseñada para ser accesible incluso si eres nuevo en estas herramientas.
 
@@ -59,7 +66,7 @@ Esta guía te ayudará a instalar MemoriX y OpenCode desde cero. Está diseñada
      ```
 3. **Python 3.10 o superior**: Requerido para el backend Titan.
    - [python.org](https://www.python.org/downloads/)
-   - ⚠️ **Importante**: Marca la casilla **"Add Python to PATH"** durante la instalación.
+   - **Importante**: Marca la casilla **"Add Python to PATH"** durante la instalación.
 
 ### Paso 2: Clonar el Repositorio
 
@@ -99,6 +106,6 @@ Una vez que la validación sea exitosa, inicia la interfaz de OpenCode:
 
 ---
 
-## 📖 Documentación Adicional
+## Documentación Adicional
 - [Arquitectura Detallada](docs/MEMORIX_FINAL_ARCHITECTURE.md)
 - [Manual de Operaciones](docs/MEMORIX_OPERATIONS.md)

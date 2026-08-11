@@ -1,7 +1,14 @@
-# MemoriX
+<h1 align="center">MemoriX</h1>
 
 <p align="center">
   <em>Design and Evaluation of a Controlled Persistent Memory System for LLM-Based Code Agents</em>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
+  <img src="https://img.shields.io/badge/Bun-000000?style=for-the-badge&logo=bun&logoColor=white" alt="Bun" />
+  <img src="https://img.shields.io/badge/PowerShell-5391FE?style=for-the-badge&logo=powershell&logoColor=white" alt="PowerShell" />
 </p>
 
 <p align="center">
@@ -14,7 +21,7 @@
 
 ---
 
-## 📖 What is MemoriX?
+## What is MemoriX?
 
 **MemoriX** is an advanced persistent memory system designed specifically for Large Language Model (LLM)-based autonomous coding agents (such as OpenCode). 
 
@@ -24,7 +31,7 @@ As AI agents increasingly assist with complex software development tasks, their 
 
 ---
 
-## 🧠 System Architecture
+## System Architecture
 
 MemoriX draws architectural inspiration from the multi-level structure of human memory. It enforces a strict knowledge lifecycle: **observe → propose → validate → retrieve → update → forget**.
 
@@ -45,7 +52,7 @@ The sole active memory system queried during agent retrieval. It is backed by a 
 
 ---
 
-## 🛠 Tech Stack & Integration
+## Tech Stack & Integration
 
 MemoriX maintains a clean runtime boundary using the **Model Context Protocol (MCP)** via JSON-RPC over `stdio`. 
 
@@ -59,7 +66,7 @@ The system natively supports a **Multi-Agent SDLC Workflow**, delegating tasks a
 
 ---
 
-## 🚀 Key Benchmarks & Performance
+## Key Benchmarks & Performance
 
 Evaluated rigorously through a paired A/B benchmark (2,048 runs across 32 task families using `qwen2.5:3b`):
 - **+28.0% Pass Rate**: Overall task pass rate improved from 31.9% (without memory) to 60.0% (with MemoriX).
@@ -69,7 +76,7 @@ Evaluated rigorously through a paired A/B benchmark (2,048 runs across 32 task f
 
 ---
 
-## 📦 Complete Installation Guide (From A to Z)
+## Complete Installation Guide (From A to Z)
 
 This guide will walk you through installing MemoriX and OpenCode from scratch. It is designed to be accessible even if you are completely new to these tools.
 
@@ -87,7 +94,7 @@ Before starting, ensure you have the following installed on your machine:
      ```
 3. **Python 3.10 or higher**: Required for the Titan memory backend.
    - Download & Install: [python.org](https://www.python.org/downloads/)
-   - ⚠️ **Important**: During installation, make sure to check the box **"Add Python to PATH"**.
+   - **Important**: During installation, make sure to check the box **"Add Python to PATH"**.
 
 ### Step 2: Clone the Repository
 
@@ -134,7 +141,7 @@ This script acts as the bridge: it launches the MCP server in the background and
 
 ---
 
-## ⚙️ Advanced Operations
+## Advanced Operations
 
 MemoriX includes several advanced tools for maintenance and Windows integration located in `tools/memorix/operations`:
 
@@ -144,6 +151,6 @@ MemoriX includes several advanced tools for maintenance and Windows integration 
 
 ---
 
-## 📖 Additional Documentation
+## Additional Documentation
 - [Detailed Architecture](docs/MEMORIX_FINAL_ARCHITECTURE.md)
 - [Operations Manual](docs/MEMORIX_OPERATIONS.md)
