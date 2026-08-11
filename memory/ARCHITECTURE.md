@@ -50,9 +50,9 @@ The non-negotiable architectural rules are:
 - short-term events are archived directly in the cold site;
 - the cold site is complete durable audit history;
 - validated candidates are stored in the hot site only;
-- normal retrieval uses a trust-aware hierarchy: Hot Site first, then Short-Term Memory, then Cold Site as a final fallback;
+- normal retrieval uses a recency-first hierarchy: Short-Term Memory first, then Hot Site, then Cold Site as a final fallback;
 - explicit cold history search remains available for audit;
-- normal retrieval falls back to Cold Site only after Hot Site and Short-Term Memory miss;
+- normal retrieval falls back to Cold Site only after Short-Term Memory and Hot Site miss;
 - Cold fallback never rehydrates archived events into Titan;
 - there is no automatic cold-to-hot rehydration;
 - pending and rejected candidates are not available to retrieval;
@@ -72,11 +72,11 @@ Stores recent events before consolidation. Every recorded event is also archived
 
 ### `hot_site/titan_active_memory`
 
-Stores human-validated active memories and serves as the first, highest-trust tier of normal retrieval.
+Stores human-validated active memories and serves as the second, validated tier of normal retrieval after STM.
 
 ### `cold_site/long_term_store`
 
-Stores append-only durable event history used both for explicit audit and as the final, provenance-labelled fallback tier when Hot Site and Short-Term Memory have no relevant match.
+Stores append-only durable event history used both for explicit audit and as the final, provenance-labelled fallback tier when Short-Term Memory and Hot Site have no relevant match.
 
 ### `cold_site/project_archive`
 

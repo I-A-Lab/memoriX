@@ -1,9 +1,9 @@
 # Hierarchical Retrieval Update
 
-Normal `memory_retrieve` now follows a trust-aware fallback hierarchy:
+Normal `memory_retrieve` now follows a recency-first fallback hierarchy:
 
-1. **Hot Site** — validated active Titan memories (priority 1).
-2. **Short-Term Memory** — recent unvalidated events (fallback 2).
+1. **Short-Term Memory** — recent unvalidated events (priority 1).
+2. **Hot Site** — validated active Titan memories (fallback 2).
 3. **Cold Site** — durable historical events (fallback 3).
 
 ## Safety rules

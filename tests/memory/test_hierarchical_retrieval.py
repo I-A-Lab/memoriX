@@ -44,7 +44,7 @@ class HierarchicalRetrievalTests(unittest.TestCase):
             metadata={"user_id": user_id},
         )
 
-    def test_priority_hot_then_stm_then_cold(self) -> None:
+    def test_priority_stm_then_hot_then_cold(self) -> None:
         self.record("event-recent", "Priority value TOKEN-42.")
         candidate = self.gateway.propose_memory_candidate(
             content="Validated priority value TOKEN-42.",
@@ -58,6 +58,14 @@ class HierarchicalRetrievalTests(unittest.TestCase):
             validation_reason="approved",
         )
 
+        stm = self.gateway.retrieve_memory(
+            "TOKEN-42", project_id="P1", user_id="U1"
+        )
+        self.assertEqual(stm.source, RetrievalSource.SHORT_TERM)
+        self.assertEqual(stm.matches[0].memory_id, "event-recent")
+        self.assertEqual(stm.matches[0].metadata["trust_level"], "recent_unvalidated")
+
+        ShortTermEventStore(self.paths.short_term_events).clear()
         hot = self.gateway.retrieve_memory(
             "TOKEN-42", project_id="P1", user_id="U1"
         )
@@ -67,15 +75,8 @@ class HierarchicalRetrievalTests(unittest.TestCase):
         self.gateway.forget_memory(
             memory.memory_id,
             validated_by="reviewer",
-            reason="test fallback",
+            reason="test cold fallback",
         )
-        stm = self.gateway.retrieve_memory(
-            "TOKEN-42", project_id="P1", user_id="U1"
-        )
-        self.assertEqual(stm.source, RetrievalSource.SHORT_TERM)
-        self.assertEqual(stm.matches[0].metadata["trust_level"], "recent_unvalidated")
-
-        ShortTermEventStore(self.paths.short_term_events).clear()
         cold = self.gateway.retrieve_memory(
             "TOKEN-42", project_id="P1", user_id="U1"
         )

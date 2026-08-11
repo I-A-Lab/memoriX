@@ -362,15 +362,24 @@ class MemoriXGateway:
     ) -> RetrievalResult:
         """Retrieve memory through the trust-aware tier hierarchy.
 
-        Priority is Hot Site -> Short-Term Memory -> Cold Site. The next tier
+        Priority is Short-Term Memory -> Hot Site -> Cold Site. The next tier
         is queried only when the previous tier has no relevant match. Pending
         candidates and Project Archive records are never queried here.
 
-        Project/user scopes are enforced on every participating tier. Fallback
-        results carry explicit provenance and validation/trust metadata.
+        Project/user scopes are enforced on every participating tier. Results
+        carry explicit provenance and validation/trust metadata.
         """
 
         limit = top_k if top_k is not None else 5
+
+        short_term_result = self._short_term_search.search(
+            query,
+            limit=limit,
+            project_id=project_id,
+            user_id=user_id,
+        )
+        if short_term_result.matches:
+            return short_term_result
 
         hot_result = self._hot_site.retrieve(
             query,
@@ -388,17 +397,8 @@ class MemoriXGateway:
                     "trust_level", "validated_active"
                 )
                 match.metadata.setdefault("validated", True)
-                match.metadata.setdefault("fallback", False)
+                match.metadata.setdefault("fallback", True)
             return hot_result
-
-        short_term_result = self._short_term_search.search(
-            query,
-            limit=limit,
-            project_id=project_id,
-            user_id=user_id,
-        )
-        if short_term_result.matches:
-            return short_term_result
 
         candidate_event_ids = frozenset(
             event_id
@@ -797,7 +797,7 @@ class MemoriXGateway:
         return {
             "architecture": "memorix_hierarchical_memory",
             "retrieval_contract": (
-                "hot_then_short_term_then_cold_fallback"
+                "short_term_then_hot_then_cold_fallback"
             ),
             "cold_site_contract": (
                 "audit_search_plus_final_retrieval_fallback"
@@ -915,7 +915,7 @@ def retrieve_memory(
     project_id: str | None = None,
     user_id: str | None = None,
 ) -> RetrievalResult:
-    """Retrieve memory through Hot -> Short-Term -> Cold fallback."""
+    """Retrieve memory through Short-Term -> Hot -> Cold fallback."""
 
     return get_default_gateway().retrieve_memory(
         query,

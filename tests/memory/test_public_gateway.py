@@ -222,7 +222,7 @@ class GatewayRetrievalContractTests(
             ]
         )
 
-    def test_hot_site_wins_over_short_term_and_cold(
+    def test_short_term_wins_over_hot_site_and_cold(
         self,
     ) -> None:
         self.record_event(
@@ -241,17 +241,17 @@ class GatewayRetrievalContractTests(
 
         self.assertEqual(
             result.source,
-            RetrievalSource.HOT_SITE,
+            RetrievalSource.SHORT_TERM,
         )
         self.assertEqual(
             result.matches[0].memory_id,
-            memory.memory_id,
+            "event_fallback_duplicate",
         )
         self.assertEqual(
             result.matches[0].metadata["retrieval_tier"],
-            "hot_site",
+            "short_term",
         )
-        self.assertTrue(
+        self.assertFalse(
             result.matches[0].metadata["validated"]
         )
 
@@ -394,7 +394,7 @@ class GatewayStatusTests(PublicGatewayTestCase):
 
         self.assertEqual(
             status["retrieval_contract"],
-            "hot_then_short_term_then_cold_fallback",
+            "short_term_then_hot_then_cold_fallback",
         )
         self.assertEqual(
             status["cold_site_contract"],

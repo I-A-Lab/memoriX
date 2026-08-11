@@ -285,7 +285,7 @@ class McpStructuredContentTests(unittest.TestCase):
         payload = tool_result_payload(
             {
                 "retrieval_contract": (
-                    "hot_then_short_term_then_cold_fallback"
+                    "short_term_then_hot_then_cold_fallback"
                 )
             }
         )
@@ -294,7 +294,7 @@ class McpStructuredContentTests(unittest.TestCase):
             payload["structuredContent"],
             {
                 "retrieval_contract": (
-                    "hot_then_short_term_then_cold_fallback"
+                    "short_term_then_hot_then_cold_fallback"
                 )
             },
         )
