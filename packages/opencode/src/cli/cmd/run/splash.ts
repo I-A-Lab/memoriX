@@ -18,7 +18,7 @@ import {
   type ScrollbackWriter,
 } from "@opentui/core"
 import * as Locale from "@/util/locale"
-import { go } from "@/cli/logo"
+import { go, logo } from "@/cli/logo"
 import type { RunSplashTheme } from "./theme"
 
 export const SPLASH_TITLE_LIMIT = 50
@@ -156,6 +156,32 @@ function draw(
   }
 }
 
+function drawGradientLine(
+  lines: Array<{ left: number; top: number; text: string; fg: ColorInput; bg?: ColorInput; attrs?: number }>,
+  row: string,
+  input: {
+    left: number
+    top: number
+    gradient: ColorInput[]
+    attrs?: number
+  },
+) {
+  let x = input.left
+  const chars = [...row]
+  const total = chars.length
+  const gradientLength = input.gradient.length
+  for (let i = 0; i < chars.length; i++) {
+    const char = chars[i]
+    const colorIndex =
+      gradientLength <= 1 || total <= 1
+        ? 0
+        : Math.min(gradientLength - 1, Math.floor((i / (total - 1)) * gradientLength))
+    const color = input.gradient[colorIndex] ?? input.gradient[0]
+    push(lines, x, input.top, char, color, undefined, input.attrs)
+    x += 1
+  }
+}
+
 function build(input: SplashWriterInput, kind: "entry" | "exit", ctx: ScrollbackRenderContext): ScrollbackSnapshot {
   const width = Math.max(1, ctx.width)
   const meta = splashMeta(input)
@@ -163,6 +189,7 @@ function build(input: SplashWriterInput, kind: "entry" | "exit", ctx: Scrollback
   const left = input.theme.left
   const right = input.theme.right
   const leftShadow = input.theme.leftShadow
+  const gradient = input.theme.gradient
   let height = 1
 
   if (kind === "entry") {
@@ -179,18 +206,29 @@ function build(input: SplashWriterInput, kind: "entry" | "exit", ctx: Scrollback
       })
     }
 
-    push(lines, body_left, top, "memoriX", right, undefined, TextAttributes.BOLD)
+    // Draw gradient wordmark
+    const wordmark = logo.left
+    for (let i = 0; i < wordmark.length; i += 1) {
+      drawGradientLine(lines, wordmark[i] ?? "", {
+        left: body_left,
+        top: top + i,
+        gradient,
+        attrs: TextAttributes.BOLD,
+      })
+    }
+
+    const wordmarkHeight = wordmark.length
     if (input.detail) {
       push(
         lines,
         body_left,
-        top + 1,
+        top + wordmarkHeight,
         Locale.truncateMiddle(input.detail, Math.max(1, width - body_left)),
         left,
         undefined,
       )
     }
-    height = top + mark.length
+    height = top + wordmarkHeight + (input.detail ? 1 : 0)
   }
 
   if (kind === "exit") {
@@ -209,22 +247,35 @@ function build(input: SplashWriterInput, kind: "entry" | "exit", ctx: Scrollback
       })
     }
 
-    if (input.showSession !== false) {
-      push(lines, body_left, top, session, left, undefined, TextAttributes.DIM)
-      push(lines, body_left + session.length, top, meta.title, right, undefined, TextAttributes.BOLD)
+    // Draw gradient wordmark
+    const wordmark = logo.left
+    for (let i = 0; i < wordmark.length; i += 1) {
+      drawGradientLine(lines, wordmark[i] ?? "", {
+        left: body_left,
+        top: top + i,
+        gradient,
+        attrs: TextAttributes.BOLD,
+      })
     }
 
-    push(lines, body_left, top + 1, label, left, undefined, TextAttributes.DIM)
+    const infoTop = top + wordmark.length
+
+    if (input.showSession !== false) {
+      push(lines, body_left, infoTop, session, left, undefined, TextAttributes.DIM)
+      push(lines, body_left + session.length, infoTop, meta.title, right, undefined, TextAttributes.BOLD)
+    }
+
+    push(lines, body_left, infoTop + 1, label, left, undefined, TextAttributes.DIM)
     push(
       lines,
       body_left + label.length,
-      top + 1,
+      infoTop + 1,
       `memoriX --mini -s ${meta.session_id}`,
       right,
       undefined,
       TextAttributes.BOLD,
     )
-    height = top + mark.length
+    height = infoTop + 2
   }
 
   const root = new BoxRenderable(ctx.renderContext, {

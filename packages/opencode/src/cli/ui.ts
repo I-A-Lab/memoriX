@@ -58,46 +58,89 @@ export function logo(pad?: string) {
 
   const result: string[] = []
   const reset = "\x1b[0m"
-  const left = {
-    fg: "\x1b[90m",
-    shadow: "\x1b[38;5;235m",
+
+  // Gradient palette: blue -> cyan -> purple (ANSI 256)
+  const gradientColors = [
+    "\x1b[38;5;69m", // Blue #5B8DD9
+    "\x1b[38;5;75m", // Light blue
+    "\x1b[38;5;80m", // Cyan #5FD7FF
+    "\x1b[38;5;105m", // Light cyan
+    "\x1b[38;5;114m", // Light purple
+    "\x1b[38;5;129m", // Purple #AF5FFF
+  ]
+
+  const shadow = {
+    fg: "\x1b[38;5;235m",
     bg: "\x1b[48;5;235m",
   }
-  const right = {
-    fg: reset,
-    shadow: "\x1b[38;5;238m",
-    bg: "\x1b[48;5;238m",
-  }
   const gap = " "
-  const draw = (line: string, fg: string, shadow: string, bg: string) => {
+
+  const drawGradient = (line: string) => {
     const parts: string[] = []
-    for (const char of line) {
+    const chars = [...line]
+    const total = chars.length
+    const gradientLength = gradientColors.length
+    for (let i = 0; i < chars.length; i++) {
+      const char = chars[i]
+      if (char === " ") {
+        parts.push(" ")
+        continue
+      }
       if (char === "_") {
-        parts.push(bg, " ", reset)
+        parts.push(shadow.bg, " ", reset)
         continue
       }
       if (char === "^") {
-        parts.push(fg, bg, "▀", reset)
+        const colorIndex =
+          gradientLength <= 1 || total <= 1
+            ? 0
+            : Math.min(gradientLength - 1, Math.floor((i / (total - 1)) * gradientLength))
+        parts.push(gradientColors[colorIndex], shadow.bg, "\u2580", reset)
         continue
       }
       if (char === "~") {
-        parts.push(shadow, "▀", reset)
+        parts.push(shadow.fg, "\u2580", reset)
+        continue
+      }
+      const colorIndex =
+        gradientLength <= 1 || total <= 1
+          ? 0
+          : Math.min(gradientLength - 1, Math.floor((i / (total - 1)) * gradientLength))
+      parts.push(gradientColors[colorIndex], char, reset)
+    }
+    return parts.join("")
+  }
+
+  const drawShadow = (line: string) => {
+    const parts: string[] = []
+    for (const char of line) {
+      if (char === "_") {
+        parts.push(shadow.bg, " ", reset)
+        continue
+      }
+      if (char === "^") {
+        parts.push(shadow.fg, shadow.bg, "\u2580", reset)
+        continue
+      }
+      if (char === "~") {
+        parts.push(shadow.fg, "\u2580", reset)
         continue
       }
       if (char === " ") {
         parts.push(" ")
         continue
       }
-      parts.push(fg, char, reset)
+      parts.push(shadow.fg, char, reset)
     }
     return parts.join("")
   }
+
   glyphs.left.forEach((row, index) => {
     if (pad) result.push(pad)
-    result.push(draw(row, left.fg, left.shadow, left.bg))
+    result.push(drawGradient(row))
     result.push(gap)
     const other = glyphs.right[index] ?? ""
-    result.push(draw(other, right.fg, right.shadow, right.bg))
+    result.push(drawShadow(other))
     result.push(EOL)
   })
   return result.join("").trimEnd()

@@ -127,7 +127,7 @@ bun install
 使用预验证脚本检查配置：
 
 ```powershell
-.\tools\memorix\runtime\start_opencode_with_memorix.ps1 -ValidateOnly
+.\tools\memorix\runtime\start_opencode_with_memorix.ps1
 ```
 如果成功，您应该会看到 `MemoriXGateway import OK`。
 

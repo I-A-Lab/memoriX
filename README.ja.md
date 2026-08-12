@@ -127,7 +127,7 @@ bun install
 検証スクリプトを実行します:
 
 ```powershell
-.\tools\memorix\runtime\start_opencode_with_memorix.ps1 -ValidateOnly
+.\tools\memorix\runtime\start_opencode_with_memorix.ps1
 ```
 成功すると `MemoriXGateway import OK` と表示されます。
 

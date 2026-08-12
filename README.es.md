@@ -132,7 +132,7 @@ bun install
 Verifica que Python esté correctamente configurado con el script de validación:
 
 ```powershell
-.\tools\memorix\runtime\start_opencode_with_memorix.ps1 -ValidateOnly
+.\tools\memorix\runtime\start_opencode_with_memorix.ps1
 ```
 Deberías ver `MemoriXGateway import OK`.
 

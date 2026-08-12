@@ -21,6 +21,7 @@ export type RunSplashTheme = {
   right: ColorInput
   leftShadow: ColorInput
   rightShadow: ColorInput
+  gradient: ColorInput[]
 }
 
 export type RunFooterTheme = {
@@ -489,11 +490,24 @@ function quantizeTheme(theme: TuiThemeCurrent, indexed: RGBA[]): TuiThemeCurrent
 function splashTheme(theme: TuiThemeCurrent, indexed: RGBA[]): RunSplashTheme {
   const left = nearestIndexed(indexed, theme.textMuted)
   const right = nearestIndexed(indexed, theme.text)
+
+  // Gradient palette: blue -> cyan -> purple
+  const gradientStops = [
+    RGBA.fromIndex(69), // Blue #5B8DD9
+    RGBA.fromIndex(75), // Light blue
+    RGBA.fromIndex(80), // Cyan #5FD7FF
+    RGBA.fromIndex(105), // Light cyan
+    RGBA.fromIndex(114), // Light purple
+    RGBA.fromIndex(129), // Purple #AF5FFF
+  ]
+  const gradient = gradientStops.map((c) => nearestIndexed(indexed, c))
+
   return {
     left,
     right,
     leftShadow: splashShadow(indexed, theme.background, left, 0.14),
     rightShadow: splashShadow(indexed, theme.background, right, 0.14),
+    gradient,
   }
 }
 
@@ -634,6 +648,14 @@ export const RUN_THEME_FALLBACK: RunTheme = {
     right: fallbackSplashRight,
     leftShadow: splashShadow(fallbackSplashIndexed, RGBA.fromValues(0, 0, 0, 0), fallbackSplashLeft, 0.14),
     rightShadow: splashShadow(fallbackSplashIndexed, RGBA.fromValues(0, 0, 0, 0), fallbackSplashRight, 0.14),
+    gradient: [
+      RGBA.fromIndex(69),
+      RGBA.fromIndex(75),
+      RGBA.fromIndex(80),
+      RGBA.fromIndex(105),
+      RGBA.fromIndex(114),
+      RGBA.fromIndex(129),
+    ],
   },
   block: {
     highlight: seed.highlight,

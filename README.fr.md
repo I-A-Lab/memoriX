@@ -166,7 +166,7 @@ bun install
 Le système nécessite Python 3. Pour vérifier que tout est bien configuré, MemoriX inclut un script de pré-validation :
 
 ```powershell
-.\tools\memorix\runtime\start_opencode_with_memorix.ps1 -ValidateOnly
+.\tools\memorix\runtime\start_opencode_with_memorix.ps1
 ```
 **Résultat attendu :**
 Vous devriez voir un message indiquant `MemoriXGateway import OK`. Si vous voyez une erreur concernant Python, assurez-vous qu'il est bien installé et ajouté à votre PATH.
