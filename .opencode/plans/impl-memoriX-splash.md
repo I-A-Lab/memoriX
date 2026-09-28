@@ -1,7 +1,7 @@
-# Implementation Plan: memoriX CLI Gradient Splash
+# Implementation Plan: NeuralMemo CLI Gradient Splash
 
 ## Overview
-Update the CLI terminal splash to feature a gradient-colored "memoriX" ASCII art with modern aesthetics.
+Update the CLI terminal splash to feature a gradient-colored "NeuralMemo" ASCII art with modern aesthetics.
 
 ## Architecture
 
@@ -18,7 +18,7 @@ logo.ts (ASCII art) -> splash.ts (render) -> theme.ts (colors)
 ## Step-by-Step Plan
 
 ### Step 1: Update ASCII Art in `logo.ts`
-- Replace current "memoriX" + "AGENTX" ASCII art with a single unified "memoriX" wordmark
+- Replace current "NeuralMemo" + "AGENTX" ASCII art with a single unified "NeuralMemo" wordmark
 - Use a cleaner, more modern ASCII font style
 - Ensure the art fits within 60 columns for good terminal compatibility
 
@@ -56,7 +56,7 @@ export const logo = {
 }
 ```
 
-This shows "memoriX" in a compact ASCII art style.
+This shows "NeuralMemo" in a compact ASCII art style.
 
 ### Step 2: Add Gradient Color Mapping in `splash.ts`
 - Create a `gradientColor` function that maps character position to an ANSI 256 color index

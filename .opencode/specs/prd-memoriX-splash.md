@@ -1,16 +1,16 @@
-# PRD: memoriX CLI Gradient Splash
+# PRD: NeuralMemo CLI Gradient Splash
 
 ## Objective
-Redesign the CLI terminal splash screen for memoriX with a modern gradient color scheme and MemoriX branding.
+Redesign the CLI terminal splash screen for NeuralMemo with a modern gradient color scheme and NeuralMemo branding.
 
 ## Context
-The current CLI splash shows ASCII art for "memoriX" and "AGENTX" with monochrome coloring. The user wants a more visually striking splash with gradient colors applied to the text.
+The current CLI splash shows ASCII art for "NeuralMemo" and "AGENTX" with monochrome coloring. The user wants a more visually striking splash with gradient colors applied to the text.
 
 ## Requirements
 
 ### Functional Requirements
 1. **Gradient Coloring**: Apply a smooth gradient effect across the ASCII art lines, transitioning from one color to another (e.g., cyan to purple, blue to magenta).
-2. **MemoriX Branding**: Keep "memoriX" as the primary brand name in the splash.
+2. **NeuralMemo Branding**: Keep "NeuralMemo" as the primary brand name in the splash.
 3. **Modern Aesthetic**: Update the ASCII art style to be cleaner and more modern while remaining readable in monospace terminals.
 4. **Shadow Effect**: Enhance the shadow/depth effect under the main text for a 3D appearance.
 5. **Session Info**: Preserve the session title and ID display in the exit splash.

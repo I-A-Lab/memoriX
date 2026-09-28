@@ -21,19 +21,19 @@
 
 ---
 
-## What is MemoriX?
+## What is NeuralMemo?
 
-**MemoriX** is an advanced persistent memory system designed specifically for Large Language Model (LLM)-based autonomous coding agents (such as OpenCode). 
+**NeuralMemo** is an advanced persistent memory system designed specifically for Large Language Model (LLM)-based autonomous coding agents (such as OpenCode). 
 
 As AI agents increasingly assist with complex software development tasks, their continuity across sessions remains fragile. When an agent session terminates, all context—decisions made, constraints discovered, conventions established—usually evaporates. Existing solutions like parametric fine-tuning, vector databases (RAG), or unstructured context dumps fail to provide controlled, auditable, and queryable long-term memory without causing context flooding.
 
-**MemoriX shifts agent memory from a simple storage challenge to a structured knowledge-governance problem.** It provides explicit admission control, logical forgetting, strict project isolation, and safe saturation behavior.
+**NeuralMemo shifts agent memory from a simple storage challenge to a structured knowledge-governance problem.** It provides explicit admission control, logical forgetting, strict project isolation, and safe saturation behavior.
 
 ---
 
 ## System Architecture
 
-MemoriX draws architectural inspiration from the multi-level structure of human memory. It enforces a strict knowledge lifecycle: **observe → propose → validate → retrieve → update → forget**.
+NeuralMemo draws architectural inspiration from the multi-level structure of human memory. It enforces a strict knowledge lifecycle: **observe → propose → validate → retrieve → update → forget**.
 
 ### 1. Short-Term Memory (STM)
 A transient journal of recent interactions and events between the agent and the tools. STM serves as an ephemeral buffer; it is **not** queried during normal memory retrieval.
@@ -54,7 +54,7 @@ The sole active memory system queried during agent retrieval. It is backed by a 
 
 ## Tech Stack & Integration
 
-MemoriX maintains a clean runtime boundary using the **Model Context Protocol (MCP)** via JSON-RPC over `stdio`. 
+NeuralMemo maintains a clean runtime boundary using the **Model Context Protocol (MCP)** via JSON-RPC over `stdio`. 
 
 - **Orchestration Layer (TypeScript / Bun)**: Manages agent lifecycle, Software Development Life Cycle (SDLC) workflows, and communicates with the memory subsystem via MCP.
 - **Memory Subsystem (Python 3.10+)**: Handles the Titan neural memory backend, consolidation pipelines, and storage management.
@@ -68,11 +68,11 @@ The system natively supports a **Multi-Agent SDLC Workflow**, delegating tasks a
 
 ## Key Benchmarks & Performance
 
-MemoriX was evaluated rigorously through a paired A/B benchmark (2,048 runs across 32 task families using `qwen2.5:3b`).
+NeuralMemo was evaluated rigorously through a paired A/B benchmark (2,048 runs across 32 task families using `qwen2.5:3b`).
 
 ### 1. Overall A/B Benchmark Results
 
-| Metric | No-Memory | MemoriX | Δ |
+| Metric | No-Memory | NeuralMemo | Δ |
 | ------ | --------- | ------- | - |
 | **Overall Pass Rate** | 31.9% (327/1024) | 60.0% (614/1024) | **+28.0pp** |
 | **Median Family Latency** | 3,384 ms | 3,504 ms | +120 ms |
@@ -84,7 +84,7 @@ MemoriX was evaluated rigorously through a paired A/B benchmark (2,048 runs acro
 
 Evaluates task success across distinct agent roles while strictly preventing information leakage.
 
-| Metric | No-Memory | MemoriX | Delta |
+| Metric | No-Memory | NeuralMemo | Delta |
 | ------ | --------- | ------- | ----- |
 | **Task Success Rate** | 25.0% | 37.5% | **+12.5pp** |
 | **Forbidden-Information Use** | 0.0% | 0.0% | **Perfect Isolation** |
@@ -113,13 +113,13 @@ Testing the memory system's reaction to increasing load and extreme overload.
 | 500,000 | ❌ | critical | 10.0 | 0.0024 ms |
 | 6,000,000 | ❌ | critical | 120.0 | 0.0023 ms |
 
-*Note: MemoriX elegantly rejects overflow (❌) instead of silently overwriting existing memories once the 50,000 capacity boundary is hit, all while maintaining sub-millisecond decision latency.*
+*Note: NeuralMemo elegantly rejects overflow (❌) instead of silently overwriting existing memories once the 50,000 capacity boundary is hit, all while maintaining sub-millisecond decision latency.*
 
 ---
 
 ## Complete Installation Guide (From A to Z)
 
-This guide will walk you through installing MemoriX and OpenCode from scratch. It is designed to be accessible even if you are completely new to these tools.
+This guide will walk you through installing NeuralMemo and OpenCode from scratch. It is designed to be accessible even if you are completely new to these tools.
 
 ### Step 1: Prerequisites
 
@@ -139,17 +139,17 @@ Before starting, ensure you have the following installed on your machine:
 
 ### Step 2: Clone the Repository
 
-Open your terminal (PowerShell recommended) and download the MemoriX source code:
+Open your terminal (PowerShell recommended) and download the NeuralMemo source code:
 
 ```powershell
 # Navigate to the folder where you want to install it
 cd C:\Your\Preferred\Folder
 
 # Clone the repository
-git clone https://github.com/anomalyco/memoriX.git
+git clone https://github.com/anomalyco/NeuralMemo.git
 
 # Enter the directory
-cd memoriX
+cd NeuralMemo
 ```
 
 ### Step 3: Install JavaScript Dependencies
@@ -163,20 +163,20 @@ bun install
 
 ### Step 4: Verify Python Environment
 
-The system requires Python 3. To verify everything is set up correctly, MemoriX includes a pre-validation script. Run it with the following command:
+The system requires Python 3. To verify everything is set up correctly, NeuralMemo includes a pre-validation script. Run it with the following command:
 
 ```powershell
-.\tools\memorix\runtime\start_opencode_with_memorix.ps1
+.\tools\NeuralMemo\runtime\start_opencode_with_NeuralMemo.ps1
 ```
 **Expected Output:**
-You should see messages indicating `MemoriXGateway import OK` and a summary of your configuration. If you see an error about Python missing, ensure Python is installed and added to your PATH.
+You should see messages indicating `NeuralMemoGateway import OK` and a summary of your configuration. If you see an error about Python missing, ensure Python is installed and added to your PATH.
 
 ### Step 5: Start the System!
 
-Once validation passes, you can launch the full OpenCode interface with MemoriX memory enabled:
+Once validation passes, you can launch the full OpenCode interface with NeuralMemo memory enabled:
 
 ```powershell
-.\tools\memorix\runtime\start_opencode_with_memorix.ps1
+.\tools\NeuralMemo\runtime\start_opencode_with_NeuralMemo.ps1
 ```
 This script acts as the bridge: it launches the MCP server in the background and starts the OpenCode interface. You are now ready to code with an agent that *actually remembers*.
 
@@ -184,14 +184,14 @@ This script acts as the bridge: it launches the MCP server in the background and
 
 ## Advanced Operations
 
-MemoriX includes several advanced tools for maintenance and Windows integration located in `tools/memorix/operations`:
+NeuralMemo includes several advanced tools for maintenance and Windows integration located in `tools/NeuralMemo/operations`:
 
-- **Nightly Consolidation**: `run_memorix_nightly.ps1` runs background consolidation and capacity maintenance.
-- **Global Command**: `install_memorix_opencode_command.ps1` registers MemoriX globally on your system.
-- **Backup & Restore**: `memorix_runtime_backup.py` and `memorix_runtime_restore.py` allow you to safely backup your agent's neural memory.
+- **Nightly Consolidation**: `run_NeuralMemo_nightly.ps1` runs background consolidation and capacity maintenance.
+- **Global Command**: `install_NeuralMemo_opencode_command.ps1` registers NeuralMemo globally on your system.
+- **Backup & Restore**: `NeuralMemo_runtime_backup.py` and `NeuralMemo_runtime_restore.py` allow you to safely backup your agent's neural memory.
 
 ---
 
 ## Additional Documentation
-- [Detailed Architecture](docs/MEMORIX_FINAL_ARCHITECTURE.md)
-- [Operations Manual](docs/MEMORIX_OPERATIONS.md)
+- [Detailed Architecture](docs/NeuralMemo_FINAL_ARCHITECTURE.md)
+- [Operations Manual](docs/NeuralMemo_OPERATIONS.md)

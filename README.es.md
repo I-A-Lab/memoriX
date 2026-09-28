@@ -1,4 +1,4 @@
-<h1 align="center">Memory AGENTX</h1>
+<h1 align="center">Memory AGENTX (NeuralMemo) </h1>
 
 <p align="center">
   <em>Diseño y Evaluación de un Sistema de Memoria Persistente Controlada para Agentes de Código basados en LLM</em>
@@ -21,17 +21,17 @@
 
 ---
 
-## ¿Qué es MemoriX?
+## ¿Qué es NeuralMemo?
 
-**MemoriX** es un sistema avanzado de memoria persistente diseñado específicamente para agentes de codificación autónomos basados en modelos de lenguaje grandes (LLM), como OpenCode.
+**NeuralMemo** es un sistema avanzado de memoria persistente diseñado específicamente para agentes de codificación autónomos basados en modelos de lenguaje grandes (LLM), como OpenCode.
 
-**MemoriX transforma la memoria del agente de un simple desafío de almacenamiento a un problema estructurado de gobernanza del conocimiento.** Proporciona un control de admisión explícito, olvido lógico, aislamiento estricto de proyectos y un comportamiento de saturación segura.
+**NeuralMemo transforma la memoria del agente de un simple desafío de almacenamiento a un problema estructurado de gobernanza del conocimiento.** Proporciona un control de admisión explícito, olvido lógico, aislamiento estricto de proyectos y un comportamiento de saturación segura.
 
 ---
 
 ## Arquitectura del Sistema
 
-MemoriX se inspira en la estructura de la memoria humana. Aplica un ciclo de vida estricto: **observar → proponer → validar → recuperar → actualizar → olvidar**.
+NeuralMemo se inspira en la estructura de la memoria humana. Aplica un ciclo de vida estricto: **observar → proponer → validar → recuperar → actualizar → olvidar**.
 
 1. **Memoria a Corto Plazo (STM)**: Registro transitorio de interacciones recientes.
 2. **Sitio Frío (Archivo Histórico)**: Archivo de solo adición para auditoría.
@@ -43,11 +43,11 @@ MemoriX se inspira en la estructura de la memoria humana. Aplica un ciclo de vid
 
 ## Benchmarks y Rendimiento
 
-MemoriX fue evaluado rigurosamente mediante un benchmark A/B (2,048 ejecuciones en 32 familias de tareas usando `qwen2.5:3b`).
+NeuralMemo fue evaluado rigurosamente mediante un benchmark A/B (2,048 ejecuciones en 32 familias de tareas usando `qwen2.5:3b`).
 
 ### 1. Resultados Globales del Benchmark A/B
 
-| Métrica | Sin Memoria | MemoriX | Δ |
+| Métrica | Sin Memoria | NeuralMemo | Δ |
 | ------- | ----------- | ------- | - |
 | **Tasa de Éxito Global** | 31.9% (327/1024) | 60.0% (614/1024) | **+28.0pp** |
 | **Latencia Mediana** | 3,384 ms | 3,504 ms | +120 ms |
@@ -59,7 +59,7 @@ MemoriX fue evaluado rigurosamente mediante un benchmark A/B (2,048 ejecuciones 
 
 Evalúa el éxito de tareas a través de distintos roles de agentes, previniendo fugas de información.
 
-| Métrica | Sin Memoria | MemoriX | Delta |
+| Métrica | Sin Memoria | NeuralMemo | Delta |
 | ------- | ----------- | ------- | ----- |
 | **Tasa de Éxito** | 25.0% | 37.5% | **+12.5pp** |
 | **Uso de Info Prohibida** | 0.0% | 0.0% | **Aislamiento Perfecto** |
@@ -88,13 +88,13 @@ Prueba del sistema frente a cargas crecientes y sobrecarga extrema.
 | 500,000 | ❌ | crítico | 10.0 | 0.0024 ms |
 | 6,000,000 | ❌ | crítico | 120.0 | 0.0023 ms |
 
-*Nota: MemoriX rechaza el exceso de forma elegante (❌) en lugar de sobrescribir memorias existentes una vez que se alcanza la capacidad de 50,000, manteniendo una latencia inferior al milisegundo.*
+*Nota: NeuralMemo rechaza el exceso de forma elegante (❌) en lugar de sobrescribir memorias existentes una vez que se alcanza la capacidad de 50,000, manteniendo una latencia inferior al milisegundo.*
 
 ---
 
 ## Guía de Instalación Completa (De la A a la Z)
 
-Esta guía te ayudará a instalar MemoriX y OpenCode desde cero. Está diseñada para ser accesible incluso si eres nuevo en estas herramientas.
+Esta guía te ayudará a instalar NeuralMemo y OpenCode desde cero. Está diseñada para ser accesible incluso si eres nuevo en estas herramientas.
 
 ### Paso 1: Requisitos Previos
 
@@ -115,8 +115,8 @@ Abre tu terminal (se recomienda PowerShell):
 
 ```powershell
 cd C:\Tu\Carpeta\Preferida
-git clone https://github.com/anomalyco/memoriX.git
-cd memoriX
+git clone https://github.com/anomalyco/NeuralMemo.git
+cd NeuralMemo
 ```
 
 ### Paso 3: Instalar Dependencias JavaScript
@@ -132,21 +132,21 @@ bun install
 Verifica que Python esté correctamente configurado con el script de validación:
 
 ```powershell
-.\tools\memorix\runtime\start_opencode_with_memorix.ps1
+.\tools\NeuralMemo\runtime\start_opencode_with_NeuralMemo.ps1
 ```
-Deberías ver `MemoriXGateway import OK`.
+Deberías ver `NeuralMemoGateway import OK`.
 
 ### Paso 5: ¡Iniciar el Sistema!
 
 Una vez que la validación sea exitosa, inicia la interfaz de OpenCode:
 
 ```powershell
-.\tools\memorix\runtime\start_opencode_with_memorix.ps1
+.\tools\NeuralMemo\runtime\start_opencode_with_NeuralMemo.ps1
 ```
 ¡Ahora estás listo para programar con un agente que *realmente recuerda*!
 
 ---
 
 ## Documentación Adicional
-- [Arquitectura Detallada](docs/MEMORIX_FINAL_ARCHITECTURE.md)
-- [Manual de Operaciones](docs/MEMORIX_OPERATIONS.md)
+- [Arquitectura Detallada](docs/NeuralMemo_FINAL_ARCHITECTURE.md)
+- [Manual de Operaciones](docs/NeuralMemo_OPERATIONS.md)

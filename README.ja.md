@@ -1,4 +1,4 @@
-<h1 align="center">Memory AGENTX</h1>
+<h1 align="center">Memory AGENTX (NeuralMemo)</h1>
 
 <p align="center">
   <em>LLMベースのコードエージェントのための制御された永続メモリシステムの設計と評価</em>
@@ -21,9 +21,9 @@
 
 ---
 
-## MemoriX とは？
+## NeuralMemo とは？
 
-**MemoriX** は、自律型コーディングエージェント（OpenCodeなど）向けに設計された高度な永続メモリシステムです。エージェントのメモリを単純なストレージの課題から、構造化された**知識ガバナンス**の問題へと根本的に移行させます。
+**NeuralMemo** は、自律型コーディングエージェント（OpenCodeなど）向けに設計された高度な永続メモリシステムです。エージェントのメモリを単純なストレージの課題から、構造化された**知識ガバナンス**の問題へと根本的に移行させます。
 
 ---
 
@@ -41,11 +41,11 @@
 
 ## ベンチマークとパフォーマンス
 
-MemoriXは、厳密なA/Bベンチマークを通じて評価されました（`qwen2.5:3b` を使用し、32のタスクファミリーで2,048回実行）。
+NeuralMemoは、厳密なA/Bベンチマークを通じて評価されました（`qwen2.5:3b` を使用し、32のタスクファミリーで2,048回実行）。
 
 ### 1. 全体的な A/B ベンチマーク結果
 
-| メトリック | メモリなし | MemoriX | Δ |
+| メトリック | メモリなし | NeuralMemo | Δ |
 | ---------- | ---------- | ------- | - |
 | **全体成功率** | 31.9% (327/1024) | 60.0% (614/1024) | **+28.0pp** |
 | **遅延中央値** | 3,384 ms | 3,504 ms | +120 ms |
@@ -57,7 +57,7 @@ MemoriXは、厳密なA/Bベンチマークを通じて評価されました（`
 
 情報漏洩を厳密に防ぎながら、異なるエージェント役割にわたるタスクの成功を評価します。
 
-| メトリック | メモリなし | MemoriX | Delta |
+| メトリック | メモリなし | NeuralMemo | Delta |
 | ---------- | ---------- | ------- | ----- |
 | **タスク成功率** | 25.0% | 37.5% | **+12.5pp** |
 | **禁止情報の使用** | 0.0% | 0.0% | **完全な分離** |
@@ -86,13 +86,13 @@ MemoriXは、厳密なA/Bベンチマークを通じて評価されました（`
 | 500,000 | ❌ | 臨界 | 10.0 | 0.0024 ms |
 | 6,000,000 | ❌ | 臨界 | 120.0 | 0.0023 ms |
 
-*注：容量制限（50,000）に達すると、MemoriX は既存のメモリを暗黙のうちに上書きするのではなく、オーバーフローをエレガントに拒否（❌）し、ミリ秒未満の決定レイテンシを維持します。*
+*注：容量制限（50,000）に達すると、NeuralMemo は既存のメモリを暗黙のうちに上書きするのではなく、オーバーフローをエレガントに拒否（❌）し、ミリ秒未満の決定レイテンシを維持します。*
 
 ---
 
 ## 完全なインストールガイド (A から Z)
 
-このガイドでは、MemoriX と OpenCode をゼロからインストールする手順を説明します。
+このガイドでは、NeuralMemo と OpenCode をゼロからインストールする手順を説明します。
 
 ### ステップ 1: 前提条件
 
@@ -112,8 +112,8 @@ PowerShell を開きます:
 
 ```powershell
 cd C:\Your\Folder
-git clone https://github.com/anomalyco/memoriX.git
-cd memoriX
+git clone https://github.com/anomalyco/NeuralMemo.git
+cd NeuralMemo
 ```
 
 ### ステップ 3: JavaScript 依存関係のインストール
@@ -127,20 +127,20 @@ bun install
 検証スクリプトを実行します:
 
 ```powershell
-.\tools\memorix\runtime\start_opencode_with_memorix.ps1
+.\tools\NeuralMemo\runtime\start_opencode_with_NeuralMemo.ps1
 ```
-成功すると `MemoriXGateway import OK` と表示されます。
+成功すると `NeuralMemoGateway import OK` と表示されます。
 
 ### ステップ 5: システムの起動！
 
 検証が成功したら、以下を実行します:
 
 ```powershell
-.\tools\memorix\runtime\start_opencode_with_memorix.ps1
+.\tools\NeuralMemo\runtime\start_opencode_with_NeuralMemo.ps1
 ```
 
 ---
 
 ## ドキュメント
-- [詳細アーキテクチャ](docs/MEMORIX_FINAL_ARCHITECTURE.md)
-- [操作マニュアル](docs/MEMORIX_OPERATIONS.md)
+- [詳細アーキテクチャ](docs/NeuralMemo_FINAL_ARCHITECTURE.md)
+- [操作マニュアル](docs/NeuralMemo_OPERATIONS.md)

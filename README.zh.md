@@ -1,4 +1,4 @@
-<h1 align="center">Memory AGENTX</h1>
+<h1 align="center">Memory AGENTX (NeuralMemo)</h1>
 
 <p align="center">
   <em>基于大型语言模型（LLM）的代码智能体的受控持久内存系统的设计与评估</em>
@@ -21,15 +21,15 @@
 
 ---
 
-## 什么是 MemoriX？
+## 什么是 NeuralMemo？
 
-**MemoriX** 是一个为基于LLM的自主编码智能体（如 OpenCode）设计的高级持久内存系统。它将智能体的内存从简单的存储挑战从根本上转变为结构化的**知识治理**问题。它提供明确的准入控制、逻辑遗忘、严格的项目隔离和安全的饱和行为。
+**NeuralMemo** 是一个为基于LLM的自主编码智能体（如 OpenCode）设计的高级持久内存系统。它将智能体的内存从简单的存储挑战从根本上转变为结构化的**知识治理**问题。它提供明确的准入控制、逻辑遗忘、严格的项目隔离和安全的饱和行为。
 
 ---
 
 ## 系统架构
 
-MemoriX 受到人类记忆模型的启发，并强制执行严格的生命周期：**观察 → 提议 → 验证 → 检索 → 更新 → 遗忘**。
+NeuralMemo 受到人类记忆模型的启发，并强制执行严格的生命周期：**观察 → 提议 → 验证 → 检索 → 更新 → 遗忘**。
 
 1. **短期记忆 (STM)**：瞬态日志。
 2. **冷站点 (历史存档)**：用于审计的仅追加存档。
@@ -41,11 +41,11 @@ MemoriX 受到人类记忆模型的启发，并强制执行严格的生命周期
 
 ## 基准测试与性能
 
-MemoriX 通过严格的 A/B 基准测试进行了评估（使用 `qwen2.5:3b` 在 32 个任务系列中运行 2,048 次）。
+NeuralMemo 通过严格的 A/B 基准测试进行了评估（使用 `qwen2.5:3b` 在 32 个任务系列中运行 2,048 次）。
 
 ### 1. 总体 A/B 基准测试结果
 
-| 指标 | 无内存 | MemoriX | Δ |
+| 指标 | 无内存 | NeuralMemo | Δ |
 | ---- | ------ | ------- | - |
 | **总体通过率** | 31.9% (327/1024) | 60.0% (614/1024) | **+28.0pp** |
 | **中位数延迟** | 3,384 ms | 3,504 ms | +120 ms |
@@ -57,7 +57,7 @@ MemoriX 通过严格的 A/B 基准测试进行了评估（使用 `qwen2.5:3b` �
 
 评估跨不同智能体角色的任务成功率，同时严格防止信息泄漏。
 
-| 指标 | 无内存 | MemoriX | Delta |
+| 指标 | 无内存 | NeuralMemo | Delta |
 | ---- | ------ | ------- | ----- |
 | **任务成功率** | 25.0% | 37.5% | **+12.5pp** |
 | **违规信息使用** | 0.0% | 0.0% | **完美隔离** |
@@ -86,13 +86,13 @@ MemoriX 通过严格的 A/B 基准测试进行了评估（使用 `qwen2.5:3b` �
 | 500,000 | ❌ | 关键 | 10.0 | 0.0024 ms |
 | 6,000,000 | ❌ | 关键 | 120.0 | 0.0023 ms |
 
-*注：一旦达到 50,000 的容量限制，MemoriX 优雅地拒绝溢出（❌），而不是静默覆盖现有的记忆，同时保持亚毫秒级的决策延迟。*
+*注：一旦达到 50,000 的容量限制，NeuralMemo 优雅地拒绝溢出（❌），而不是静默覆盖现有的记忆，同时保持亚毫秒级的决策延迟。*
 
 ---
 
 ## 完整安装指南 (从 A 到 Z)
 
-本指南将引导您从零开始安装 MemoriX 和 OpenCode。
+本指南将引导您从零开始安装 NeuralMemo 和 OpenCode。
 
 ### 第 1 步：环境要求
 
@@ -112,8 +112,8 @@ MemoriX 通过严格的 A/B 基准测试进行了评估（使用 `qwen2.5:3b` �
 
 ```powershell
 cd C:\您的文件夹
-git clone https://github.com/anomalyco/memoriX.git
-cd memoriX
+git clone https://github.com/anomalyco/NeuralMemo.git
+cd NeuralMemo
 ```
 
 ### 第 3 步：安装 JavaScript 依赖项
@@ -127,20 +127,20 @@ bun install
 使用预验证脚本检查配置：
 
 ```powershell
-.\tools\memorix\runtime\start_opencode_with_memorix.ps1
+.\tools\NeuralMemo\runtime\start_opencode_with_NeuralMemo.ps1
 ```
-如果成功，您应该会看到 `MemoriXGateway import OK`。
+如果成功，您应该会看到 `NeuralMemoGateway import OK`。
 
 ### 第 5 步：启动系统！
 
 运行以下命令即可开始：
 
 ```powershell
-.\tools\memorix\runtime\start_opencode_with_memorix.ps1
+.\tools\NeuralMemo\runtime\start_opencode_with_NeuralMemo.ps1
 ```
 
 ---
 
 ## 附加文档
-- [详细架构](docs/MEMORIX_FINAL_ARCHITECTURE.md)
-- [操作手册](docs/MEMORIX_OPERATIONS.md)
+- [详细架构](docs/NeuralMemo_FINAL_ARCHITECTURE.md)
+- [操作手册](docs/NeuralMemo_OPERATIONS.md)
