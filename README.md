@@ -1,4 +1,4 @@
-<h1 align="center">Memory AGENTX</h1>
+<h1 align="center">Memory AGENTX (NeuralMemo)</h1>
 
 <p align="center">
   <em>Design and Evaluation of a Controlled Persistent Memory System for LLM-Based Code Agents</em>
